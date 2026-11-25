@@ -658,6 +658,7 @@ var D;
 try { D = JSON.parse(localStorage.getItem(DBK) || 'null'); } catch(e){ D = null; }
 if (!D || typeof D !== 'object') D = blankDB();
 (function fix(){ var b = blankDB(); for (var k in b) if (!(k in D)) D[k] = b[k]; for (var m in b.meta) if (!(m in D.meta)) D.meta[m] = b.meta[m]; })();
+function fresh(){ try { var x = JSON.parse(localStorage.getItem(DBK) || 'null'); if (x && typeof x === 'object'){ D = x; var b = blankDB(); for (var k in b) if (!(k in D)) D[k] = b[k]; for (var m in b.meta) if (!(m in D.meta)) D.meta[m] = b.meta[m]; } } catch(e){} }
 function persist(){ try { localStorage.setItem(DBK, JSON.stringify(D)); } catch(e){ throw new Error('이 기기의 저장 공간이 부족해 저장하지 못했습니다. 백업 파일을 받아 두세요.'); } }
 function pad(n){ return (n < 10 ? '0' : '') + n; }
 function now(){ var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()); }
@@ -746,7 +747,7 @@ var API = {
   },
   apiUsers: function(){ return { sver: D.sver }; },
   apiPoll: function(code, ver, sver){
-    if (Number(sver) !== D.sver) return { reload: true, ver: D.ver, sver: D.sver };
+    if (Number(sver) !== D.sver || Number(ver) !== D.ver) return { reload: true, ver: D.ver, sver: D.sver };
     return { ver: D.ver, sver: D.sver, changes: [], body: {} };
   },
   apiSaveFile: function(){ throw new Error('이 화면에서는 파일을 내려받을 수 없습니다. 다른 브라우저(크롬·엣지·사파리)로 열어 주세요.'); },
@@ -781,7 +782,7 @@ function runner(ok, no){
       var a = arguments;
       setTimeout(function(){
         var out;
-        try { out = clone(API[n].apply(null, a)); } catch(e){ if (no) no(e); return; }
+        try { fresh(); out = clone(API[n].apply(null, a)); } catch(e){ if (no) no(e); return; }
         if (ok) ok(out);
       }, 0);
     };
