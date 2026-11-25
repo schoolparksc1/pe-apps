@@ -800,7 +800,10 @@ window.PAPS_LOCAL = {
     location.reload();
   },
   pinReset: function(){ D.pin = ''; D.body = {}; D.ver++; persist(); location.reload(); },
-  hasPin: function(){ return !!D.pin; }
+  hasPin: function(){ return !!D.pin; },
+  checkPinHash: function(h){ return !!D.pin && h === D.pin; },
+  getBody: function(){ var o = {}; Object.keys(D.body).forEach(function(k){ var b = D.body[k]; if (b && (b.h || b.w)) o[k] = { h: b.h || '', w: b.w || '' }; }); return o; },
+  mergeBody: function(obj){ var n = 0; Object.keys(obj || {}).forEach(function(k){ var cur = D.body[k], v = obj[k]; if (!v || !(v.h || v.w)) return; if (cur && (cur.h || cur.w)) return; D.body[k] = { h: String(v.h || ''), w: String(v.w || ''), at: now() }; n++; }); if (n){ D.ver++; persist(); } return n; }
 };
 })();
 
@@ -1251,8 +1254,8 @@ function renderSetup(){const G=gradesList();if(!isAdmin()){renderSetupTeacher();
   <div class="card"><h3><span class="no">1</span>학년 명렬표 (원반)</h3><p>학년별 명렬표(학년·반·번호·성명·성별) 엑셀을 넣으면 원반 명단이 만들어집니다. 명렬표 대신 <b>나이스 PAPS 학년별 양식</b>만 넣어도 그 파일의 원반·학생 명단이 만들어지고, 적힌 기록까지 들어갑니다(이때는 성별 없음). 1·2·3학년 파일을 한꺼번에 넣어도 됩니다.</p><div class="drop" data-pickfile="1">여기를 누르거나 파일을 끌어다 놓으세요 · .xlsx</div><div class="rows">${rost}</div></div>
   <div class="card"><h3><span class="no">2</span>이동반 출석부 (선택)</h3><p>원반이 아닌 수업반은 나이스 교과시간별출석부를 넣으면 명렬표에서 학생을 찾아 수업반으로 묶습니다. 수업반으로 기록하고, 내보낼 때는 원반 기준으로 들어갑니다.</p><div class="drop" data-pickfile="1">출석부 파일 넣기 · 여러 개 가능</div><div class="rows">${cls}</div></div>
   <div class="card"><h3><span class="no">3</span>PAPS 양식 · 기록 합치기 · 내보내기</h3><p>나이스에서 받은 학년별 PAPS 입력 양식을 넣으면 학교가 고른 종목이 정해집니다. 다른 선생님이 기록해 보낸 같은 양식을 넣으면 빈 칸만 채우고, 다른 값은 목록으로 보여 줍니다. 내보내기는 나이스 양식 파일을 고르면 그 모양대로, 기록부 값을 먼저 넣고 기록부에 없는 칸은 파일 값을 둡니다. 기록부 명단에 없는 학생 줄은 뺍니다.</p><div class="drop" data-pickfile="1">PAPS 양식 넣기 · 학년별</div><div class="rows">${items}</div></div>
-  <div class="card"><h3><span class="no">4</span>백업</h3><p>기록은 <b>이 기기(브라우저)에만</b> 저장되고 어디로도 보내지지 않습니다. 브라우저 기록을 지우거나, 재부팅하면 초기화되는 교실 PC에서는 사라지니 측정이 끝날 때마다 백업 파일을 받아 두세요. 다른 기기로 옮길 때도 백업 파일을 씁니다. 백업 불러오기는 지금 기록을 지우거나 바꾸지 않고 빈 칸만 채웁니다. <b>키·몸무게 수치는 백업 파일에 들어가지 않습니다.</b></p>
-    <div class="actions" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn pri" id="bkSave">백업 파일 내려받기 (.json)</button><button class="btn" data-pickfile="1">백업 불러오기</button><button class="btn" id="exLoad2">예시 학교 불러오기</button><span style="flex:1"></span><button class="btn small warn" id="pinReset">키·몸무게 비밀번호 초기화</button><button class="btn small warn" id="localWipe">이 기기 기록 모두 지우기</button></div></div>`+featCards()+usersCard()}
+  <div class="card"><h3><span class="no">4</span>백업</h3><p>기록은 <b>이 기기(브라우저)에만</b> 저장되고 어디로도 보내지지 않습니다. 브라우저 기록을 지우거나, 재부팅하면 초기화되는 교실 PC에서는 사라지니 측정이 끝날 때마다 백업 파일을 받아 두세요. 다른 기기로 옮길 때도 백업 파일을 씁니다. 백업 불러오기는 지금 기록을 지우거나 바꾸지 않고 빈 칸만 채웁니다. 키·몸무게는 <b>키·몸무게 비밀번호로 암호화해서</b> 백업 파일에 넣습니다. 파일을 열어 봐도 알아볼 수 없고, 불러올 때 그 비밀번호를 넣어야 풀립니다(비밀번호를 잊으면 그 백업의 키·몸무게는 되살릴 수 없습니다).</p>
+    <div class="actions" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn pri" id="bkSave2">백업 파일 내려받기 (.json)</button><button class="btn" data-pickfile="1">백업 불러오기</button><button class="btn" id="exLoad2">예시 학교 불러오기</button><span style="flex:1"></span><button class="btn small warn" id="pinReset">키·몸무게 비밀번호 초기화</button><button class="btn small warn" id="localWipe">이 기기 기록 모두 지우기</button></div></div>`+featCards()+usersCard()}
 function renderSetupTeacher(){const me=GS.me||{};const sc=(me.scope||[]);
   $('setupBox').innerHTML=`<div class="card"><h3>내 정보</h3><div class="rows"><div class="row"><span><b>${esc(me.name||'')}</b><span class="src">맡은 반 ${sc.length?sc.map(x=>esc(x.id)+(x.mode==='cls'?' (수업반)':'')).join(' · '):'아직 정해지지 않음'}</span></span><button class="btn small" id="logoutBtn">나가기</button></div></div><p class="src">모든 반의 기록을 볼 수 있고, 맡은 반 학생만 고칠 수 있습니다. 키·몸무게 수치는 맡은 반 학생만 보입니다. 명렬표·출석부 넣기와 나이스 내보내기는 관리자가 합니다.</p></div><div class="card"><h3>입력 양식 올리기</h3><p>채운 입력 양식이나 나이스 PAPS 양식을 올리면 <b>맡은 반 학생의 빈 칸만</b> 채웁니다. 다른 반 학생 데이터는 건너뜁니다. 이미 적힌 값과 다른 칸은 목록으로 보여 주고, ‘파일 값으로’를 눌러야 바뀝니다.</p><div class="drop" data-pickfile="1">여기를 누르거나 파일을 끌어다 놓으세요 · .xlsx</div></div>`}
 function armed(b,msg){if(b.classList.contains('armed'))return true;b.classList.add('armed');const t=b.textContent;b.textContent=msg||'한 번 더 누르면 지움';setTimeout(()=>{if(b.isConnected){b.classList.remove('armed');b.textContent=t}},3000);return false}
@@ -1880,9 +1883,49 @@ document.addEventListener('click',async e=>{if(!isAdmin())return;
     var t=e.target;
     if(t.closest('#infoLink')){e.preventDefault();info();return}
     if(t.closest('#exLoad2')){if(Object.keys(S.grades).length&&!S.example){if(!armed(t.closest('#exLoad2'),'한 번 더 누르면 지금 기록 대신 예시를 불러옴'))return}loadExample();return}
+    if(t.closest('#bkSave2')){backupWithBody();return}
     if(t.closest('#pinReset')){if(!armed(t.closest('#pinReset'),'한 번 더 누르면 비밀번호와 키·몸무게 수치를 지움'))return;PAPS_LOCAL.pinReset();return}
     if(t.closest('#localWipe')){if(!armed(t.closest('#localWipe'),'한 번 더 누르면 이 기기 기록을 모두 지움'))return;PAPS_LOCAL.wipe();return}
   });
+  /* ---------- 키·몸무게 암호화 백업 (AES-GCM · 비밀번호에서 PBKDF2로 열쇠를 만듦) ---------- */
+  const ITER=200000,te=new TextEncoder(),td=new TextDecoder();
+  const b64e=u8=>{let s='';for(let i=0;i<u8.length;i+=0x8000)s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(s)};
+  const b64d=t=>Uint8Array.from(atob(t),c=>c.charCodeAt(0));
+  const canCrypto=()=>!!(window.crypto&&crypto.subtle&&window.isSecureContext!==false);
+  async function kdf(p,salt,iter){const base=await crypto.subtle.importKey('raw',te.encode(p),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:iter,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+  async function seal(obj,p){const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12)),key=await kdf(p,salt,ITER);
+    const ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},key,te.encode(JSON.stringify(obj))));
+    return {alg:'AES-GCM-256/PBKDF2-SHA256',iter:ITER,salt:b64e(salt),iv:b64e(iv),data:b64e(ct),n:Object.keys(obj).length}}
+  async function open_(e,p){const key=await kdf(p,b64d(e.salt),e.iter||ITER);const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(e.iv)},key,b64d(e.data));return JSON.parse(td.decode(pt))}
+  function fileName(){return `PAPS기록부_백업_${todayStr()}.json`}
+  function writeBackup(enc){const data={app:'paps-book',v:1,savedAt:Date.now(),state:{...S,ui:undefined}};if(enc)data.bodyEnc=enc;
+    saveFile(fileName(),new Blob([JSON.stringify(data)],{type:'application/json'}))}
+  async function backupWithBody(){commitActive&&commitActive();
+    const body=PAPS_LOCAL.getBody(),n=Object.keys(body).length;
+    if(!n){writeBackup(null);return}
+    if(!canCrypto()){toast('이 화면에서는 암호화를 쓸 수 없어 키·몸무게를 빼고 백업합니다');writeBackup(null);return}
+    if(!PAPS_LOCAL.hasPin()){toast('키·몸무게 비밀번호가 없어 키·몸무게를 빼고 백업합니다');writeBackup(null);return}
+    openDlg('백업 파일 내려받기',`<p>키·몸무게 <b>${n}명</b>을 키·몸무게 비밀번호로 암호화해서 함께 넣습니다. 비밀번호를 넣어 주세요.</p><div class="actions" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><input class="field" type="password" id="bkPw" placeholder="키·몸무게 비밀번호" autocomplete="off" style="flex:1;min-width:160px"><button class="btn pri" id="bkPwGo">암호화해서 받기</button></div><p class="src" id="bkPwMsg" style="color:var(--red)"></p><p class="src"><button class="btn small" id="bkNoBody">키·몸무게 빼고 받기</button></p>`,'narrow');
+    setTimeout(()=>{try{$i('bkPw').focus()}catch(e){}},50);
+    const go=async()=>{const p=$i('bkPw').value;if(!p){$i('bkPwMsg').textContent='비밀번호를 넣어 주세요';return}
+      if(!PAPS_LOCAL.checkPinHash(await pinHash(p))){$i('bkPwMsg').textContent='비밀번호가 맞지 않습니다';return}
+      $i('bkPwGo').disabled=true;$i('bkPwMsg').textContent='';
+      try{const enc=await seal(body,p);closeDlg();writeBackup(enc);toast(`백업 파일을 받았습니다 · 키·몸무게 ${n}명은 암호화해서 넣었습니다`)}catch(err){$i('bkPwGo').disabled=false;$i('bkPwMsg').textContent='암호화하지 못했습니다 · 키·몸무게 빼고 받기를 써 주세요'}};
+    $i('bkPwGo').onclick=go;$i('bkPw').onkeydown=e=>{if(e.key==='Enter')go()};
+    $i('bkNoBody').onclick=()=>{closeDlg();writeBackup(null);toast('키·몸무게를 빼고 백업 파일을 받았습니다')}}
+  /* 백업 불러오기: 기록은 원래 방식(빈 칸만 채움), 키·몸무게는 비밀번호로 풀어서 빈 학생만 채움 */
+  const origRestore=restoreBackup;
+  restoreBackup=async function(f){let o=null;try{o=JSON.parse(await f.text())}catch(e){}
+    await origRestore(f);
+    const btn=$i('bkApply');if(!o||!o.bodyEnc||!btn)return;
+    const ul=$i('dlgBody').querySelector('ul');
+    if(ul)ul.insertAdjacentHTML('beforeend',`<li>키·몸무게 ${o.bodyEnc.n||''}명 (암호화됨) · 백업할 때의 키·몸무게 비밀번호를 넣으면 빈 학생만 채웁니다. 비워 두면 키·몸무게는 건너뜁니다.<div style="display:flex;gap:8px;margin-top:6px"><input class="field" type="password" id="bkPin" placeholder="백업할 때의 키·몸무게 비밀번호" autocomplete="off" style="flex:1"></div><div class="src" id="bkPinMsg" style="color:var(--red)"></div></li>`);
+    const prev=btn.onclick;
+    btn.onclick=async()=>{const p=($i('bkPin')||{}).value||'';let nb=0;
+      if(p){if(!canCrypto()){$i('bkPinMsg').textContent='이 화면에서는 암호를 풀 수 없습니다';return}
+        try{nb=PAPS_LOCAL.mergeBody(await open_(o.bodyEnc,p))}catch(err){$i('bkPinMsg').textContent='비밀번호가 맞지 않습니다';return}}
+      prev();
+      if(nb){await boot(false);toast(`키·몸무게 ${nb}명을 백업에서 채웠습니다`)}}}
 })();
 </script>
 </body></html>
