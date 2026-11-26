@@ -148,6 +148,24 @@ footer a{font-weight:700}
   a{color:inherit;text-decoration:none}
 }
 
+.setup{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:18px;counter-reset:su}
+.setup>li{counter-increment:su;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:20px;align-items:start;background:var(--tile);border-radius:22px;padding:22px;margin:0}
+.setup .su-t{display:flex;gap:10px;align-items:center;font-size:17px;font-weight:900;letter-spacing:-.02em;margin-bottom:6px}
+.setup .su-t::before{content:counter(su);width:30px;height:30px;flex:none;border-radius:50%;background:var(--ac);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center}
+.setup .su-d{font-size:14.5px;color:var(--ink-2)}
+.setup .su-d p{margin:0 0 8px}
+.setup .su-tips{margin:8px 0 0;padding:0;list-style:none;display:grid;gap:5px}
+.setup .su-tips li{margin:0;font-size:13.5px;padding-left:16px;position:relative;color:var(--ink-2)}
+.setup .su-tips li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--ac)}
+.setup .su-img{display:flex;flex-direction:column;gap:10px}
+.setup .su-img a{display:block;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#fff;cursor:zoom-in}
+.setup .su-img img{display:block;width:100%;height:auto}
+.setup .tw{margin:10px 0 4px;background:#fff}
+.setup table{font-size:13px}
+.setup th,.setup td{padding:8px 10px}
+@media (max-width:760px){.setup>li{grid-template-columns:1fr;padding:18px}}
+@media print{.setup>li{break-inside:avoid;grid-template-columns:1fr 1fr}}
+
 .one{max-width:860px;margin:0 auto;padding:0 32px}
 .flow4{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .flow4 figure{margin:0;display:flex;flex-direction:column}
@@ -182,7 +200,7 @@ footer a{font-weight:700}
 <div class="hero"><div class="hero-ic" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/><path d="M17 3l2 2-2 2"/></svg></div><div><h1>학생선수 관리 사용법</h1><p>대회 출전 기록으로 출석인정결석 사용일수, 나이스 입력, 이스쿨 이수를 정리하고 기안문과 학업성적관리위원회 심의 자료를 만들어요.</p><div class="meta"><span class="chip">v1.0</span><span class="chip">설치·로그인 없음</span><span class="chip">장부는 이 기기에만 저장</span></div></div></div>
 <section class="s" style="margin-top:44px"><h2><span class="no">01</span>처음이라면</h2><ol class="steps"><li><div><b>예시로 둘러보기</b><span>학생 6명, 대회 7건이 들어 있는 예시 장부가 만들어져요.</span></div></li><li><div><b>⚙ 설정 확인</b><span>학년도와 출석인정결석 허용일수(예: 50일)를 학교 기준에 맞춰요. 백업도 설정에서 해요.</span></div></li><li><div><b>학생 · 이스쿨 탭에 학생 넣기</b><span>학번·이름·종목을 넣거나 기존 관리 엑셀을 가져와요.</span></div></li></ol></section>
 <section class="s"><h2><span class="no">02</span>이렇게 써요</h2><p class="lead">학생을 등록하고, 대회 출전을 기록하면 나머지 서류가 따라 나와요.</p><div class="flow4"><figure><a class="shot" href="img/athlete/04-eschool.webp" target="_blank" rel="noopener" title="크게 보기"><img src="img/athlete/04-eschool.webp" alt="학생 · 최저학력 · 이스쿨" loading="lazy"></a><figcaption><b class="t"><i>1</i>학생 · 최저학력 · 이스쿨</b>학생마다 학기별 최저학력 도달 여부와 이스쿨 이수·필요 회차를 숫자로 바로 넣어요.</figcaption></figure><figure><a class="shot" href="img/athlete/02-draft.webp" target="_blank" rel="noopener" title="크게 보기"><img src="img/athlete/02-draft.webp" alt="대회 기록과 기안문" loading="lazy"></a><figcaption><b class="t"><i>2</i>대회 기록과 기안문</b><span class="btnname">+ 대회 추가</span> 후 <span class="btnname">기안문</span>을 누르면 관련·붙임이 들어간 내부결재 본문이 만들어져요. 서식째 복사하거나 hwpx로 받아요.</figcaption></figure><figure><a class="shot" href="img/athlete/03-neis.webp" target="_blank" rel="noopener" title="크게 보기"><img src="img/athlete/03-neis.webp" alt="나이스 입력" loading="lazy"></a><figcaption><b class="t"><i>3</i>나이스 입력</b>나이스에 입력할 출결(인정 결석) 목록이 정리돼요. 입력한 줄은 체크해 두면 ‘나이스 반영 완료’로 바뀌어요.</figcaption></figure><figure><a class="shot" href="img/athlete/05-committee.webp" target="_blank" rel="noopener" title="크게 보기"><img src="img/athlete/05-committee.webp" alt="학업성적관리위원회 심의" loading="lazy"></a><figcaption><b class="t"><i>4</i>학업성적관리위원회 심의</b>출결 허용일수 예외, 최저학력, 학생선수 등록 서류(연간계획서·보호자동의서·선수등록확인서류) 세 안건을 한곳에서 준비하고 기안문·협의록용 표를 복사해요.</figcaption></figure></div></section>
-<section class="s"><h2><span class="no">03</span>알아 두면 좋은 기능</h2><ul class="chk"><li><b>현황</b> — 이스쿨 미이수, 나이스 미반영, 심의 필요, 최저학력 미도달 학생 수가 맨 위 카드에 모여요.</li><li><b>학생별 사용일수</b> — 학생마다 출석인정결석 사용일수와 남은 일수를 막대로 보여 줘요.</li><li><b>담임 메시지</b> — 대회 기록마다 담임 선생님께 보낼 안내 문구를 만들어 복사해요.</li><li><b>달력 · 안내</b> — 공휴일과 학업성적관리위원회 예외 대회를 달력에서 확인해요.</li></ul></section>
+<section class="s"><h2><span class="no">03</span>알아 두면 좋은 기능</h2><ul class="chk"><li><b>현황</b> — 이스쿨 미이수, 나이스 미반영, 심의 필요, 최저학력 미도달 학생 수가 맨 위 카드에 모여요. 학생별 현황 표의 이스쿨 <b>이수</b> 숫자는 클릭하면 그 자리에서 바로 고칠 수 있어요(Enter 저장, Esc 취소).</li><li><b>학생별 사용일수</b> — 학생마다 출석인정결석 사용일수와 남은 일수를 막대로 보여 줘요.</li><li><b>담임 메시지</b> — 대회 기록마다 담임 선생님께 보낼 안내 문구를 만들어 복사해요.</li><li><b>달력 · 안내</b> — 공휴일과 학업성적관리위원회 예외 대회를 달력에서 확인해요.</li></ul></section>
 <section class="s"><h2><span class="no">04</span>꼭 지켜 주세요</h2><div class="note warn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg><div><ul><li>학생 개인정보가 담긴 장부예요. <b>이 기기의 브라우저에만</b> 저장되니, 공용 PC에서는 쓰지 말고 ⚙ 설정에서 <b>백업 파일</b>을 받아 두세요.</li><li>기안문과 심의 자료는 예시 서식이에요. 학교·교육청 규정과 관련 공문 번호를 꼭 확인하고 쓰세요.</li></ul></div></div></section>
 <section class="s"><h2><span class="no">05</span>내 수업에 맞게 고쳐 쓰기</h2>
 <p><span class="btnname">HTML 받기</span>로 파일을 받아 Claude 같은 AI에게 첨부하고, 바꾸고 싶은 점을 한 가지씩 말해 보세요. 고친 파일은 더블클릭으로 바로 써요.</p>
