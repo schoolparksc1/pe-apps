@@ -148,6 +148,24 @@ footer a{font-weight:700}
   a{color:inherit;text-decoration:none}
 }
 
+.setup{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:18px;counter-reset:su}
+.setup>li{counter-increment:su;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:20px;align-items:start;background:var(--tile);border-radius:22px;padding:22px;margin:0}
+.setup .su-t{display:flex;gap:10px;align-items:center;font-size:17px;font-weight:900;letter-spacing:-.02em;margin-bottom:6px}
+.setup .su-t::before{content:counter(su);width:30px;height:30px;flex:none;border-radius:50%;background:var(--ac);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center}
+.setup .su-d{font-size:14.5px;color:var(--ink-2)}
+.setup .su-d p{margin:0 0 8px}
+.setup .su-tips{margin:8px 0 0;padding:0;list-style:none;display:grid;gap:5px}
+.setup .su-tips li{margin:0;font-size:13.5px;padding-left:16px;position:relative;color:var(--ink-2)}
+.setup .su-tips li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--ac)}
+.setup .su-img{display:flex;flex-direction:column;gap:10px}
+.setup .su-img a{display:block;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#fff;cursor:zoom-in}
+.setup .su-img img{display:block;width:100%;height:auto}
+.setup .tw{margin:10px 0 4px;background:#fff}
+.setup table{font-size:13px}
+.setup th,.setup td{padding:8px 10px}
+@media (max-width:760px){.setup>li{grid-template-columns:1fr;padding:18px}}
+@media print{.setup>li{break-inside:avoid;grid-template-columns:1fr 1fr}}
+
 .one{max-width:860px;margin:0 auto;padding:0 32px}
 .flow4{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .flow4 figure{margin:0;display:flex;flex-direction:column}
@@ -182,7 +200,7 @@ footer a{font-weight:700}
 <div class="hero"><div class="hero-ic" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4.5a2.5 2.5 0 0 0 2.5 4M17 6h2.5a2.5 2.5 0 0 1-2.5 4"/><path d="M12 14v4M8 21h8M9 18h6"/></svg></div><div><h1>스포츠 토너먼트 사용법</h1><p>종목과 참가 반만 정하면 대진표 · 추첨 화면 · 일정 · 경기 기록지 · 순위가 자동으로 만들어져요.</p><div class="meta"><span class="chip">v1.2</span><span class="chip">설치·로그인 없음</span><span class="chip">기록은 이 기기에만 저장</span></div></div></div>
 <section class="s" style="margin-top:44px"><h2><span class="no">01</span>처음이라면</h2><ol class="steps"><li><div><b>예시로 둘러보기</b><span>처음 화면에서 누르면 배드민턴·탁구 예시 대회가 열려요. 마음껏 눌러 봐도 괜찮아요.</span></div></li><li><div><b>둘러봤다면 관리 → 데이터 관리 → 새 대회 시작</b><span>예시를 지우고 내 대회를 만들어요.</span></div></li></ol></section>
 <section class="s"><h2><span class="no">02</span>대회는 이렇게 흘러가요</h2><p class="lead">관리 탭에서 준비하고, 나머지 탭은 학생에게 보여 줘요.</p><div class="flow4"><figure><a class="shot" href="img/tournament/03-event-teams.webp" target="_blank" rel="noopener" title="크게 보기"><img src="img/tournament/03-event-teams.webp" alt="종목 만들기" loading="lazy"></a><figcaption><b class="t"><i>1</i>종목 만들기</b><span class="btnname">관리</span> → <span class="btnname">+ 종목 추가</span> → <span class="btnname">설정</span>. 참가 반(빠르게 채우기), 세트 수·점수, 경기 날짜를 정해요. 부전승은 자동.</figcaption></figure><figure><a class="shot" href="img/tournament/12-draw-after.webp" target="_blank" rel="noopener" title="크게 보기"><img src="img/tournament/12-draw-after.webp" alt="대진 추첨" loading="lazy"></a><figcaption><b class="t"><i>2</i>대진 추첨</b><span class="btnname">관리</span> → <span class="btnname">추첨 화면 열기</span>. TV에 띄우고 <kbd>스페이스바</kbd>로 추첨, 끝나면 꼭 <span class="btnname">저장하기</span>.</figcaption></figure><figure><a class="shot" href="img/tournament/16-sheet.webp" target="_blank" rel="noopener" title="크게 보기"><img src="img/tournament/16-sheet.webp" alt="결과 입력" loading="lazy"></a><figcaption><b class="t"><i>3</i>결과 입력</b><span class="btnname">일정·결과</span>에서 경기를 눌러 세트 점수를 넣고 저장. 이긴 반이 자동으로 다음 라운드에 올라가요.</figcaption></figure><figure><a class="shot" href="img/tournament/14-bracket-h.webp" target="_blank" rel="noopener" title="크게 보기"><img src="img/tournament/14-bracket-h.webp" alt="공유·발표" loading="lazy"></a><figcaption><b class="t"><i>4</i>공유·발표</b><span class="btnname">대진표</span>에서 이미지 저장·인쇄, <span class="btnname">순위</span>에서 1~4위 확인. 3·4위전 없이 4강 결과로 3·4위가 정해져요.</figcaption></figure></div></section>
-<section class="s"><h2><span class="no">03</span>알아 두면 좋은 기능</h2><ul class="chk"><li><b>학생 심판 배정</b> — 관리 → 심판 배정에 <code>1-3 김하늘</code>처럼 학년-반과 함께 명단을 넣고 <span class="btnname">남은 경기 자동 배정</span>. 같은 학년 경기에만, 자기 반 경기는 빼고 배정돼요. 엑셀 명단도 넣을 수 있어요.</li><li><b>수업 모드</b> — TV에 띄워 둘 때 켜요. 비밀번호(4자 이상)를 정하면 관리 탭·점수 입력·심판 이름이 숨겨져요.</li><li><b>공지 · D-day · 규칙</b> — 관리 탭에 적으면 ‘오늘’ 화면과 규칙 탭에 바로 보여요.</li><li><b>경기 연기</b> — 그 경기의 기록지에서 날짜만 바꾸면 일정에 ‘변경’ 표시가 붙어요.</li></ul></section>
+<section class="s"><h2><span class="no">03</span>알아 두면 좋은 기능</h2><ul class="chk"><li><b>학생 심판 배정</b> — 관리 → 심판 배정에 <code>1-3 김하늘</code>처럼 학년-반과 함께 명단을 넣고 <span class="btnname">남은 경기 자동 배정</span>. 같은 학년 경기에만, 자기 반 경기는 빼고 배정돼요. 추첨하거나 결과를 넣어 대진이 바뀌면 <b>자기 반 경기가 된 심판은 자동으로 다른 반 학생으로 바뀌어요.</b> <span class="btnname">배정표 크게 보기</span>로 그날 배정을 TV에 띄우고, <span class="btnname">이미지 복사</span>로 단톡방에 바로 붙일 수 있어요. 엑셀 명단도 넣을 수 있어요.</li><li><b>수업 모드</b> — TV에 띄워 둘 때 켜요. 비밀번호(4자 이상)를 정하면 관리 탭·점수 입력·심판 이름이 숨겨져요.</li><li><b>공지 · D-day · 규칙</b> — 관리 탭에 적으면 ‘오늘’ 화면과 규칙 탭에 바로 보여요.</li><li><b>경기 연기</b> — 그 경기의 기록지에서 날짜만 바꾸면 일정에 ‘변경’ 표시가 붙어요.</li></ul></section>
 <section class="s"><h2><span class="no">04</span>꼭 지켜 주세요</h2><div class="note warn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg><div><ul><li>기록은 <b>입력한 기기에만</b> 저장돼요. 학생 휴대폰에서 열어도 선생님 기록은 보이지 않아요.</li><li>추첨 직후와 경기가 있는 날마다 <b>관리 → 백업 파일 내려받기</b>. 다른 기기로 옮길 때도 이 파일을 불러오면 돼요.</li><li>경기 기록이 생긴 종목은 다시 추첨할 수 없고, 추첨 뒤에는 팀 <b>이름만</b> 고치세요(팀 수를 바꾸면 추첨이 지워져요).</li></ul></div></div></section>
 <section class="s"><h2><span class="no">05</span>내 수업에 맞게 고쳐 쓰기</h2>
 <p><span class="btnname">HTML 받기</span>로 파일을 받아 Claude 같은 AI에게 첨부하고, 바꾸고 싶은 점을 한 가지씩 말해 보세요. 고친 파일은 더블클릭으로 바로 써요.</p>

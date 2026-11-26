@@ -200,7 +200,7 @@ footer a{font-weight:700}
         <div class="fc"><div class="ic"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><b>추첨 발표 화면</b><span>프로젝터·TV에 띄우고 스페이스바로 한 팀씩 추첨. 마음에 안 들면 되돌리기.</span></div>
         <div class="fc"><div class="ic"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div><b>날짜별 경기 일정</b><span>경기 날짜만 넣으면 라운드 순서대로 일정이 붙고, ‘오늘’ 화면에 그날 경기가 떠요.</span></div>
         <div class="fc"><div class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M9 4h6v3H9z"/><path d="M15 5h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h4"/></svg></div><b>경기 기록지</b><span>세트별 점수를 넣으면 승리팀이 자동 판정되고, 다음 라운드로 올라가요.</span></div>
-        <div class="fc"><div class="ic"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><b>학생 심판 배정</b><span>같은 학년 경기에만, 자기 반 경기는 빼고, 맡은 횟수가 고르게 자동 배정.</span></div>
+        <div class="fc"><div class="ic"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><b>학생 심판 배정</b><span>같은 학년 경기에만, 자기 반 경기는 빼고, 맡은 횟수가 고르게 자동 배정. 대진이 바뀌면 자기 반 심판은 자동 교체.</span></div>
         <div class="fc"><div class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M12 14v4M8 21h8"/></svg></div><b>순위·결과 정리</b><span>결승이 끝나면 1~4위 확정. 대진표 이미지 저장, 인쇄, 결과 CSV 받기.</span></div>
       </div>
     </section>
@@ -396,7 +396,7 @@ footer a{font-weight:700}
             <li data-n="1"><span><b>심판 배정 기능 쓰기</b> — 쓰지 않는다면 체크를 해제하세요. 일정·기록지에서 심판 칸이 사라져요.</span></li>
             <li data-n="2"><span><b>심판 명단</b> — 한 줄에 한 명. 이름 앞에 <code>1-3 김하늘</code>처럼 <b>학년-반</b>이나 <code>10305 김하늘</code>처럼 <b>학번</b>을 붙이면 자동 배정이 더 똑똑해져요.</span></li>
             <li data-n="3"><span><span class="btnname">엑셀·CSV에서 명단 넣기</span> — 나이스 명렬표나 심판 신청 명단(.xlsx, .xls, .csv)에서 ‘이름’ 또는 ‘학번·이름’ 열을 찾아 명단에 더해요.</span></li>
-            <li data-n="4"><span><span class="btnname">남은 경기 자동 배정</span> — 대진이 정해진 경기 중 심판이 없는 경기에 배정해요.</span></li>
+            <li data-n="4"><span><span class="btnname">남은 경기 자동 배정</span> — 심판이 없는 남은 경기에 모두 배정해요. 대진이 아직 안 정해진 경기도 자기 반이 올라올 수 있는 경기는 되도록 피해서 넣어요.</span></li>
             <li data-n="5"><span><span class="btnname">배정표 인쇄</span> — 날짜·경기·심판이 정리된 배정표를 인쇄하거나 PDF로 저장해요.</span></li>
           </ol>
         </figcaption>
@@ -408,8 +408,21 @@ footer a{font-weight:700}
         <li>같은 날 같은 시간에 한 사람이 두 경기를 맡지 않아요.</li>
         <li>맡은 횟수가 적은 학생부터 골라서 고르게 나눠요. 아래 ‘배정 횟수’에서 확인할 수 있어요.</li>
       </ul>
-      <div class="note tip"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg><div><p>자기 반 경기인지 알려면 대진이 정해져야 해요. 그래서 <b>추첨 직후</b>에 한 번, 그리고 <b>라운드가 끝날 때마다</b> <span class="btnname">남은 경기 자동 배정</span>을 다시 눌러 주세요. 8강·4강은 이긴 반이 정해진 뒤에야 배정돼요.</p></div></div>
-      <p>특정 경기의 심판만 바꾸고 싶다면 그 경기의 <b>기록지</b>에서 심판을 골라 저장하면 돼요.</p>
+      <div class="note tip"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg><div><p><b>대진이 바뀔 때마다 자동으로 다시 걸러요.</b> 추첨을 하거나 경기 결과를 입력해 다음 경기 대진이 정해지면, 그 경기를 맡은 심판이 자기 반 학생인지 바로 확인해서 <b>다른 반 학생으로 바꿔 줘요</b>(화면 아래에 몇 명을 바꿨는지 알려 줘요). 버튼을 다시 누를 필요는 없어요. 끝난 경기와 지난 날짜 경기의 심판은 그대로 둬요.</p></div></div>
+      <p>특정 경기의 심판만 바꾸고 싶다면 그 경기의 <b>기록지</b>에서 심판을 골라 저장하면 돼요. 자기 반·다른 학년 학생은 목록에 ‘불가’로 표시되어 고를 수 없어요.</p>
+      <h4>배정표 크게 보기 · 이미지 복사</h4>
+      <p>심판 배정 칸의 <span class="btnname">배정표 크게 보기</span>를 누르면 그날 경기와 심판이 종목별로 큰 화면에 떠요. TV나 전자칠판에 띄워 두기 좋아요.</p>
+      <figure>
+        <div class="shot"><img src="img/tournament/10-ref-board.webp" alt="심판 배정표 크게 보기 화면" loading="lazy" width="1600" height="375"></div>
+        <figcaption><span class="cap">배정표 크게 보기</span>
+          <ol class="legend">
+            <li data-n="1"><span><span class="btnname">이미지 복사</span> — 지금 보고 있는 날의 배정표를 그림으로 복사해요. 학급 단톡방이나 메신저 대화창에 <b>Ctrl+V</b>로 붙이면 돼요. 휴대폰·태블릿에서는 <b>이미지 저장</b>으로 바뀌어 사진첩(다운로드)에 저장돼요.</span></li>
+            <li data-n="2"><span><span class="btnname">◀ 이전 날</span> · <span class="btnname">다음 날 ▶</span> — 날짜를 넘겨 봐요. 처음에는 오늘(없으면 다음 경기일)이 떠요.</span></li>
+            <li data-n="3"><span><span class="btnname">전체화면</span> · <span class="btnname">닫기</span> — 닫기는 Esc 키로도 돼요.</span></li>
+          </ol>
+        </figcaption>
+      </figure>
+      <div class="note tip"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg><div><p>크게 보기를 열지 않고 심판 배정 칸의 <span class="btnname">배정표 이미지 복사</span>를 바로 눌러도 돼요. 이때는 오늘(없으면 다음 경기일) 배정표가 복사돼요. 복사가 막힌 화면에서는 그림 파일로 내려받고 미리보기를 띄워 줘요.</p></div></div>
 
       <!-- 4-5 -->
       <h3 id="h-score"><span class="no">4-5</span>경기 결과 입력하기</h3>

@@ -606,6 +606,15 @@ details.sched[open] summary{margin-bottom:6px}
 .adm .datarow{row-gap:10px}
 .adm .chk{line-height:1.6}
 .adm p,.adm .sub,.adm .chk span{word-break:keep-all;overflow-wrap:break-word}
+/* 심판 배정표 크게 보기 */
+.rb-stage .rb-grid{flex:1;display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:clamp(10px,1.4vw,24px);align-content:start}
+.rb-row.rb-m{align-items:center}
+.rb-row.rb-m span{display:flex;flex-direction:column;gap:2px;min-width:0;font-size:1em}
+.rb-row.rb-m em{font-style:normal;font-weight:600;color:#E4EAF4;font-size:.72em}
+.rb-row.rb-m small{color:#8FA3C4;font-size:.52em;font-weight:600}
+.rb-row.rb-m b{white-space:nowrap}
+.rb-row.rb-m b.none{color:#FF9B7A}
+.st-btn.ghost:disabled{opacity:.35}
 
 </style>
 
@@ -703,7 +712,16 @@ try {
 } catch(e){}
 var state = DB.state;
 function saveLocal(){ try { localStorage.setItem(LS, JSON.stringify(DB)); return true; } catch(e){ toast('저장하지 못했습니다. 브라우저 저장 공간을 확인하세요.'); return false; } }
-function save(){ state.updatedAt = new Date().toISOString(); _mcache = {}; _evc = null; saveLocal(); }
+var _refFixing = false;
+function save(){
+  state.updatedAt = new Date().toISOString(); _mcache = {}; _evc = null;
+  if (!_refFixing && state.refs && state.refs.on && state.refs.list.length){
+    _refFixing = true;
+    try { var x = refFix(false); if (x.fixed) setTimeout(function(){ toast('대진이 바뀌어 자기 반 경기 심판 ' + x.fixed + '명을 다른 반 학생으로 바꿨습니다' + (x.none ? ' · ' + x.none + '경기는 맡을 사람이 없어 비워 두었습니다' : '')); }, 60); } catch(err){}
+    _refFixing = false;
+  }
+  saveLocal();
+}
 function setState(s){ DB.state = state = fixState(s); _mcache = {}; _evc = null; }
 
 /* ---------------- 종목·팀 ---------------- */
@@ -916,10 +934,11 @@ function render(){
   h += '</main><footer><span>' + esc(state.org ? state.org + ' · ' : '') + '스포츠 토너먼트 v' + APP_VER + ' · 만든 이 다정고 박성찬 · 기록은 이 기기에만 저장</span><span>'
     + (state.updatedAt ? '마지막 저장 ' + fmtStamp(state.updatedAt) : '') + '</span></footer>';
   if (stageFor && teacher()) h += stageHtml(stageFor);
+  else if (rbOpen && teacher() && state.refs.on) h += refBoardHtml();
   h += '<div id="modal"></div>';
   app.innerHTML = h;
   document.body.classList.toggle('kiosk', !!DB.kiosk);
-  document.documentElement.classList.toggle('stage-on', !!(stageFor && teacher()));
+  document.documentElement.classList.toggle('stage-on', !!((stageFor || (rbOpen && state.refs.on)) && teacher()));
   if (editing) renderModal();
   else if (infoOpen) renderInfo();
 }
@@ -1203,7 +1222,7 @@ function renderModal(){
   var h = '<div class="scrim" data-act="scrim"><div class="sheet ev-c' + e.color + '" role="dialog" aria-modal="true" aria-labelledby="sheet-title"><div class="sheet-h"><div><div class="row">' + evChip(e) + pill(r) + '</div><h2 id="sheet-title">' + esc(e.name) + ' 경기 기록지</h2></div><button class="close" data-act="close" aria-label="닫기">×</button></div><div class="sheet-b">';
   h += '<div class="form-meta"><span class="k">라운드</span><span>' + roundName(m) + '</span><span class="k">경기날짜</span><span>' + whenTxt(r) + (r.moved ? ' (변경)' : '') + '</span></div>';
   if (teacher() && state.refs.on){
-    h += '<label class="field">심판<select data-act="ed-ref"><option value="">미배정</option>' + state.refs.list.map(function(x){ return '<option value="' + x.id + '"' + (ed.ref === x.id ? ' selected' : '') + '>' + esc(x.name) + '</option>'; }).join('') + '</select></label>';
+    h += '<label class="field">심판<select data-act="ed-ref"><option value="">미배정</option>' + state.refs.list.map(function(x){ var ok = refOk(x.id, r), lb = ok === 'no' ? ' (자기 반·다른 학년 — 불가)' : ok === 'risk' ? ' (자기 반이 올라올 수도 있음)' : ''; return '<option value="' + x.id + '"' + (ed.ref === x.id ? ' selected' : '') + (ok === 'no' && ed.ref !== x.id ? ' disabled' : '') + '>' + esc(x.name + lb) + '</option>'; }).join('') + '</select></label>';
   }
   h += '<div class="rec-wrap"><table class="rec"><thead><tr><th>순번</th><th>경기</th><th>' + esc(nA) + '<br>득점</th><th>' + esc(nB) + '<br>득점</th></tr></thead><tbody>';
   e.games.forEach(function(gname, i){
@@ -1454,9 +1473,9 @@ function refAdmin(){
   var cnt = {}; Object.keys(R.assign).forEach(function(k){ cnt[R.assign[k]] = (cnt[R.assign[k]] || 0) + 1; });
   h += '<div class="sub2">심판 명단 <span class="sub">(' + R.list.length + '명 · 한 줄에 한 명)</span></div><textarea rows="5" data-act="ref-list" style="width:100%" placeholder="예) 2-1 김하늘">' + esc(R.list.map(function(x){ return x.name; }).join('\n')) + '</textarea>'
     + '<div class="row reftools"><button class="btn" data-act="ref-xl">엑셀·CSV에서 명단 넣기</button><input type="file" id="refFile" accept=".xlsx,.xls,.csv" hidden><span class="sub">이름(또는 학번·이름) 열을 찾아 명단에 더합니다</span></div>'
-    + '<div class="row reftools"><button class="btn primary" data-act="ref-auto">남은 경기 자동 배정</button><button class="btn" data-act="ref-print">배정표 인쇄</button><button class="btn danger" data-act="ref-clear">배정 모두 지우기</button></div>'
+    + '<div class="row reftools"><button class="btn primary" data-act="ref-auto">남은 경기 자동 배정</button><button class="btn" data-act="rb-open">배정표 크게 보기</button><button class="btn" data-act="rb-copy">' + imgBtnTxt(true) + '</button><button class="btn" data-act="ref-print">배정표 인쇄</button><button class="btn danger" data-act="ref-clear">배정 모두 지우기</button></div>'
     + (R.list.length ? '<p class="sub">배정 횟수: ' + R.list.map(function(x){ return esc(x.name) + ' ' + (cnt[x.id] || 0); }).join(' · ') + '</p>' : '')
-    + '<p class="sub">이름 앞에 학년-반(예: 1-3 김하늘)이나 학번을 적으면, 자동 배정은 <b>같은 학년 종목</b>에만 넣고 <b>자기 반 경기</b>는 뺍니다. 자기 반인지 알려면 대진이 정해져야 하니 추첨 뒤, 그리고 라운드가 끝날 때마다 다시 눌러 주세요. 같은 날 같은 시간에 한 사람이 두 경기를 맡지 않게, 맡은 횟수가 적은 사람부터 고릅니다. 경기마다 심판은 기록지에서 바꿀 수 있습니다.</p>';
+    + '<p class="sub">이름 앞에 학년-반(예: 1-3 김하늘)이나 학번을 적으면, 자동 배정은 <b>같은 학년 종목</b>에만 넣고 <b>자기 반 경기</b>는 뺍니다. <b>추첨하거나 경기 결과를 입력해 대진이 바뀌면, 자기 반 경기가 된 심판은 자동으로 빠지고 다른 반 학생으로 바뀝니다.</b> 대진이 아직 정해지지 않은 경기는 자기 반이 올라올 수 있는 경기를 되도록 피해서 넣습니다. 같은 날 같은 시간에 한 사람이 두 경기를 맡지 않게, 맡은 횟수가 적은 사람부터 고릅니다. 경기마다 심판은 기록지에서 바꿀 수 있습니다.</p>';
   return h + '</div>';
 }
 function refGC(name){
@@ -1475,39 +1494,168 @@ function evGrade(e){
   var gs = {}; teamsOf(e).forEach(function(tm){ var x = teamGC(tm.name || tm); if (x) gs[x.g] = 1; });
   var k = Object.keys(gs); return k.length === 1 ? +k[0] : 0;
 }
-/* 심판 자격: 학년-반을 알면 같은 학년 종목만, 자기 반 경기는 제외. 대진이 아직 안 정해진 경기는 'wait' */
+/* 이 경기에 나올 수 있는 팀: 대진이 정해졌으면 두 팀, 아니면 올라올 수 있는 모든 팀(추첨 전이면 그 종목 전체) */
+function possibleTeams(e, side){
+  if (side.s){ var v = drawOf(e).slots[side.s]; return v == null ? teamsOf(e).map(function(t){ return t.id; }) : v > 0 ? [v] : []; }
+  var mm = getMatch(e, side.w), rr = result(e, mm.id);
+  if (rr.winnerTeam != null) return rr.winnerTeam > 0 ? [rr.winnerTeam] : [];
+  return possibleTeams(e, mm.a).concat(possibleTeams(e, mm.b));
+}
+/* 심판 자격
+   no   : 다른 학년 종목이거나, 대진이 정해졌는데 자기 반 경기
+   risk : 대진이 아직 안 정해졌고 자기 반이 올라올 수도 있음(가능하면 피함)
+   ok   : 문제 없음 */
 function refOk(id, r){
   var ref = state.refs.list.filter(function(x){ return x.id === id; })[0]; if (!ref) return 'no';
   var gc = refGC(ref.name); if (!gc) return 'ok';
   var eg = evGrade(r.e); if (eg && eg !== gc.g) return 'no';
-  if (r.A == null || r.B == null) return 'wait';
-  var own = [teamName(r.e, r.A), teamName(r.e, r.B)].some(function(nm){ var x = teamGC(nm); return x && x.g === gc.g && x.c === gc.c; });
-  return own ? 'no' : 'ok';
+  var mine = function(tid){ var x = teamGC(teamName(r.e, tid)); return !!x && x.g === gc.g && x.c === gc.c; };
+  if (r.A != null && r.B != null) return [r.A, r.B].some(mine) ? 'no' : 'ok';
+  var pt = (r.A != null ? [r.A] : possibleTeams(r.e, r.m.a)).concat(r.B != null ? [r.B] : possibleTeams(r.e, r.m.b));
+  return pt.some(mine) ? 'risk' : 'ok';
+}
+/* 심판 배정 다시 맞추기
+   all=true : '남은 경기 자동 배정' 버튼 — 빈 경기를 모두 채움
+   all=false: 저장할 때마다 자동 — 대진이 바뀌어 자기 반·다른 학년이 된 배정만 빼고 다른 반 학생으로 바꿈
+   끝난 경기와 지난 날짜 경기는 건드리지 않는다 */
+function refFix(all){
+  var R = state.refs, res = { n:0, fixed:0, none:0, risk:0, names:[] };
+  if (!R.on || !R.list.length) return res;
+  var today = todayStr(), list = allMatches('all').filter(function(r){ return !r.bye; });
+  var open = list.filter(function(r){ return r.status !== 'done' && !(r.d && r.d < today); });
+  var cnt = {}; R.list.forEach(function(x){ cnt[x.id] = 0; });
+  Object.keys(R.assign).forEach(function(k){ if (cnt[R.assign[k]] != null) cnt[R.assign[k]]++; else delete R.assign[k]; });
+  var todo = [];
+  open.forEach(function(r){
+    var a = R.assign[r.key];
+    if (a && refOk(a, r) === 'no'){ cnt[a]--; delete R.assign[r.key]; res.fixed++; todo.push(r); }
+    else if (!a && all) todo.push(r);
+  });
+  if (!todo.length) return res;
+  var busy = {}, day = {};
+  Object.keys(R.assign).forEach(function(k){ var r = resultByKey(k); if (r){ busy[r.d + ' ' + r.t + ' ' + R.assign[k]] = 1; day[r.d + ' ' + R.assign[k]] = 1; } });
+  todo.forEach(function(r){
+    var best = null, bs = null;
+    R.list.forEach(function(x){
+      var ok = refOk(x.id, r); if (ok === 'no' || busy[r.d + ' ' + r.t + ' ' + x.id]) return;
+      var sc = [ok === 'risk' ? 1 : 0, day[r.d + ' ' + x.id] ? 1 : 0, cnt[x.id], Math.random()];
+      var better = !best; for (var q = 0; !better && q < sc.length; q++){ if (sc[q] !== bs[q]){ better = sc[q] < bs[q]; break; } }
+      if (better){ best = x; bs = sc; }
+    });
+    if (!best){ res.none++; return; }
+    R.assign[r.key] = best.id; cnt[best.id]++; busy[r.d + ' ' + r.t + ' ' + best.id] = 1; day[r.d + ' ' + best.id] = 1; res.n++;
+    if (bs[0]) res.risk++;
+  });
+  return res;
 }
 function refAuto(){
   var R = state.refs; if (!R.list.length){ toast('심판 명단을 먼저 넣어 주세요'); return; }
-  var all = allMatches('all').filter(function(r){ return !r.bye && r.status !== 'done'; }), fixed = 0;
-  all.forEach(function(r){ var a = R.assign[r.key]; if (a && refOk(a, r) === 'no'){ delete R.assign[r.key]; fixed++; } });
-  var cnt = {}; R.list.forEach(function(x){ cnt[x.id] = 0; });
-  Object.keys(R.assign).forEach(function(k){ if (cnt[R.assign[k]] != null) cnt[R.assign[k]]++; else delete R.assign[k]; });
-  var busy = {}; Object.keys(R.assign).forEach(function(k){ var r = resultByKey(k); if (r) busy[r.d + ' ' + r.t + ' ' + R.assign[k]] = 1; });
-  var n = 0, wait = 0, none = 0;
-  all.forEach(function(r){
-    if (R.assign[r.key]) return;
-    var st = R.list.map(function(x){ return [x.id, refOk(x.id, r)]; });
-    var c = st.filter(function(v){ return v[1] === 'ok' && !busy[r.d + ' ' + r.t + ' ' + v[0]]; }).map(function(v){ return v[0]; }).sort(function(a, b){ return cnt[a] - cnt[b]; });
-    if (!c.length){ if (st.some(function(v){ return v[1] === 'wait'; })) wait++; else none++; return; }
-    var min = cnt[c[0]], top = c.filter(function(id){ return cnt[id] === min; });
-    var pick = top[Math.floor(Math.random() * top.length)];
-    R.assign[r.key] = pick; cnt[pick]++; busy[r.d + ' ' + r.t + ' ' + pick] = 1; n++;
-  });
+  var x = refFix(true);
   save(); render();
-  var msg = n ? n + '경기에 심판을 배정했습니다' : '새로 배정한 경기가 없습니다';
-  if (fixed) msg += ' · 자기 반·다른 학년 배정 ' + fixed + '건을 고쳤습니다';
-  if (wait) msg += ' · 대진이 정해지지 않은 ' + wait + '경기는 추첨이나 이전 경기 결과 뒤에 다시 눌러 주세요';
-  else if (none) msg += ' · 맡을 수 있는 심판이 없는 경기 ' + none + '개';
-  else if (!n) msg = '배정할 경기가 없습니다 · 남은 경기에 이미 심판이 모두 배정되어 있어요';
+  var msg = x.n ? x.n + '경기에 심판을 배정했습니다' : '배정할 경기가 없습니다 · 남은 경기에 이미 심판이 모두 배정되어 있어요';
+  if (x.fixed) msg += ' · 자기 반·다른 학년 배정 ' + x.fixed + '건을 바꿨습니다';
+  if (x.none) msg += ' · 맡을 수 있는 심판이 없는 경기 ' + x.none + '개';
   toast(msg);
+}
+/* ---------------- 심판 배정표 크게 보기 · 이미지 ---------------- */
+var rbOpen = false, rbDate = null;
+var IS_MOBILE = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Mac/.test(navigator.platform || ''));
+function imgBtnTxt(long){ return (long ? '배정표 ' : '') + (IS_MOBILE ? '이미지 저장' : '이미지 복사'); }
+function refDays(){ var ds = []; allMatches('all').forEach(function(r){ if (!r.bye && r.d && ds.indexOf(r.d) < 0) ds.push(r.d); }); return ds.sort(); }
+function boardDay(){ var ds = refDays(), t = todayStr(); return rbDate && ds.indexOf(rbDate) >= 0 ? rbDate : (ds.filter(function(x){ return x >= t; })[0] || ds[ds.length - 1] || ''); }
+/* 그날 경기를 종목별로 묶는다: 행 = [대진, 라운드·시간, 심판] */
+function boardModel(){
+  var cur = boardDay(); if (!cur) return null;
+  var groups = [], by = {};
+  allMatches('all').forEach(function(r){
+    if (r.bye || r.d !== cur) return;
+    var g = by[r.e.id]; if (!g){ g = by[r.e.id] = { title: r.e.name, rows: [] }; groups.push(g); }
+    var vs = (r.A != null ? shortName(r.e, r.A) : sideTbd(r.e, r.m.a)) + ' vs ' + (r.B != null ? shortName(r.e, r.B) : sideTbd(r.e, r.m.b));
+    g.rows.push([vs, roundName(r.m) + ' · ' + r.t + (r.status === 'done' ? ' · 종료' : ''), refName(state.refs.assign[r.key]) || '미배정']);
+  });
+  var head = [state.org, state.title || '스포츠 토너먼트'].filter(Boolean).join(' ');
+  return { cur: cur, head: head, title: fmtDate(cur, true) + ' 심판 배정', groups: groups };
+}
+function refBoardHtml(){
+  var m = boardModel(), ds = refDays(), ci = m ? ds.indexOf(m.cur) : -1;
+  var h = '<div class="stage rb-stage" role="dialog" aria-modal="true" aria-label="심판 배정표"><div class="st-head"><div><div class="st-eyebrow">' + esc(m ? m.head : '') + '</div><h2 class="st-title">' + (m ? esc(m.title) : '심판 배정표') + '</h2></div>'
+    + '<div class="st-tools"><button class="st-btn ghost" data-act="rb-copy">' + imgBtnTxt(false) + '</button><button class="st-btn ghost" data-act="rb-day" data-d="-1"' + (ci <= 0 ? ' disabled' : '') + '>◀ 이전 날</button><button class="st-btn ghost" data-act="rb-day" data-d="1"' + (ci < 0 || ci >= ds.length - 1 ? ' disabled' : '') + '>다음 날 ▶</button><button class="st-btn ghost" data-act="stage-full">전체화면</button><button class="st-btn ghost" data-act="rb-close">닫기</button></div></div>';
+  if (!m || !m.groups.length) return h + '<p class="st-sub">경기 날짜가 정해진 경기가 없습니다.</p></div>';
+  return h + '<div class="rb-grid">' + m.groups.map(function(g){
+    return '<div class="st-group"><div class="st-gt">' + esc(g.title) + '</div>' + g.rows.map(function(r){
+      return '<div class="rb-row rb-m"><span><em>' + esc(r[0]) + '</em><small>' + esc(r[1]) + '</small></span><b' + (r[2] === '미배정' ? ' class="none"' : '') + '>' + esc(r[2]) + '</b></div>';
+    }).join('') + '</div>';
+  }).join('') + '</div></div>';
+}
+var IMG_FB = '"IBM Plex Sans KR", system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif', IMG_FD = '"Do Hyeon", ' + IMG_FB;
+function wrapLines(ctx, text, maxW){
+  var out = [], line = '';
+  String(text).split('').forEach(function(ch){ var t = line + ch; if (line && ctx.measureText(t).width > maxW){ out.push(line); line = ch === ' ' ? '' : ch; } else line = t; });
+  if (line) out.push(line); return out.length ? out : [''];
+}
+/* 배정표를 캔버스에 직접 그린다(외부 라이브러리 없이) */
+function drawBoard(m){
+  var W = 1200, PAD = 40, COLS = m.groups.length >= 3 ? 3 : Math.max(1, m.groups.length), GAP = 20, CW = (W - PAD * 2 - GAP * (COLS - 1)) / COLS, IN = 22, ROW = 70, SC = 2;
+  var mc = document.createElement('canvas').getContext('2d');
+  var cards = m.groups.map(function(g){ mc.font = '700 24px ' + IMG_FB; var tl = wrapLines(mc, g.title, CW - IN * 2); var hh = IN + tl.length * 32 + 14; return { g: g, tl: tl, hh: hh, h: hh + g.rows.length * ROW + 10 }; });
+  var top = PAD + 26 + 64 + 24, colH = []; for (var i = 0; i < COLS; i++) colH.push(top);
+  cards.forEach(function(c){ var k = colH.indexOf(Math.min.apply(null, colH)); c.x = PAD + k * (CW + GAP); c.y = colH[k]; colH[k] += c.h + GAP; });
+  var H = Math.max.apply(null, colH) - GAP + PAD;
+  var cv = document.createElement('canvas'); cv.width = W * SC; cv.height = H * SC;
+  var x = cv.getContext('2d'); x.scale(SC, SC); x.textBaseline = 'alphabetic';
+  x.fillStyle = '#0B1426'; x.fillRect(0, 0, W, H);
+  x.fillStyle = '#9FB0CC'; x.font = '600 18px ' + IMG_FB; x.fillText(m.head, PAD, PAD + 18);
+  x.fillStyle = '#FFFFFF'; x.font = '56px ' + IMG_FD; x.fillText(m.title, PAD, PAD + 26 + 54);
+  function rr(px, py, w, h, r){ x.beginPath(); x.moveTo(px + r, py); x.arcTo(px + w, py, px + w, py + h, r); x.arcTo(px + w, py + h, px, py + h, r); x.arcTo(px, py + h, px, py, r); x.arcTo(px, py, px + w, py, r); x.closePath(); }
+  function fit(t, maxW){ if (x.measureText(t).width <= maxW) return t; while (t.length > 1 && x.measureText(t + '…').width > maxW) t = t.slice(0, -1); return t + '…'; }
+  cards.forEach(function(c){
+    rr(c.x, c.y, CW, c.h, 14); x.fillStyle = '#14223D'; x.fill(); x.lineWidth = 1.5; x.strokeStyle = '#2A3E63'; x.stroke();
+    var y = c.y + IN;
+    x.fillStyle = '#FFC94A'; x.font = '700 24px ' + IMG_FB; c.tl.forEach(function(l){ y += 32; x.fillText(l, c.x + IN, y - 8); });
+    y = c.y + c.hh;
+    c.g.rows.forEach(function(r){
+      x.strokeStyle = '#2A3E63'; x.lineWidth = 1; x.beginPath(); x.moveTo(c.x + IN, y); x.lineTo(c.x + CW - IN, y); x.stroke();
+      var rx = c.x + CW - IN, none = r[2] === '미배정';
+      x.textAlign = 'right'; x.fillStyle = none ? '#FF9B7A' : '#FFFFFF'; x.font = '700 26px ' + IMG_FB; var nm = fit(r[2], CW * 0.45); x.fillText(nm, rx, y + ROW / 2 + 10);
+      var lw = CW - IN * 2 - x.measureText(nm).width - 14;
+      x.textAlign = 'left'; x.fillStyle = '#E4EAF4'; x.font = '600 19px ' + IMG_FB; x.fillText(fit(r[0], lw), c.x + IN, y + 30);
+      x.fillStyle = '#8FA3C4'; x.font = '500 15px ' + IMG_FB; x.fillText(fit(r[1], lw), c.x + IN, y + 54);
+      y += ROW;
+    });
+  });
+  return cv;
+}
+function boardFontsReady(){
+  if (!document.fonts || !document.fonts.load) return Promise.resolve();
+  var ps = ['700 24px "IBM Plex Sans KR"', '600 19px "IBM Plex Sans KR"', '500 15px "IBM Plex Sans KR"', '56px "Do Hyeon"'].map(function(f){ return document.fonts.load(f, '가1').catch(function(){}); });
+  return Promise.race([Promise.all(ps), new Promise(function(res){ setTimeout(res, 1500); })]);
+}
+function saveBlob(name, blob){ var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1000); }
+function showBoardImage(url, blob, name, note){
+  var ov = document.createElement('div');
+  ov.className = 'img-ov'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-label', '배정표 이미지');
+  ov.innerHTML = '<div class="img-ov-b"><p>' + esc(note) + '</p><img alt="심판 배정표" src="' + url + '"><div class="actions"><button class="btn" data-ov="save">이미지 파일로 받기</button><button class="btn primary" data-ov="close">닫기</button></div></div>';
+  ov.addEventListener('click', function(e){ var b = e.target.closest('[data-ov]'); if (e.target === ov || (b && b.dataset.ov === 'close')) ov.remove(); else if (b && b.dataset.ov === 'save') saveBlob(name, blob); });
+  document.body.appendChild(ov);
+}
+function copyBoardImage(){
+  var m = boardModel(); if (!m || !m.groups.length){ toast('경기 날짜가 정해진 경기가 없습니다'); return; }
+  var name = ('심판배정 ' + m.cur + '.png');
+  var canvasP = boardFontsReady().then(function(){ return drawBoard(m); });
+  var blobP = canvasP.then(function(c){ return new Promise(function(res, rej){ c.toBlob(function(b){ b ? res(b) : rej(); }, 'image/png'); }); });
+  function fallback(note, download){
+    Promise.all([canvasP, blobP]).then(function(v){ if (download) saveBlob(name, v[1]); showBoardImage(v[0].toDataURL('image/png'), v[1], name, note); }).catch(function(){ toast('이미지를 만들지 못했습니다'); });
+  }
+  if (IS_MOBILE){ toast('배정표 이미지를 저장하는 중…'); fallback('사진첩(다운로드)에 저장했습니다. 저장되지 않았다면 아래 그림을 길게 눌러 ‘이미지 저장’을 누르세요.', true); return; }
+  toast('배정표 이미지를 만드는 중…');
+  if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){
+    try {
+      navigator.clipboard.write([new ClipboardItem({ 'image/png': blobP })]).then(function(){ toast(fmtDate(m.cur) + ' 배정표 이미지를 복사했습니다 · 메신저 대화창에 붙여넣기(Ctrl+V) 하세요'); },
+        function(){ fallback('이 화면에서는 클립보드 복사가 막혀 있어 이미지 파일로 내려받았습니다. 아래 그림을 마우스 오른쪽 버튼 → ‘이미지 복사’로 써도 됩니다.', true); });
+      return;
+    } catch(e){}
+  }
+  fallback('이 브라우저는 이미지 복사를 지원하지 않아 파일로 내려받았습니다. 아래 그림을 마우스 오른쪽 버튼 → ‘이미지 복사’로 써도 됩니다.', true);
 }
 function resultByKey(k){ var i = k.indexOf(':'), e = EV(k.slice(0, i)); if (!e || !getMatch(e, k.slice(i + 1))) return null; return result(e, k.slice(i + 1)); }
 function refPrint(){
@@ -1710,6 +1858,10 @@ app.addEventListener('click', function(ev){
     case 'ms-del': state.milestones = state.milestones.filter(function(n){ return n.id !== id; }); save(); render(); return;
     case 'ref-auto': refAuto(); return;
     case 'ref-print': refPrint(); return;
+    case 'rb-open': rbOpen = true; rbDate = null; render(); return;
+    case 'rb-close': rbOpen = false; if (document.fullscreenElement) document.exitFullscreen().catch(function(){}); render(); return;
+    case 'rb-day': var dl = refDays(), ci = dl.indexOf(boardDay()), ni = ci + (+t.dataset.d); if (ni >= 0 && ni < dl.length){ rbDate = dl[ni]; render(); } return;
+    case 'rb-copy': copyBoardImage(); return;
     case 'ref-xl': var xf = document.getElementById('refFile'); xf.value = ''; xf.click(); return;
     case 'ref-clear': confirmBox('모든 심판 배정을 지웁니다. 계속할까요?', '지우기').then(function(ok){ if (!ok) return; state.refs.assign = {}; save(); render(); }); return;
     case 'backup': doBackup(); return;
@@ -1731,6 +1883,7 @@ document.addEventListener('keydown', function(ev){
     if (boxResolve !== null || document.getElementById('box-in')) { closeBox(false); return; }
     if (editing){ editing = null; document.getElementById('modal').innerHTML = ''; return; }
     if (infoOpen){ infoOpen = false; document.getElementById('modal').innerHTML = ''; return; }
+    if (rbOpen && !stageFor){ rbOpen = false; if (document.fullscreenElement) document.exitFullscreen().catch(function(){}); render(); return; }
     if (stageFor && !drawing){ stageFor = null; if (document.fullscreenElement) document.exitFullscreen().catch(function(){}); render(); }
   }
   if (ev.key === 'Enter' && document.getElementById('box-in')){ closeBox(true); }
