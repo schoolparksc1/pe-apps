@@ -333,6 +333,11 @@ table.cards td.es-n.short{color:var(--crit)}
 table.cards td.es-n.zero b{color:var(--faint)}
 table.cards td.es-n.plan,table.cards td.es-n.plan b{color:var(--warn)}
 table.cards td.es-ok{text-align:center}
+table.cards td.es-ed{cursor:text;position:relative}
+table.cards td.es-ed:hover{background:color-mix(in srgb,var(--accent) 9%,transparent);box-shadow:inset 0 0 0 1.5px var(--accent)}
+table.cards td.es-ed:hover b{color:var(--accent)}
+table.cards td.es-ed input::-webkit-inner-spin-button,table.cards td.es-ed input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+table.cards td.es-ed input{-moz-appearance:textfield;width:56px;font:700 19px/1.2 inherit;font-family:inherit;text-align:center;padding:5px 4px;border:1.5px solid var(--accent);border-radius:8px;background:var(--bg,#fff);color:var(--fg)}
 /* 현황 표: 핵심 열 강조 */
 table.cards thead th{background:var(--sunken);padding-top:13px;padding-bottom:13px;border-bottom:1px solid var(--line)}
 table.cards thead th.key{font-size:17px;font-weight:800;color:var(--fg);letter-spacing:-.01em;box-shadow:inset 0 -3px 0 var(--accent)}
@@ -944,7 +949,7 @@ function viewOverview(){
         return `<tr class="click ${open?"open":""}" data-detail="${esc(s.id)}" aria-expanded="${open}">
           <td class="c-who"><div class="who"><span class="nm"><b>${esc(s.id)} ${esc(s.name)}</b>${s.sport?`<small>${esc(s.sport)}</small>`:""}</span>${x.minNow==="X"?`<span class="chip crit">최저학력 미도달</span>`:""}</div></td>
           <td class="c-bar"><div class="bar"><div class="lbl"><span><b>${fmtDH(x.usedH)}</b> / ${S.limit}일</span><span>${lv==="over"?`<b style="color:var(--crit)">${fmtDH(x.usedH-S.limit*6)} 초과</b>`:`${fmtDH(Math.max(0,S.limit*6-x.usedH))} 남음`}</span></div><div class="track"><div class="fill ${lv==="ok"?"":lv==="warn"?"warn":"crit"}" style="width:${pct}%"></div></div></div></td>
-          <td class="es-n sub">${x.need1}</td><td class="es-n"><b>${x.s1}</b></td><td class="es-n sub">${x.need2}</td><td class="es-n"><b>${x.s2}</b>${x.carryUsed?`<small title="1학기 부족분을 2학기 이수로 채움">이월 ${x.carryUsed}</small>`:""}</td><td class="es-n ${x.eState==="short"?"short":x.short?"plan":"zero"}"><b>${x.short}</b>회차${x.short&&x.short>x.shortDone&&x.shortDone?`<small>지난 대회분 ${x.shortDone}</small>`:""}</td><td class="es-ok">${x.eState==="short"?`<span class="chip crit">미완료</span>`:x.eState==="planned"?`<span class="chip warn">예정분 남음</span>`:x.eState==="done"?`<span class="chip ok">완료</span>`:`<span class="muted">-</span>`}</td>
+          <td class="es-n sub">${x.need1}</td><td class="es-n es-ed" data-eedit="${esc(s.id)}|1" title="클릭해서 1학기 이수 회차 입력"><b>${x.s1}</b></td><td class="es-n sub">${x.need2}</td><td class="es-n es-ed" data-eedit="${esc(s.id)}|2" title="클릭해서 2학기 이수 회차 입력"><b>${x.s2}</b>${x.carryUsed?`<small title="1학기 부족분을 2학기 이수로 채움">이월 ${x.carryUsed}</small>`:""}</td><td class="es-n ${x.eState==="short"?"short":x.short?"plan":"zero"}"><b>${x.short}</b>회차${x.short&&x.short>x.shortDone&&x.shortDone?`<small>지난 대회분 ${x.shortDone}</small>`:""}</td><td class="es-ok">${x.eState==="short"?`<span class="chip crit">미완료</span>`:x.eState==="planned"?`<span class="chip warn">예정분 남음</span>`:x.eState==="done"?`<span class="chip ok">완료</span>`:`<span class="muted">-</span>`}</td>
           <td class="mc c-ex ${x.exH?"":"none"}"><div class="mcw">${x.exH?`<span class="chip ex">예외 ${fmtDH(x.exH)}</span>`:`<span class="muted">-</span>`}</div></td>
           <td class="mc c-neis ${x.pendNeis?"":"none"}"><div class="mcw">${x.pendNeis?`<span class="chip warn">${x.pendNeis}건 미반영</span>`:`<span class="muted small">-</span>`}</div></td>
           <td class="mc c-nx ${x.upcoming?"":"none"}"><div class="mcw">${x.upcoming?`<div class="nx" title="${esc(x.upcoming.ev)}">${esc(shortEv(x.upcoming.ev))}<small>${fmtPeriod(x.upcoming.start,x.upcoming.end)}</small></div>`:`<span class="muted">-</span>`}</div></td>
@@ -1475,7 +1480,29 @@ function copyRv(kind){
 
 /* ---------- 이벤트 ---------- */
 const main = $("#main");
+function setEDone(sid, sem, n){
+  n=Math.max(0,Math.floor(Number(n)||0));
+  if (n===eDone(sid,sem)) return false;
+  S.elog=(S.elog||[]).filter(x=>!(x.sid===sid && eSem(x)===sem));
+  if (n) S.elog.push({id:uid(), sid, date:"", sem, n, memo:"직접 입력"});
+  commit(`${nameOf(sid)} ${sem}학기 이스쿨 이수 ${n}회차로 저장했습니다`); return true;
+}
+function startEEdit(td){
+  if (td.querySelector("input")) return;
+  const [sid,k]=td.dataset.eedit.split("|"), sem=+k, cur=eDone(sid,sem);
+  td.innerHTML=`<input type="number" min="0" inputmode="numeric" value="${cur}" aria-label="${esc(nameOf(sid))} ${sem}학기 이수 회차">`;
+  const inp=td.firstChild; let done=false;
+  const fin=save=>{ if(done) return; done=true; if(!(save && setEDone(sid,sem,inp.value))) render(); };
+  inp.addEventListener("keydown",ev=>{ if(ev.isComposing) return;
+    if(ev.key==="Enter"){ ev.preventDefault(); fin(true); }
+    else if(ev.key==="Escape"){ ev.preventDefault(); ev.stopPropagation(); fin(false); } });
+  inp.addEventListener("blur",()=>fin(true));
+  inp.addEventListener("click",ev=>ev.stopPropagation());
+  inp.focus(); inp.select();
+}
 const mainClick = e => {
+  const ee = e.target.closest("[data-eedit]");
+  if (ee){ startEEdit(ee); return; }
   const d = e.target.closest("[data-detail]");
   if (d){ ui.detail = ui.detail===d.dataset.detail ? null : d.dataset.detail; render(); return; }
   if (e.target.closest("[data-drclose]")){ ui.detail=null; render(); return; }
@@ -1527,10 +1554,7 @@ main.addEventListener("change", e => {
   if (t.dataset.sf==="id"){ changeId(t.dataset.id, t.value.trim(), t); return; }
   if (t.dataset.sf==="name" && !t.value.trim()){ t.value=nameOf(t.dataset.id); return; }
   if (t.dataset.sf){ const s=S.students.find(x=>x.id===t.dataset.id); if(!s) return; s[t.dataset.sf] = t.type==="number" ? Math.max(0,Number(t.value)||0) : t.value.trim(); commit(); return; }
-  if (t.dataset.eset){ const [sid,k]=t.dataset.eset.split("|"), sem=+k, n=Math.max(0,Math.floor(Number(t.value)||0));
-    S.elog=(S.elog||[]).filter(x=>!(x.sid===sid && eSem(x)===sem));
-    if (n) S.elog.push({id:uid(), sid, date:"", sem, n, memo:"직접 입력"});
-    commit(`${nameOf(sid)} ${sem}학기 이스쿨 이수 ${n}회차로 저장했습니다`); return; }
+  if (t.dataset.eset){ const [sid,k]=t.dataset.eset.split("|"); setEDone(sid,+k,t.value); return; }
   if (t.dataset.doc){ const [sid,k]=t.dataset.doc.split("|"); const st=S.students.find(x=>x.id===sid); if(!st) return; st.docs=Object.assign({},st.docs,{[k]:t.checked}); commit(); return; }
   if (t.dataset.rv){ S.rv=Object.assign({min:"",doc:""},S.rv,{[t.dataset.rv]:t.value}); commit(t.value?"심의일을 저장했습니다":""); return; }
   if (t.dataset.revdate){ S.records.forEach(r=>{ if(gk(r)===t.dataset.revdate) r.review=t.value; }); commit(t.value?"심의일을 저장했습니다":""); return; }
