@@ -87,7 +87,8 @@ main{padding-bottom:12px}
 .mats{display:flex;flex-direction:column;gap:6px;padding-top:12px;border-top:1px solid var(--line)}
 .mats-h{font-size:12px;font-weight:700;color:var(--ink-3)}
 .mat{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink-2);background:#fff;border-radius:10px;padding:7px 10px}
-.mat:hover{color:var(--ink);box-shadow:0 0 0 1px var(--line) inset}
+.mat{transition:color .15s,box-shadow .15s}
+.mat:hover,.mat:focus-visible{color:var(--blue);box-shadow:0 0 0 1.5px var(--blue) inset}
 .mat svg{width:15px;height:15px;stroke-width:1.8;flex:none;color:#DC2626}
 .shelf.wide .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 .shelf.wide .mats{flex-direction:row;flex-wrap:wrap;align-items:center}
