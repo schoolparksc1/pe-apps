@@ -380,6 +380,24 @@ tbody tr:hover td.tot{background:var(--accent-soft)}
 .panel h2{font-family:var(--f-display);font-weight:400;font-size:20px;margin:0}
 .panel p{margin:0;color:var(--muted);font-size:13px;max-width:70ch}
 textarea{width:100%;min-height:150px;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:10px;font-variant-numeric:tabular-nums}
+.ci-step{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start}
+.ci-step>b{width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px}
+.ci-step p{margin:2px 0 6px}
+.ci-tx{width:100%;min-height:130px;resize:vertical;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding:10px 12px;box-sizing:border-box}
+.ci-prompt{white-space:pre-wrap;font-size:12.5px;line-height:1.55;background:var(--bg);border-radius:10px;padding:10px 12px;max-height:220px;overflow:auto;margin:6px 0 0}
+.ci-prev{display:flex;flex-direction:column;gap:8px}
+.ci-area{border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+.ci-area h4{margin:0;font-size:15px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.ci-area h4 em{font-style:normal;font-size:12px;font-weight:600;color:var(--muted)}
+.ci-area .ci-kv{font-size:13px;color:var(--muted)}
+.ci-rows{display:flex;flex-wrap:wrap;gap:4px;font-size:12px}
+.ci-rows span{background:var(--bg);border-radius:6px;padding:2px 7px;white-space:nowrap}
+.ci-warn{background:#FEF6E7;color:#6B3A07;border-radius:10px;padding:8px 12px;font-size:13px}
+.ci-warn ul{margin:4px 0 0;padding-left:18px}
+.ci-err{background:#FDECEC;color:#8A1C1C;border-radius:10px;padding:8px 12px;font-size:13px}
+.ci-total{font-weight:700}
+.ci-sub{font-size:12.5px;color:var(--muted)}
+.ci-mode{display:flex;flex-direction:column;gap:4px;font-size:14px}
 .crit{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;align-items:start}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
 .card .head{display:flex;gap:8px;align-items:center}
@@ -1631,6 +1649,8 @@ th.at small.sp{display:block;font-size:11px;font-weight:600;line-height:1.1;opac
       <p class="sub" style="margin:0;flex:1;min-width:220px">영역을 고치거나 추가하면 모든 반 수행평가에 바로 반영됩니다. 기록 환산형은 구간표로, 등급 선택형은 등급별 점수로 계산합니다.</p>
       <button class="btn" id="addRecordArea"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>기록 환산 영역</button>
       <button class="btn" id="addGradeArea"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>등급 선택 영역</button>
+      <button class="btn primary" id="critImport"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 18v-6M9 15l3 3 3-3"/></svg>평가계획에서 가져오기</button>
+      <button class="btn" id="critExport"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>기준 복사</button>
       <button class="btn danger" id="resetCrit">기본 기준으로 되돌리기</button>
     </div>
     <div class="crit" id="critList"></div>
@@ -2538,6 +2558,163 @@ $('critList').addEventListener('click',e=>{
   }else return;
   save();renderCrit();renderClassSel();renderSheet();
 });
+
+/* ---------- 평가계획에서 기준 가져오기 · 기준 복사 ---------- */
+const CI_FMT='pe-criteria-v1';
+const CI_PROMPT=`첨부한 평가계획에서 수행평가 영역별 채점 기준을 찾아, 아래 형식의 JSON 하나로만 답해 주세요. 설명 문장 없이 JSON만 주세요.
+
+[규칙]
+1. 영역마다 type을 하나 고릅니다.
+ - "record"(기록 환산): 성공 개수·횟수·점수·거리처럼 기록 구간에 따라 점수를 주는 영역.
+   · rows: [최소 기록, 점수]를 높은 기록부터. "12개 이상"은 [12, 점수], "10~11개"는 아래쪽 숫자 [10, 점수].
+   · below: 가장 낮은 구간("1개 이하", "49점 이하", "0개" 등)의 점수.
+   · 남녀 기준이 다르면 rows·below는 남학생, rowsF·belowF는 여학생 기준.
+   · unit: 기록 단위(개, 회, 점, m 등).
+   · rounds: 평가 기회 수(여러 번 측정해 가장 높은 기록을 반영하는 횟수). 한 번이면 1.
+   · split: 한 번 측정할 때 여러 부분 기록을 더해 쓰는 경우에만(예: 포핸드 5회 + 백핸드 5회) ["포핸드","백핸드"]처럼 적습니다. 아니면 빼세요.
+ - "grade"(등급 선택): 채점 항목마다 기준 문장을 골라 점수를 더하는 영역. items 안에 항목마다 options를 [기준 요약, 점수]로, 높은 점수부터.
+ - "score"(점수 직접 입력): 위 둘로 나타낼 수 없는 영역. max는 만점, min은 수행평가에 참여한 학생이 받는 최저 점수.
+2. base: "수행과정에는 참여했으나 결과물 미제출·장기 질병 결시" 기본점수. absent: "장기 미인정 결시" 점수. 괄호 속 백분율은 빼고 숫자만.
+3. max: 평가계획에 적힌 영역 배점(만점).
+4. 기록이 낮을수록 좋은 영역(달리기 시간 등)은 "score"로 적고 note에 그 사실을 적습니다.
+5. 대체 영역, 장애 학생 등 조정 기준은 넣지 않습니다.
+6. 숫자를 확신하기 어렵거나 표가 잘려 보이면 그 영역의 note에 적어 주세요.
+
+[형식]
+{"format":"${CI_FMT}","areas":[
+ {"name":"탁구 서브","type":"record","max":30,"unit":"개","rounds":3,"rows":[[12,30],[10,27],[8,24]],"below":12,"base":9,"absent":8},
+ {"name":"탁구 스트로크","type":"record","max":30,"unit":"개","rounds":3,"rows":[[50,30],[40,28]],"below":12,"rowsF":[[30,30],[25,28]],"belowF":12,"base":10,"absent":9},
+ {"name":"배드민턴 헤어핀","type":"record","max":30,"unit":"개","rounds":2,"split":["포핸드","백핸드"],"rows":[[10,30],[9,28]],"below":10,"base":8,"absent":7},
+ {"name":"글쓰기","type":"grade","max":10,"items":[{"name":"입장과 근거","options":[["입장과 근거 모두 명확",5],["둘 중 하나만",4]]},{"name":"분량","options":[["300자 이상",5],["200~299자",4]]}],"base":3,"absent":2}
+]}
+(위 숫자는 형식 예시입니다. 실제 값은 첨부한 평가계획에서 가져오세요.)`;
+const ciNum=v=>{if(typeof v==='number')return isFinite(v)?v:NaN;const m=String(v??'').replace(/,/g,'').match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):NaN};
+const ciNn=t=>String(t||'').replace(/\s+/g,'').toLowerCase();
+function ciExtract(txt){
+  let t=String(txt||'').replace(/[“”]/g,'"').replace(/[‘’]/g,"'").replace(/```[a-zA-Z]*/g,'');
+  const a=t.indexOf('{'),b=t.lastIndexOf('}');if(a<0||b<=a)throw new Error('붙여 넣은 글에서 { … } 형식을 찾지 못했습니다. AI 답을 처음부터 끝까지 그대로 붙여 넣어 주세요.');
+  t=t.slice(a,b+1);
+  try{return JSON.parse(t)}catch(e){
+    try{return JSON.parse(t.replace(/,\s*([}\]])/g,'$1'))}catch(e2){throw new Error('형식이 조금 어긋나 읽지 못했습니다. AI에게 “JSON 형식만 다시 보여 줘”라고 요청한 뒤 다시 붙여 넣어 주세요.')}
+  }
+}
+function ciRows(arr,lbl,warn){
+  if(!Array.isArray(arr)||!arr.length)return null;
+  const rows=arr.map(r=>Array.isArray(r)?{min:ciNum(r[0]),score:ciNum(r[1])}:{min:ciNum(r&&r.min),score:ciNum(r&&r.score)}).filter(r=>!isNaN(r.min)&&!isNaN(r.score));
+  if(rows.length!==arr.length)warn.push(`${lbl}: 숫자가 아닌 구간 ${arr.length-rows.length}개는 뺐습니다`);
+  rows.sort((x,y)=>y.min-x.min);
+  for(let i=1;i<rows.length;i++){if(rows[i].min===rows[i-1].min)warn.push(`${lbl}: 최소 기록 ${rows[i].min}이 두 번 나옵니다`);if(rows[i].score>rows[i-1].score)warn.push(`${lbl}: 기록이 낮은데 점수가 더 높은 구간이 있습니다 (${rows[i].min} → ${rows[i].score}점)`)}
+  return rows;
+}
+function ciParse(txt){
+  const raw=ciExtract(txt);const list=Array.isArray(raw)?raw:(raw.areas||raw.criteria||raw['영역']);
+  if(!Array.isArray(list)||!list.length)throw new Error('영역(areas) 목록이 비어 있습니다.');
+  const out=[];
+  list.forEach((x,k)=>{
+    const warn=[],errs=[];const name=String(x.name||x['영역명']||'').trim()||`영역 ${k+1}`;
+    let type=String(x.type||'').trim();type={'기록 환산':'record','기록':'record','등급 선택':'grade','등급':'grade','점수 직접 입력':'score','점수':'score'}[type]||type;
+    const a={name,type};
+    if(type==='record'){
+      a.unit=String(x.unit||'').trim();
+      const rounds=Math.max(1,Math.min(6,Math.round(ciNum(x.rounds??x.attempts??1))||1));
+      const split=Array.isArray(x.split)?x.split.map(v=>String(v).trim()).filter(Boolean):[];
+      if(split.length>1){a.split=split;a.splitAuto=1}
+      a.attempts=rounds*(split.length>1?split.length:1);
+      a.rows=ciRows(x.rows,'구간',warn);a.below=ciNum(x.below);
+      if(!a.rows)errs.push('기록 구간(rows)이 없습니다');
+      if(isNaN(a.below)){if(a.rows&&a.rows.length){a.below=a.rows[a.rows.length-1].score;warn.push('가장 낮은 구간 점수(below)가 없어 마지막 구간 점수로 두었습니다')}else a.below=0}
+      if(x.rowsF){a.rowsF=ciRows(x.rowsF,'여학생 구간',warn);a.belowF=ciNum(x.belowF);if(a.rowsF){a.bySex=true;if(isNaN(a.belowF))a.belowF=a.below}else delete a.rowsF}
+      if(a.rows&&a.rows.some(r=>r.score<=a.below))warn.push('가장 낮은 구간 점수가 위 구간 점수보다 낮지 않습니다');
+    }else if(type==='grade'){
+      const items=Array.isArray(x.items)?x.items:(Array.isArray(x.options)?[{name:'등급',options:x.options}]:[]);
+      a.items=items.map((it,ii)=>({name:String(it.name||`항목 ${ii+1}`).trim(),options:(it.options||[]).map(o=>Array.isArray(o)?{label:String(o[0]??'').trim(),score:ciNum(o[1])}:{label:String(o.label??o.name??'').trim(),score:ciNum(o.score)}).filter(o=>!isNaN(o.score)).sort((p,q)=>q.score-p.score)})).filter(it=>it.options.length);
+      if(!a.items.length)errs.push('등급 기준(items)이 없습니다');
+    }else if(type==='score'){
+      a.max=ciNum(x.max);a.min=ciNum(x.min);if(isNaN(a.max))errs.push('만점(max)이 없습니다');if(isNaN(a.min))a.min=0;
+    }else errs.push(`평가 방식(type) “${x.type||''}”을 알 수 없습니다`);
+    a.base=ciNum(x.base);a.absent=ciNum(x.absent);
+    if(isNaN(a.base)){a.base=0;warn.push('기본점수(base)가 없어 0으로 두었습니다')}
+    if(isNaN(a.absent)){a.absent=Math.max(0,a.base-1);warn.push(`미인정 결시 점수(absent)가 없어 기본점수−1(${a.absent})로 두었습니다`)}
+    if(!errs.length){const m=maxOf(a),st=ciNum(x.max);a._max=m;if(!isNaN(st)&&st!==m)warn.push(`평가계획 배점은 ${st}점인데 구간표 최고 점수는 ${m}점입니다`)}
+    if(x.note)warn.push('AI 메모: '+String(x.note));
+    out.push({a,warn,errs});
+  });
+  return out;
+}
+function ciRowsTxt(rows,below,unit){return rows.map(r=>`<span>${esc(r.min)}${esc(unit)}↑ ${esc(r.score)}</span>`).join('')+`<span>그 아래 ${esc(below)}</span>`}
+function ciPreview(list){
+  const okN=list.filter(x=>!x.errs.length).length,total=list.filter(x=>!x.errs.length).reduce((t,x)=>t+x.a._max,0);
+  const cur=CR(),names=new Set(cur.map(c=>ciNn(c.name)));
+  let h=list.map(({a,warn,errs})=>{
+    let body='';
+    if(!errs.length){
+      if(a.type==='record'){
+        body=`<div class="ci-kv">기록 환산 · ${a.attempts/(a.split?a.split.length:1)}회 측정(최고 기록)${a.split?` · 한 번에 ${esc(a.split.join('+'))} 합계`:''} · 단위 ${esc(a.unit||'-')}</div>`+
+          `<div class="ci-rows">${a.bySex?'<b style="font-size:12px">남</b>':''}${ciRowsTxt(a.rows,a.below,a.unit)}</div>`+
+          (a.bySex?`<div class="ci-rows"><b style="font-size:12px">여</b>${ciRowsTxt(a.rowsF,a.belowF,a.unit)}</div>`:'');
+      }else if(a.type==='grade'){
+        body=`<div class="ci-kv">등급 선택 · 항목 ${a.items.length}개 (항목 점수를 더함)</div>`+a.items.map(it=>`<div class="ci-rows"><b style="font-size:12px">${esc(it.name)}</b>${it.options.map(o=>`<span>${esc(o.label)} ${esc(o.score)}</span>`).join('')}</div>`).join('');
+      }else body=`<div class="ci-kv">점수 직접 입력 · ${esc(a.min)}~${esc(a.max)}점</div>`;
+      body+=`<div class="ci-kv">기본점수(미제출·질병) ${esc(a.base)} · 미인정 결시 ${esc(a.absent)}</div>`;
+    }
+    return `<div class="ci-area"><h4>${esc(a.name)} <em>${errs.length?'읽지 못함':a._max+'점'}${!errs.length&&names.has(ciNn(a.name))?' · 지금 기준에 같은 이름 있음':''}</em></h4>${body}`+
+      (errs.length?`<div class="ci-err">${errs.map(esc).join('<br>')}</div>`:'')+(warn.length?`<div class="ci-warn">확인해 주세요<ul>${warn.map(w=>`<li>${esc(w)}</li>`).join('')}</ul></div>`:'')+`</div>`;
+  }).join('');
+  h=`<p class="ci-total">영역 ${okN}개 · 합계 ${total}점${total!==100?' <span style="color:#B45309;font-weight:600">(100점이 아닙니다 — 평가계획을 확인해 주세요)</span>':''}</p>`+h;
+  return h;
+}
+let ciList=null;
+function openCritImport(){
+  const g=curSet();
+  openDlg(`평가계획에서 기준 가져오기 · ${g.label}`,`
+    <div class="ci-step"><b>1</b><div><p>평가계획(PDF·사진·한글 파일)을 Claude 같은 AI 채팅에 올리고, 아래 요청문을 함께 보내세요.</p>
+      <div class="row"><button class="btn primary" id="ciCopy">AI 요청문 복사</button><span class="ci-sub">앱은 파일을 어디로도 보내지 않아요. AI에는 평가계획만 올리세요.</span></div>
+      <details><summary class="ci-sub" style="cursor:pointer;margin-top:6px">요청문 보기</summary><div class="ci-prompt">${esc(CI_PROMPT)}</div></details></div></div>
+    <div class="ci-step"><b>2</b><div><p>AI가 돌려준 답을 그대로 붙여 넣고 <b>미리보기</b>를 누르세요.</p>
+      <textarea class="ci-tx field" id="ciText" placeholder='{"format":"${CI_FMT}","areas":[ … ]}' spellcheck="false"></textarea>
+      <div class="row" style="margin-top:6px"><button class="btn" id="ciParse">미리보기</button></div></div></div>
+    <div class="ci-step"><b>3</b><div><p>평가계획과 맞는지 확인하고 적용하세요.</p><div class="ci-prev" id="ciPrev"><p class="ci-sub">아직 미리보기가 없습니다.</p></div>
+      <div id="ciApplyBox" hidden><div class="ci-mode" style="margin:8px 0">
+        <label><input type="radio" name="ciMode" value="replace" checked> ${esc(g.label)} 기준을 이것으로 바꾸기 <span class="ci-sub">— 이름이 같은 영역의 학생 기록은 그대로 둡니다</span></label>
+        <label><input type="radio" name="ciMode" value="add"> 지금 기준 뒤에 영역으로 더하기</label></div>
+        <div class="row"><button class="btn primary" id="ciApply">적용</button></div></div></div></div>`);
+  ciList=null;
+  $('ciCopy').addEventListener('click',()=>copyText(CI_PROMPT));
+  $('ciParse').addEventListener('click',()=>{
+    try{ciList=ciParse($('ciText').value);$('ciPrev').innerHTML=ciPreview(ciList);$('ciApplyBox').hidden=!ciList.some(x=>!x.errs.length)}
+    catch(e){ciList=null;$('ciPrev').innerHTML=`<div class="ci-err">${esc(e.message)}</div>`;$('ciApplyBox').hidden=true}
+  });
+  $('ciApply').addEventListener('click',()=>{
+    if(!ciList)return;const ok=ciList.filter(x=>!x.errs.length).map(x=>x.a);if(!ok.length)return;
+    const mode=(document.querySelector('input[name=ciMode]:checked')||{}).value||'replace';
+    const cur=CR(),kept=[];let keptRec=0;
+    const fresh=ok.map(a=>{const b=JSON.parse(JSON.stringify(a));delete b._max;
+      const old=cur.find(c=>ciNn(c.name)===ciNn(b.name));
+      if(mode==='replace'&&old){b.id=old.id;
+        if(old.type==='record'&&b.type==='record'&&spUsed(old)&&(spN(old)!==spN(b)||old.attempts!==b.attempts)){b.attempts=old.attempts;if(old.split)b.split=old.split;else delete b.split;kept.push(b.name)}
+        if(spUsed(old))keptRec++;
+      }else b.id=uid();
+      return normArea(b)});
+    const set=curSet();
+    if(mode==='replace'){const lost=cur.filter(c=>!fresh.some(f=>f.id===c.id)&&spUsed(c));
+      if(lost.length&&!confirm(`지금 기준의 ${lost.map(c=>'‘'+c.name+'’').join(', ')} 영역에는 학생 기록이 있습니다. 새 기준에 같은 이름이 없어 수행평가 표에서 빠집니다. 계속할까요?`))return;
+      set.criteria=fresh}
+    else set.criteria=cur.concat(fresh);
+    save();closeDlg();renderCrit();renderClassSel();renderSheet();
+    toast(`${set.label} 평가 기준 ${fresh.length}개 영역을 ${mode==='replace'?'바꿨습니다':'더했습니다'}${kept.length?` · 기록이 있는 ${kept.join(', ')}은 평가 횟수를 그대로 두었습니다`:''}`);
+  });
+}
+function critToText(){
+  const areas=CR().map(a=>{const o={name:a.name,type:a.type,max:maxOf(a)};
+    if(a.type==='record'){o.unit=a.unit||'';o.rounds=a.attempts/spN(a);if(spN(a)>1)o.split=a.split;o.rows=a.rows.map(r=>[+r.min,+r.score]);o.below=+a.below;if(a.bySex){o.rowsF=(a.rowsF||[]).map(r=>[+r.min,+r.score]);o.belowF=+a.belowF}}
+    else if(a.type==='grade')o.items=a.items.map(it=>({name:it.name,options:it.options.map(p=>[p.label,+p.score])}));
+    else{o.max=+a.max;o.min=+(a.min??0)}
+    o.base=+a.base;o.absent=+a.absent;return o});
+  return JSON.stringify({format:CI_FMT,set:curSet().label,areas});
+}
+$('critImport').addEventListener('click',openCritImport);
+$('critExport').addEventListener('click',()=>{copyText(critToText());});
+
 $('addRecordArea').addEventListener('click',()=>{CR().push({id:uid(),name:'새 실기 영역',type:'record',unit:'회',attempts:2,rows:[{min:20,score:30},{min:15,score:27},{min:10,score:24}],below:21,base:11,absent:10});save();renderCrit();renderClassSel();renderSheet()});
 $('addGradeArea').addEventListener('click',()=>{CR().push({id:uid(),name:'새 등급 영역',type:'grade',items:[{name:'등급',options:[{label:'A',score:20},{label:'B',score:17},{label:'C',score:14},{label:'D',score:11}]}],base:8,absent:7});save();renderCrit();renderClassSel();renderSheet()});
 $('resetCrit').addEventListener('click',e=>{
