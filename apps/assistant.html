@@ -589,7 +589,7 @@ td.tot .ok{display:block;font-family:var(--f-body);font-size:10px;color:var(--ac
   .dk{display:none}.dm{display:inline}
   .summary{display:flex}
   /* 아래: 탭 막대 */
-  .mtabs{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);padding:4px 4px env(safe-area-inset-bottom,0px);box-shadow:0 -6px 20px rgba(20,33,61,.06)}
+  .mtabs{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);padding:4px 4px env(safe-area-inset-bottom,0px);box-shadow:0 -6px 20px rgba(20,33,61,.06)}
   .mtabs button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:54px;border:0;background:transparent;color:var(--muted);font:600 11px var(--f-body);cursor:pointer;border-radius:10px}
   .mtabs button svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8}
   .mtabs button[aria-selected="true"]{color:var(--fg)}
@@ -1445,12 +1445,38 @@ body:not(.slock) #view-paps .tablebox{box-shadow:0 0 0 2px var(--brand)}
   #papsTable th.pbt,#papsTable td.pbd{width:calc((100vw - 170px)/2);box-sizing:border-box}
 }
 th.at small.sp{display:block;font-size:11px;font-weight:600;line-height:1.1;opacity:.85;white-space:nowrap}
+
+/* 시작 · 설정 */
+#setupBody{display:flex;flex-direction:column;gap:14px;max-width:980px}
+.su-hero{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.su-hero h3{margin:0 0 4px;font-size:19px}
+.su-hero p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
+.su-hero.ex{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 35%,transparent)}
+.su-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:899px){.su-steps{grid-template-columns:1fr}}
+.su-step{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.su-step .n{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:15px}
+.su-step .n i{font-style:normal;width:26px;height:26px;border-radius:50%;background:var(--brand);color:#14213d;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:14px}
+.su-step .n i.ok{background:#16a34a;color:#fff}
+.su-step p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.6}
+.su-step .drop{min-height:92px}
+.su-list{display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+.su-list div{display:flex;justify-content:space-between;gap:10px;padding:6px 10px;background:var(--bg,#f6f7f9);border-radius:8px}
+.su-list div b{font-weight:700}
+.su-list .warn{color:var(--warn,#b45309)}
+.su-grades{display:flex;flex-direction:column;gap:8px}
+.su-grades button.g{display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 12px;cursor:pointer;font:inherit;color:inherit}
+.su-grades button.g:hover{border-color:var(--accent)}
+.su-grades button.g small{color:var(--muted);font-size:12.5px}
+.su-grades button.g small.none{color:var(--warn,#b45309)}
+.su-more{display:flex;gap:8px;flex-wrap:wrap}
 </style>
 
 <div class="shell">
 <aside class="side" aria-label="메뉴">
   <div class="brand"><span class="mark"><svg class="court ball crown" viewBox="0 0 24 24" aria-hidden="true" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(2.88 5.48) scale(0.76)" stroke-width="1.95"><circle cx="12" cy="12" r="10"/><path d="M11.1 7.1a16.55 16.55 0 0 1 10.9 4"/><path d="M12 12a12.6 12.6 0 0 1-8.7 5"/><path d="M16.8 13.6a16.55 16.55 0 0 1-9 7.5"/><path d="M20.7 17a12.8 12.8 0 0 0-8.7-5 13.3 13.3 0 0 1 0-10"/><path d="M6.3 3.8a16.55 16.55 0 0 0 1.9 11.5"/></g><path d="M7.4 6.4 6.8 2.6l3 2.2L12 1.6l2.2 3.2 3-2.2-.6 3.8z" style="fill:var(--brand)" stroke-width="1.4"/></svg></span><div><a href="../" id="backDrawer" class="backlink" hidden>← 체육 앱 서랍</a><h1>체육 수업 어시스턴트</h1><p class="tagline">수행평가 · 출석 · 세특</p><p class="sync" id="syncStat" aria-live="polite">이 기기에 저장</p></div></div>
   <nav class="nav" role="tablist" aria-label="화면">
+    <button role="tab" id="tab-setup" aria-selected="false"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>시작 · 설정</button>
     <button role="tab" id="tab-att" aria-selected="false"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M9 15l2 2 4-4"/></svg>출석</button>
     <button role="tab" id="tab-tt" aria-selected="false"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M8 13h3M8 17h3M14 13h2M14 17h2"/></svg>체육과 시간표</button>
     <button role="tab" id="tab-sheet" aria-selected="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg>수행평가</button>
@@ -1571,7 +1597,7 @@ th.at small.sp{display:block;font-size:11px;font-weight:600;line-height:1.1;opac
     </div>
 
     <div class="notice" id="exampleNote" hidden>
-      <span><b>예시 명단입니다.</b> 실제 반 명단은 ‘명단 넣기’에 출석부 파일을 끌어다 놓으세요.</span>
+      <span><b>예시로 둘러보는 중입니다.</b> 학생·기록·평가 기준은 모두 예시예요. 실제로 쓰려면 예시를 지우고 ‘시작 · 설정’에서 시작하세요.</span>
       <button class="btn small" id="clearExample">예시 지우기</button>
     </div>
 
@@ -1644,6 +1670,11 @@ th.at small.sp{display:block;font-size:11px;font-weight:600;line-height:1.1;opac
     <div class="tt-sum" id="ttSum"></div>
     <div class="tt-box" id="ttBox"></div>
   </section>
+
+  <!-- 시작 · 설정 -->
+  <section id="view-setup" hidden style="flex-direction:column;gap:14px">
+    <div id="setupBody"></div>
+  </section>
   <section id="view-crit" hidden style="flex-direction:column;gap:14px">
     <div class="toolbar">
       <p class="sub" style="margin:0;flex:1;min-width:220px">영역을 고치거나 추가하면 모든 반 수행평가에 바로 반영됩니다. 기록 환산형은 구간표로, 등급 선택형은 등급별 점수로 계산합니다.</p>
@@ -1651,7 +1682,7 @@ th.at small.sp{display:block;font-size:11px;font-weight:600;line-height:1.1;opac
       <button class="btn" id="addGradeArea"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>등급 선택 영역</button>
       <button class="btn primary" id="critImport"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 18v-6M9 15l3 3 3-3"/></svg>평가계획에서 가져오기</button>
       <button class="btn" id="critExport"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>기준 복사</button>
-      <button class="btn danger" id="resetCrit">기본 기준으로 되돌리기</button>
+      <button class="btn danger" id="resetCrit">이 학년 기준 모두 지우기</button>
     </div>
     <div class="crit" id="critList"></div>
   </section>
@@ -1676,7 +1707,7 @@ th.at small.sp{display:block;font-size:11px;font-weight:600;line-height:1.1;opac
 </div>
 <div class="pop" id="attPop" hidden role="dialog" aria-label="출결 선택"></div>
 <button class="totop" id="toTop" hidden aria-label="맨 위로"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>맨 위로</button>
-<nav class="mtabs" id="mTabs" aria-label="화면"><button data-go="att"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M9 15l2 2 4-4"/></svg><span>출석</span><i class="mdot" id="mAttDot" hidden></i></button><button data-go="tt"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M8 13h3M8 17h3M14 13h2M14 17h2"/></svg><span>시간표</span></button><button data-go="sheet"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg><span>수행평가</span></button><button data-go="paps"><svg viewBox="0 0 24 24"><path d="M13 4a2 2 0 1 0 0 .01M8 21l3-6 3 2v4M11 15l1-5 4 2 3-1M12 10l-4 1-2 3"/></svg><span>PAPS</span></button><button data-go="check"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><span>학생 확인</span></button><button data-go="crit"><svg viewBox="0 0 24 24"><path d="M4 6h10M4 12h16M4 18h7"/><circle cx="17" cy="6" r="2"/><circle cx="14" cy="18" r="2"/></svg><span>평가 기준</span></button></nav>
+<nav class="mtabs" id="mTabs" aria-label="화면"><button data-go="setup"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>설정</button><button data-go="att"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M9 15l2 2 4-4"/></svg><span>출석</span><i class="mdot" id="mAttDot" hidden></i></button><button data-go="tt"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M8 13h3M8 17h3M14 13h2M14 17h2"/></svg><span>시간표</span></button><button data-go="sheet"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg><span>수행평가</span></button><button data-go="paps"><svg viewBox="0 0 24 24"><path d="M13 4a2 2 0 1 0 0 .01M8 21l3-6 3 2v4M11 15l1-5 4 2 3-1M12 10l-4 1-2 3"/></svg><span>PAPS</span></button><button data-go="check"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><span>학생 확인</span></button><button data-go="crit"><svg viewBox="0 0 24 24"><path d="M4 6h10M4 12h16M4 18h7"/><circle cx="17" cy="6" r="2"/><circle cx="14" cy="18" r="2"/></svg><span>평가 기준</span></button></nav>
 <div class="msheet" id="mSheet" hidden><div class="msheet-bg" data-close="1"></div><div class="msheet-p" role="dialog" aria-label="반 선택"><div class="grab"></div><h3>반 선택</h3><p class="msync" id="mSync"></p><div id="mSheetList"></div></div></div>
 
 <div class="ms" id="msView" hidden role="dialog" aria-label="측정 모드">
@@ -1958,7 +1989,8 @@ function normArea(a){if(a.type==='grade'&&!a.items){a.items=[{name:'등급',opti
 function load(){
   let s=null;
   try{const raw=localStorage.getItem(KEY);if(raw){s=JSON.parse(raw);if(s&&s.ver!==VER)localStorage.setItem(KEY+'-backup-v'+(s.ver||0),raw)}}catch(e){}
-  if(!s||!Array.isArray(s.classes))s={classes:[]};
+  if(!s||!Array.isArray(s.classes))s={classes:[],fresh:true};
+  if(!s.sets&&s.fresh){s.sets=[];s.grade='g1';delete s.fresh}
   if(!s.sets){
     const old=s.criteria;
     s.sets=[{id:'g3',label:'3학년',criteria:old||criteriaG3()},{id:'g2',label:'2학년',criteria:criteriaG2()}];
@@ -1978,15 +2010,11 @@ function load(){
     }}));
   s.curBy=s.curBy||{};
   if(s.cur){const c=s.classes.find(c=>c.id===s.cur);if(c)s.curBy[c.set]=c.id;delete s.cur}
-  // 학년에 학생 있는 반이 하나도 없으면(빈 '새 반'만 있으면) 예시 반을 다시 둠
-  s.sets.forEach(x=>{
-    const mine=s.classes.filter(c=>c.set===x.id);
-    if(!mine.some(c=>(c.students||[]).length||c.example)){
-      s.classes=s.classes.filter(c=>!(c.set===x.id&&!(c.students||[]).length&&/^새 반/.test(c.name||'')));
-      s.classes.push(EXAMPLES[x.id]?EXAMPLES[x.id]():{id:uid(),set:x.id,name:'새 반 1',students:[]});
-    }});
+  // 1·2·3학년 묶음은 늘 있게(평가 기준은 비어 있는 채로 시작)
+  ['g1','g2','g3'].forEach((id,i)=>{if(!s.sets.some(x=>x.id===id))s.sets.push({id,label:(i+1)+'학년',criteria:[]})});
+  s.sets.sort((a,b)=>String(a.id).localeCompare(String(b.id)));
   if(!s.sets.some(x=>x.id===s.grade))s.grade=s.sets[0].id;
-  s.tab=s.tab||'sheet';s.ver=VER;
+  s.tab=s.tab||(s.classes.some(c=>(c.students||[]).length)?'sheet':'setup');s.ver=VER;
   s.classes.forEach(c=>(c.students||[]).forEach(st=>{
     if(st.tag&&/위탁/.test(st.tag)){const w=(st.tag.match(/[(（][^)）]*위탁[^)）]*[)）]|\[[^\]]*위탁[^\]]*\]/g)||[]).join('');st.name=(st.name||'')+w;st.tag=st.tag.replace(/[(（][^)）]*위탁[^)）]*[)）]|\[[^\]]*위탁[^\]]*\]/g,'').trim()}
     const sp=splitName(st.name);st.name=sp.name;if(sp.tag)st.tag=[st.tag,sp.tag].filter(Boolean).join(' ');}));
@@ -2009,7 +2037,7 @@ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('on'),Math.max(1800,String(msg).length*70))}
 
 const maxOf=a=>a.type==='record'?Math.max(...a.rows.map(r=>+r.score),+a.below,...(a.bySex?[...(a.rowsF||[]).map(r=>+r.score),+a.belowF]:[])):a.type==='score'?Number(a.max):a.items.reduce((t,it)=>t+Math.max(...it.options.map(o=>+o.score)),0);
-const useSex=c=>c.useSex!=null?!!c.useSex:(c.set!=='g3'&&!/^3-\d/.test(c.name||''));
+const useSex=c=>c.useSex!=null?!!c.useSex:true;
 const sexLabel={M:'남',F:'여'};
 const isNum=v=>v!==''&&v!=null&&!isNaN(Number(v));
 const badScore=(a,s)=>{if(a.type!=='score')return false;const v=(s.rec[a.id]||[])[0];return v!=null&&v!==''&&(!isNum(v)||Number(v)<Number(a.min??0)||Number(v)>Number(a.max))};
@@ -2073,6 +2101,7 @@ function renderSheet(){
     h+=a.type==='score'?`<th class="sts${B(a)}">상태</th>`:`<th class="stc${B(a)}">상태</th><th class="scc${B(a)}">점수<span class="stm-h">·상태</span></th>`;
   }
   h+='</tr></thead><tbody>';
+  if(!A.length){h+=`<tr><td colspan="99"><div class="empty-state">${esc(curSet().label)} 평가 기준이 아직 없습니다. <button class="btn small primary" type="button" data-su="crit">평가 기준 만들기</button> 또는 <button class="btn small" type="button" data-su="setup">시작 · 설정</button></div></td></tr>`}
   if(!c.students.length){h+=`<tr><td colspan="99"><div class="empty-state">아직 학생이 없습니다. 출석부 엑셀 파일을 이 화면에 끌어다 놓거나 ‘명단 넣기’를 누르세요. 넣은 명단은 출석 탭에도 그대로 쓰입니다.</div></td></tr>`}
   c.students.forEach((s,ri)=>{
     h+=`<tr data-sid="${s.id}"><td class="cl">${esc(clNo||'—')}</td><td class="sq">${ri+1}</td><td class="bn"><input class="plain no-in" data-k="ban" id="bn-${s.id}" value="${esc(s.ban)}" aria-label="소속반"></td><td class="no"><input class="plain no-in" data-k="no" id="no-${s.id}" value="${esc(s.no)}" aria-label="번호"><span class="bnm">${esc(s.ban)}반</span></td><td class="nm"><input class="plain" data-k="name" id="nm-${s.id}" value="${esc(s.name)}" aria-label="이름">${hasMemo(s)?'<i class="memo-dot" title="관찰 메모 있음"></i>':''}${(()=>{const ab=absInfo(c,s);return ab?`<span class="absm" title="출석부 ${md(ab.date)} 결석">${ab.label}</span>`:''})()}${useSex(c)?`<span class="sxm ${s.sex==='F'?'f':s.sex==='M'?'m':''}">${s.sex==='F'?'여':s.sex==='M'?'남':''}</span>`:''}</td>`+(useSex(c)?`<td class="sx"><select class="sxsel ${s.sex?'':'missing'}" id="sx-${s.id}" data-sex="1" aria-label="${esc(s.name)} 성별"><option value="">—</option><option value="M" ${s.sex==='M'?'selected':''}>남</option><option value="F" ${s.sex==='F'?'selected':''}>여</option></select></td>`:'');
@@ -2190,7 +2219,7 @@ $('sheet').addEventListener('click',e=>{
   if(b.dataset.armed){const c=cur();c.students=c.students.filter(s=>s.id!==b.dataset.del);save();renderClassSel();renderSheet();toast('학생을 삭제했습니다');}
   else{b.dataset.armed='1';b.textContent='삭제?';b.style.fontSize='12px';setTimeout(()=>{if(b.isConnected){delete b.dataset.armed;b.textContent='×';b.style.fontSize=''}},2500)}
 });
-function markReal(){const c=cur();if(c.example){c.example=false;$('exampleNote').hidden=true}}
+function markReal(){}
 
 $('classSel').addEventListener('change',e=>{scoreLocked=true;setCur(e.target.value);save();renderClassSel();renderSheet()});
 $('addClass').addEventListener('click',()=>{const c={id:uid(),set:state.grade,name:`새 반 ${classesOf(state.grade).length+1}`,students:[]};state.classes.push(c);setCur(c.id);save();renderClassSel();renderSheet();openRename()});
@@ -2223,6 +2252,7 @@ $('rosterApply').addEventListener('click',()=>{
     else{const m=l.match(/^(\d+)\s+(.+)$/);if(m){no=+m[1];name=m[2].trim()}else{no=null;name=parts[0]}}
     n=no??n+1;const nm2=splitName(name);return {id:uid(),ban,no:String(no??n),name:nm2.name,tag:nm2.tag,sex,rec:{},st:{}};
   }).filter(s=>s.name&&s.name!=='이름'&&s.name!=='성명');
+  if(hasExample())clearExample(true);
   const c=cur();c.students=studs;c.example=false;if(/예시/.test(c.name))c.name=c.name.replace(/\s*\(예시\)/,'');
   save();$('rosterPanel').hidden=true;$('rosterText').value='';renderClassSel();renderSheet();updateSexBtn();
   const miss=useSex(c)?sexCounts(c)['']:0;
@@ -2233,7 +2263,7 @@ $('addStudent').addEventListener('click',()=>{
   const s={id:uid(),ban:'',no:String(no),name:'',rec:{},st:{}};c.students.push(s);markReal();save();renderClassSel();renderSheet();
   const el=$('nm-'+s.id);if(el)el.focus();
 });
-$('clearExample').addEventListener('click',()=>{const c=cur();c.students=[];c.example=false;c.name='새 반 1';c.subject='';delete c.neis;save();renderClassSel();renderSheet()});
+$('clearExample').addEventListener('click',()=>askClearExample());
 
 function tsv(full){
   const c=cur(),A=CR();const us=useSex(c);const head=['수업반','연번','소속반','번호','이름'].concat(us?['성별']:[]);const cln=clsNoOf(c);
@@ -2259,7 +2289,7 @@ function getDownloads(){
 }
 /* 학년별 나이스 업로드 양식(사용자가 올린 나이스 파일의 머리글·서식, 학생 행은 빼고 보관) */
 const NEIS_FORMS={g3:{subject:'운동과 건강(2)',sheetName:'empty0',areas:[{name:'농구 슛',max:35},{name:'다트 카운트업',max:35},{name:'배구 종합 수비기능',max:30}],sTxt:5,sNum:6,b64:'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'}};
-const formOf=c=>(c&&!c.example&&NEIS_FORMS[c.set])||null;
+const formOf=c=>null; // 배포판: 학교별 나이스 양식 고정 없음
 const subjOf=c=>{const F=formOf(c);return F?(c.neisSubj||F.subject):(c.subject||c.name)};
 async function buildFromForm(F,rows){
   const zip=await JSZip.loadAsync(fromB64(F.b64));const path='xl/worksheets/sheet1.xml';
@@ -2341,6 +2371,7 @@ document.addEventListener('drop',e=>{if(!hasFiles(e))return;e.preventDefault();d
   if(state.tab==='crit')setTab('sheet');importFiles(files)});
 async function importFiles(files){
   if(!files.length)return;
+  if(hasExample()){clearExample(true);toast('예시를 지우고 실제 자료를 넣습니다')}
   if(!window.ExcelJS){toast('엑셀 라이브러리를 불러오지 못했습니다');return}
   const done=[],books=[];let lastNeis=null,papsRes=null;
   for(const f of files){
@@ -2352,7 +2383,7 @@ async function importFiles(files){
     else done.push(await importRoster(r.data,f.name,buf));
   }
   books.forEach(bk=>done.push(applySexBook(bk)));
-  save();renderAll();if(state.tab==='att')renderAtt();
+  save();renderAll();if(state.tab==='att')renderAtt();if(state.tab==='setup')renderSetup();
   if(done.length){$('rosterPanel').hidden=true;
     const c=cur(),miss=useSex(c)?sexCounts(c)['']:0;
     toast(done.join(' · ')+(miss?` — 성별 미입력 ${miss}명: 성별 명렬표를 끌어다 놓거나 성별 칸에서 고르세요`:''));
@@ -2407,18 +2438,17 @@ async function importRoster(d,fileName,buf){
   const grade=String(inf.grade||(d.students[0]&&d.students[0].grade)||'').trim();
   if(grade&&state.sets.some(x=>x.id==='g'+grade))state.grade='g'+grade;
   let clsName=[inf.cls,inf.subject].filter(Boolean).join(' ')||fileName.replace(/\.xlsx$/i,'');
-  if(grade==='3'){
-    // 3학년은 소속반이 곧 학급: 가장 많은 소속반으로 '3-11'처럼 이름 붙임
-    const cnt={};d.students.forEach(st=>{const k=String(st.ban||'').trim();if(k)cnt[k]=(cnt[k]||0)+1});
-    const top=Object.keys(cnt).sort((x,y)=>cnt[y]-cnt[x])[0];
-    if(top)clsName=`3-${top}`;
+  const oneBan=(()=>{const b=new Set(d.students.map(st=>String(st.ban||'').trim()).filter(Boolean));return b.size===1?[...b][0]:''})();
+  if(grade&&oneBan&&!inf.cls){
+    // 학생이 모두 한 반이면(학급 = 수업반) '3-11'처럼 이름 붙임
+    clsName=`${grade}-${oneBan}`+(inf.subject?' '+inf.subject:'');
   }
   const subject=inf.subject?(inf.clsNo?`${inf.subject}(${inf.clsNo})`:inf.subject):'';
-  const newNo=grade==='3'?((clsName.match(/^3-(\d+)/)||[])[1]||inf.clsNo):inf.clsNo;
+  const newNo=inf.clsNo||(oneBan&&!inf.cls?oneBan:'');
   const t=pickTarget(c=>c.name===clsName,d.students,c=>!clsNoOf(c)||!newNo||clsNoOf(c)===String(newNo));
   const kept=mergeStudents(t,d.students);
   t.name=clsName;t.example=false;if(!t.neis||!t.subject)t.subject=subject;
-  t.useSex=grade?grade!=='3':!/^3-\d/.test(clsName);
+  if(t.useSex==null)t.useSex=true;
   t.set=t.set||state.grade;const auto=fillFromBook(t);
   t.clsNo=newNo||'';
   if(inf.schedule&&inf.schedule.length)t.schedule=inf.schedule;
@@ -2526,7 +2556,7 @@ function renderCrit(){
         <label>기본점수(미제출·질병)<input id="c-${a.id}-base" data-a="${ai}" data-f="base" inputmode="decimal" value="${esc(a.base)}"></label>
         <label>미인정 결시<input id="c-${a.id}-abs" data-a="${ai}" data-f="absent" inputmode="decimal" value="${esc(a.absent)}"></label>
       </div>${body}</div>`;
-  }).join('');
+  }).join('')||`<div class="su-hero" style="grid-column:1/-1"><div><h3>${esc(curSet().label)} 평가 기준이 아직 없어요</h3><p>가장 빠른 방법은 <b>평가계획에서 가져오기</b>예요. 평가계획(PDF·사진)을 AI 채팅에 올리고 안내된 질문을 붙여 넣은 뒤, 받은 답을 그대로 붙여 넣으면 영역·구간표가 한 번에 만들어져요. 직접 만들려면 <b>기록 환산 영역</b>(기록을 구간표로 점수 환산)이나 <b>등급 선택 영역</b>(등급별 점수)을 누르세요.</p></div><div class="su-more"><button class="btn primary" type="button" data-su="ci">평가계획에서 가져오기</button></div></div>`;
 }
 const numF=['min','max','score','below','belowF','base','absent','attempts'];
 $('critList').addEventListener('change',e=>{
@@ -2719,9 +2749,9 @@ $('addRecordArea').addEventListener('click',()=>{CR().push({id:uid(),name:'새 �
 $('addGradeArea').addEventListener('click',()=>{CR().push({id:uid(),name:'새 등급 영역',type:'grade',items:[{name:'등급',options:[{label:'A',score:20},{label:'B',score:17},{label:'C',score:14},{label:'D',score:11}]}],base:8,absent:7});save();renderCrit();renderClassSel();renderSheet()});
 $('resetCrit').addEventListener('click',e=>{
   const b=e.currentTarget;
-  if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent='한 번 더 누르면 되돌림';setTimeout(()=>{b.classList.remove('armed');b.textContent='기본 기준으로 되돌리기'},3000);return}
-  b.classList.remove('armed');b.textContent='기본 기준으로 되돌리기';
-  const st=curSet();st.criteria=defaultCriteria(st.id);save();renderCrit();renderClassSel();renderSheet();toast(`${st.label} 기본 기준(${(SET_DEFAULTS[st.id]||{}).names||''})으로 되돌렸습니다`);
+  if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent='한 번 더 누르면 모두 지움';setTimeout(()=>{b.classList.remove('armed');b.textContent='이 학년 기준 모두 지우기'},3000);return}
+  b.classList.remove('armed');b.textContent='이 학년 기준 모두 지우기';
+  const st=curSet();st.criteria=[];delete st.exCrit;save();renderCrit();renderClassSel();renderSheet();toast(`${st.label} 평가 기준을 모두 지웠습니다 · 영역을 추가하거나 평가계획에서 가져오세요`);
 });
 
 /* ---------- 학생 확인 ---------- */
@@ -2847,6 +2877,7 @@ function fromB64(b){const s=atob(b),u=new Uint8Array(s.length);for(let i=0;i<s.l
 // 2학년 수업 요일(선생님이 알려준 시간표) — 출석부 파일에 시간표가 없을 때 사용
 const G2_SCHED={'2':[1,4],'4':[3,5],'6':[1,4],'8':[1,2],'9':[1,2],'10':[4,5]};
 function applyScheduleDefaults(){
+  return false; // 배포판: 학교별 수업 요일 고정 없음
   let ch=false;
   state.classes.forEach(c=>{
     if(c.set!=='g2'||(c.schedule&&c.schedule.length))return;
@@ -2902,7 +2933,7 @@ function renderAtt(){
    el.textContent=last?`나이스 입력: ${mdl(last)}까지 완료 · ${rest.length?`남은 날짜 ${rest.length}일 (${rest.slice(0,4).map(mdl).join(', ')}${rest.length>4?' …':''})`:'모두 입력함'}`:`나이스 입력: 아직 없음 · 남은 날짜 ${rest.length}일`}}
   const V=sug?sortKeys([...W,sug]):W;const cols=Math.max(N,V.length+(!sug&&!A.dates.includes(td)&&V.length>=N?1:0));
   const canAdd=!sug&&!A.dates.includes(td)&&c.students.length>0;
-  const g2=c.set==='g2',cln=clsNoOf(c);
+  const g2=new Set(c.students.map(s=>String(s.ban||''))).size>1,cln=clsNoOf(c);
   // 날짜 보기는 반을 바꿔도 유지(나이스 입력할 때 반마다 다시 고르지 않게). 이 반에 없는 날짜면 빈 목록과 안내
   const fMissing=attFilter!=='all'&&attFilter!=='any'&&!W.includes(attFilter);
   $('attFilter').innerHTML=`<option value="all">전체 학생</option><option value="any">결석 있는 학생만 (많은 순)</option>`+(fMissing?`<option value="${attFilter}">${md(attFilter)}${dupNo(attFilter)>1?`(${dupNo(attFilter)})`:''} 결석생만 · 이 반은 날짜 없음</option>`:'')+[...W].reverse().map(d=>`<option value="${d}">${md(d)}${dupNo(d)>1?`(${dupNo(d)})`:''} 결석생만${(A.neis||{})[d]?'':dateOf(d)<=td?' · 나이스 미입력':''}</option>`).join('');
@@ -2990,7 +3021,7 @@ $('attFilter').addEventListener('change',e=>{attFilter=e.target.value;closePop()
 $('attHint').addEventListener('click',e=>{if(e.target.id!=='attForceToday')return;const c=cur(),A=attOf(c),td=todayStr();if(!A.dates.includes(td)){A.dates.push(td);sortKeys(A.dates);delete skipToday[c.id];save()}renderAtt()});
 function attMatrix(){
   const c=cur(),A=attOf(c),W=winDates(c);
-  const g2=c.set==='g2',cln=clsNoOf(c);
+  const g2=new Set(c.students.map(s=>String(s.ban||''))).size>1,cln=clsNoOf(c);
   const head=[...(g2?['수업반']:[]),'연번','학년','반','번호','성명',...W.map(md)];
   const rows=c.students.map((s,i)=>[...(g2?[cln]:[]),i+1,s.grade||gradeOf(c),s.ban??'',s.no??'',s.name,...W.map(d=>(A.abs[d]||{})[s.id]?'/':'')]);
   return {c,A,W,head,rows};
@@ -3037,7 +3068,7 @@ $('attExport').addEventListener('click',async()=>{
 /* ---------- 사이드바 ---------- */
 function renderSide(){
   const c=cur();const groups={};
-  allClassesSorted().forEach(x=>{(groups[x.set]=groups[x.set]||[]).push(x)});
+  allClassesSorted().filter(x=>(x.students||[]).length||!/^새 반/.test(x.name||'')||x.id===c.id&&state.tab!=='setup').forEach(x=>{(groups[x.set]=groups[x.set]||[]).push(x)});
   $('sideClasses').innerHTML=Object.keys(groups).sort((a,b)=>(Number(a.replace(/\D/g,''))||99)-(Number(b.replace(/\D/g,''))||99)).map(g=>{
     const st=state.sets.find(x=>x.id===g),list=groups[g];
     const subj=(list.find(x=>x.subject)||{}).subject||'';const sname=subj.replace(/\(.*$/,'').trim();
@@ -3047,8 +3078,8 @@ function renderSide(){
   updateMobile();
 }
 function updatePageTitle(){
-  const c=cur(),t=state.tab;$('subline').hidden=t==='att'||t==='paps'||t==='tt';
-  $('pageTitle').textContent=t==='tt'?'체육과 시간표':t==='crit'?`${curSet().label} 평가 기준`:`${c.name.replace(/\s*스포츠 생활\d.*$/,'')} ${t==='att'?'출석':t==='paps'?'PAPS':'수행평가'}`;
+  const c=cur(),t=state.tab;$('subline').hidden=t==='att'||t==='paps'||t==='tt'||t==='setup';
+  $('pageTitle').textContent=t==='setup'?'시작 · 설정':t==='tt'?'체육과 시간표':t==='crit'?`${curSet().label} 평가 기준`:`${c.name.replace(/\s*스포츠 생활\d.*$/,'')} ${t==='att'?'출석':t==='paps'?'PAPS':'수행평가'}`;
 }
 $('sideClasses').addEventListener('click',e=>{const sg=e.target.closest('button[data-sg]');if(sg){state.sideOpen=state.sideOpen||{};state.sideOpen[sg.dataset.sg]=!state.sideOpen[sg.dataset.sg];localSave();renderSide();return}const b=e.target.closest('button[data-cls]');if(!b)return;attGoClass(b.dataset.cls);if(state.tab==='crit')setTab('sheet');updatePageTitle()});
 $('navCheck').addEventListener('click',()=>{if(state.tab!=='sheet')setTab('sheet');openCheck()});
@@ -3117,7 +3148,8 @@ $('mSeg').addEventListener('click',e=>{const b=e.target.closest('button[data-ar]
   b.scrollIntoView({inline:'nearest',block:'nearest'})});
 function updateMobile(){
   if(!$('mbar'))return;const c=cur(),t=state.tab;
-  if(t==='tt'){$('mClsName').innerHTML=`체육과<em>시간표</em>`;$('mClsSub').textContent=(TT.cfg&&TT.cfg.school)||'나이스 시간표'}
+  if(t==='setup'){$('mClsName').innerHTML=`시작<em>설정</em>`;$('mClsSub').textContent='출석부 · 명렬표 · 평가 기준'}
+  else if(t==='tt'){$('mClsName').innerHTML=`체육과<em>시간표</em>`;$('mClsSub').textContent=(TT.cfg&&TT.cfg.school)||'나이스 시간표'}
   else if(t==='crit'){$('mClsName').innerHTML=`${esc(curSet().label)}<em>평가 기준</em>`;$('mClsSub').textContent='눌러서 반 바꾸기'}
   else{const p=pendingOf(c).length;
     $('mClsName').innerHTML=`${esc(shortName(c.name))}<em>${t==='att'?'출석':t==='paps'?'PAPS':'수행평가'}</em>`;
@@ -3547,7 +3579,7 @@ document.addEventListener('click',e=>{if(e.target.closest('#ckPick')){openCkPick
 
 /* 화면 제목을 눌러 반 바꾸기 (PC·태블릿) */
 function openClassPick(){const c=cur(),groups={};allClassesSorted().forEach(x=>{(groups[x.set]=groups[x.set]||[]).push(x)});
-  const t=state.tab==='att'?'출석':state.tab==='crit'?'평가 기준':state.tab==='paps'?'PAPS':'수행평가';
+  const t=state.tab==='setup'?'시작 · 설정':state.tab==='att'?'출석':state.tab==='crit'?'평가 기준':state.tab==='paps'?'PAPS':'수행평가';
   openDlg(`반 바꾸기 · ${t}`,Object.keys(groups).sort((a,b)=>(Number(a.replace(/\D/g,''))||99)-(Number(b.replace(/\D/g,''))||99)).map(g=>{
     const st=state.sets.find(x=>x.id===g),list=groups[g],sn=subjShort(list.find(x=>x.subject)||{});
     return `<h4 class="cp-h">${esc(st?st.label:g)}${sn?' · '+esc(sn):''}</h4><div class="pickgrid cp">${list.map(x=>{const p=pendingOf(x).length;
@@ -3813,16 +3845,82 @@ function setTab(t){
   if(t!=='sheet'){scoreLocked=true;applyScoreLock()}
   if(!$('msView').hidden)closeMeasure();
   document.body.classList.toggle('app',t==='sheet'||t==='att'||t==='paps');
-  [['sheet','view-sheet'],['att','view-att'],['paps','view-paps'],['crit','view-crit'],['tt','view-tt']].forEach(([k,id])=>{$('tab-'+k).setAttribute('aria-selected',t===k);$(id).hidden=t!==k;$(id).style.display=t===k?'flex':''});
-  $('gradeTabs').hidden=t==='att'||t==='tt';
+  [['sheet','view-sheet'],['att','view-att'],['paps','view-paps'],['crit','view-crit'],['tt','view-tt'],['setup','view-setup']].forEach(([k,id])=>{$('tab-'+k).setAttribute('aria-selected',t===k);$(id).hidden=t!==k;$(id).style.display=t===k?'flex':''});
+  $('gradeTabs').hidden=t==='att'||t==='tt'||t==='setup';
+  if(t==='setup')renderSetup();
   if(t==='tt')ttRender();
   if(t==='att')renderAtt();
   if(t==='paps')renderPaps();
   if(t==='sheet')requestAnimationFrame(setHeadOffset);
   closeMenus();updatePageTitle();updateMobile();
 }
+
+/* ---------- 시작 · 설정 ---------- */
+const hasExample=()=>state.classes.some(c=>c.example);
+const realClasses=()=>state.classes.filter(c=>!c.example&&!isClubSafe(c)&&(c.students||[]).length);
+function isClubSafe(c){return c&&(c.kind==='club'||c.set==='club')}
+function canExample(){
+  if(hasExample())return false;
+  if(realClasses().length)return false;
+  return ['g2','g3'].every(id=>{const x=state.sets.find(y=>y.id===id);return !x||!x.criteria.length||x.exCrit});
+}
+function loadExample(){
+  if(!canExample()){toast('이미 입력한 반이나 평가 기준이 있어 예시를 열 수 없습니다');return}
+  ['g3','g2'].forEach(id=>{let x=state.sets.find(y=>y.id===id);if(!x){x={id,label:id.slice(1)+'학년',criteria:[]};state.sets.push(x)}
+    x.criteria=defaultCriteria(id).map(normArea);x.exCrit=true});
+  state.classes=state.classes.filter(c=>c.example||(c.students||[]).length||isClubSafe(c));
+  const a=EXAMPLES.g3(),b=EXAMPLES.g2();state.classes.push(a,b);
+  state.grade='g3';state.curBy.g3=a.id;state.curBy.g2=b.id;
+  save();renderAll();setTab('sheet');toast('예시 반 2개와 예시 평가 기준을 열었습니다 · 다 둘러보면 ‘예시 지우기’');
+}
+function clearExample(quiet){
+  state.classes=state.classes.filter(c=>!c.example);
+  state.sets.forEach(x=>{if(x.exCrit){x.criteria=[];delete x.exCrit}});
+  Object.keys(state.curBy||{}).forEach(g=>{if(!state.classes.some(c=>c.id===state.curBy[g]))delete state.curBy[g]});
+  save();
+  if(!quiet){renderAll();setTab('setup');toast('예시를 모두 지웠습니다 · 여기서 출석부부터 넣어 시작하세요')}
+}
+function askClearExample(){
+  if(!hasExample()){setTab('setup');return}
+  openDlg('예시 지우기',`<p>예시 반 2개(학생·기록·관찰 메모)와 예시 평가 기준을 모두 지웁니다. 직접 넣은 반과 기준은 그대로 남습니다.</p><div class="toolbar" style="justify-content:flex-end"><button class="btn" type="button" data-su="close">취소</button><button class="btn danger" type="button" id="suClearGo">예시 지우기</button></div>`);
+  setTimeout(()=>{const b=$('suClearGo');if(b)b.onclick=()=>{closeDlg();clearExample()}},0);
+}
+function renderSetup(){
+  const box=$('setupBody');if(!box)return;
+  const ex=hasExample(),real=realClasses();
+  const sets=state.sets.filter(x=>x.id!=='club');
+  const gradeNo=x=>String(x.id).replace(/^g/,'');
+  const sexMiss=real.filter(c=>useSex(c)).reduce((t,c)=>t+c.students.filter(s=>!s.sex).length,0);
+  const books=Object.keys(state.sexBook||{}).filter(g=>Object.keys(state.sexBook[g]||{}).length);
+  const critOk=sets.some(x=>x.criteria.length&&!x.exCrit);
+  const hero=ex?`<div class="su-hero ex"><div><h3>지금은 예시로 둘러보는 중이에요</h3><p>예시 반 2개와 예시 평가 기준이 들어 있어요. 다 둘러봤으면 예시를 지우고 아래 순서대로 시작하세요.</p></div><div class="su-more"><button class="btn" type="button" data-su="sheet">예시 계속 보기</button><button class="btn danger" type="button" data-su="clear">예시 지우기</button></div></div>`
+    :`<div class="su-hero"><div><h3>${real.length?'설정':'처음이라면 여기서 시작하세요'}</h3><p>${real.length?'출석부를 더 넣거나, 명렬표·평가 기준을 고칠 때 이 화면을 쓰세요.':'① 출석부를 넣어 반을 만들고 ② 학년 명렬표로 성별을 채우고 ③ 학년별 평가 기준을 만들면 수행평가를 시작할 수 있어요.'}</p></div>${canExample()?`<div class="su-more"><button class="btn primary" type="button" data-su="example">예시로 둘러보기</button></div>`:''}</div>`;
+  const clsList=real.length?`<div class="su-list">${sets.map(x=>{const L=real.filter(c=>c.set===x.id);return L.length?`<div><span>${esc(x.label)}</span><b>${L.length}개 반 · ${L.reduce((t,c)=>t+c.students.length,0)}명</b></div>`:''}).join('')}</div>`:'';
+  box.innerHTML=hero+`<div class="su-steps">
+    <div class="su-step"><span class="n"><i class="${real.length?'ok':''}">${real.length?'✓':'1'}</i>출석부 넣기</span>
+      <p>나이스에서 내려받은 <b>수업반별 출석부</b>(.xlsx)를 넣으면 반이 만들어지고 소속반·번호·이름이 들어가요. 여러 개를 한 번에 넣어도 돼요. 나이스 수행평가 양식도 넣을 수 있어요.</p>
+      <label class="drop" for="neisFile" tabindex="0"><span class="drop-t"><span class="dk">출석부 끌어다 놓기</span><span class="dm">눌러서 파일 고르기</span></span><span class="drop-s">.xlsx · 여러 파일 가능</span></label>
+      ${clsList}
+    </div>
+    <div class="su-step"><span class="n"><i class="${books.length&&!sexMiss?'ok':''}">${books.length&&!sexMiss?'✓':'2'}</i>학년 명렬표 넣기</span>
+      <p><b>학년 전체 명렬표</b>(학년·반·번호·성명·성별)를 넣으면 반·번호·이름이 맞는 학생의 성별이 한 번에 채워져요. 남녀 기준이 다른 영역에 필요해요. 먼저 넣어 두면 나중에 넣는 출석부에도 자동으로 채워져요.</p>
+      <label class="drop" for="neisFile" tabindex="0"><span class="drop-t"><span class="dk">명렬표 끌어다 놓기</span><span class="dm">눌러서 파일 고르기</span></span><span class="drop-s">.xlsx · 머리글에 성명·성별</span></label>
+      <div class="su-list">${books.length?`<div><span>넣은 명렬표</span><b>${books.map(g=>g+'학년').join(', ')}</b></div>`:''}${real.length?`<div class="${sexMiss?'warn':''}"><span>성별 미입력</span><b>${sexMiss}명</b></div>`:''}</div>
+    </div>
+    <div class="su-step"><span class="n"><i class="${critOk?'ok':''}">${critOk?'✓':'3'}</i>평가 기준 만들기</span>
+      <p>학년마다 평가 영역과 점수 기준을 만들어요. 평가계획(PDF·사진)을 AI에게 보여 주고 받은 답을 붙여 넣는 <b>평가계획에서 가져오기</b>가 가장 빨라요.</p>
+      <div class="su-grades">${sets.map(x=>{const n=x.criteria.length,mx=x.criteria.reduce((t,a)=>t+maxOf(a),0);return `<button class="g" type="button" data-sugrade="${x.id}"><span><b>${esc(x.label)}</b></span><small class="${n?'':'none'}">${n?`${x.exCrit?'예시 · ':''}${n}개 영역 · 만점 ${mx}점`:'아직 없음 · 만들기'}</small></button>`}).join('')}</div>
+    </div>
+  </div>
+  <div class="su-hero"><div><h3 style="font-size:16px">백업</h3><p>기록은 이 기기(브라우저)에만 저장돼요. 학기 중에도 가끔 백업 파일을 받아 두세요.</p></div><div class="su-more"><button class="btn" type="button" data-su="bkSave">백업 파일 내려받기</button><button class="btn" type="button" data-su="bkLoad">백업 파일 불러오기</button>${ex?'':(canExample()?'':`<button class="btn" type="button" disabled title="입력한 반이나 기준이 있으면 예시를 열 수 없어요">예시로 둘러보기</button>`)}</div></div>`;
+}
+document.addEventListener('click',e=>{const u=e.target.closest('[data-su]');if(u){const k=u.dataset.su;
+  if(k==='crit'||k==='setup'||k==='sheet')setTab(k);else if(k==='clear')askClearExample();else if(k==='example')loadExample();
+  else if(k==='bkSave'||k==='bkLoad')$(k).click();else if(k==='close')closeDlg();else if(k==='ci')$('critImport').click();return}});
+document.addEventListener('click',e=>{const g=e.target.closest('[data-sugrade]');if(!g)return;state.grade=g.dataset.sugrade;save();renderAll();setTab('crit')});
 $('tab-sheet').addEventListener('click',()=>setTab('sheet'));
 $('tab-crit').addEventListener('click',()=>setTab('crit'));
+$('tab-setup').addEventListener('click',()=>setTab('setup'));
 $('tab-att').addEventListener('click',()=>setTab('att'));
 $('tab-paps').addEventListener('click',()=>setTab('paps'));
 
@@ -4297,7 +4395,7 @@ async function clubFill(c,A){
 {const _ra=renderAtt;renderAtt=function(){_ra.apply(this,arguments);try{$('attTable').classList.toggle('club',isClub(cur()))}catch(e){}}}
 
 if(applyScheduleDefaults())localSave();
-renderAll();setTab(['crit','att','paps','tt'].includes(state.tab)?state.tab:'sheet');
+renderAll();setTab(['crit','att','paps','tt','setup'].includes(state.tab)?state.tab:'sheet');
 startSync();
 })();
 </script>
