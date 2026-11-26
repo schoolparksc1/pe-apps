@@ -590,7 +590,46 @@ details.sched[open] summary{margin-bottom:6px}
 .stage .vst-s .st-val,.stage .vst-s .st-reel{font-size:clamp(16px,1.9vw,30px)!important;letter-spacing:-.02em}
 .stage .vst-s.bye{border-style:dashed}
 .stage .vst-s .reel,.stage .vst-s .st-reel{display:block!important;height:1.4em!important;line-height:1.4em!important;overflow:hidden!important;width:100%;flex:0 0 auto;--rh:1.4em}
+/* 관리 탭 공지·일정 줄이 좁은 화면에서 넘치지 않게 */
+.arow>*{min-width:0;max-width:100%;box-sizing:border-box}
+@media (max-width:900px){.arow.ms{grid-template-columns:150px 1fr auto}.arow.ms>input[type=text]:last-of-type{grid-column:2/3}}
 
+/* v1.2 간격 */
+.adm h3{margin:0 0 12px}
+.adm p.sub{line-height:1.7;margin:10px 0}
+.adm .row{gap:10px}
+.adm .row + p.sub{margin-top:14px}
+.adm p.sub + .row{margin-top:14px}
+.adm textarea + .row{margin-top:12px}
+.reftools{margin-top:12px}
+.reftools .sub{font-size:13px}
+.adm .datarow{row-gap:10px}
+.adm .chk{line-height:1.6}
+.adm p,.adm .sub,.adm .chk span{word-break:keep-all;overflow-wrap:break-word}
+
+</style>
+
+<style id="pe-common">
+.pe-mback{display:inline-flex;align-items:center;justify-content:center;flex:none;width:34px;height:34px;border-radius:10px;font-size:20px;line-height:1;text-decoration:none;color:inherit;opacity:.85}
+.pe-mback:hover{opacity:1;background:rgba(127,127,127,.14)}
+.pe-minfo{display:inline-flex;align-items:center;justify-content:center;flex:none;width:34px;height:34px;border-radius:10px;border:0;background:transparent;color:inherit;font:inherit;font-size:17px;cursor:pointer;opacity:.85}
+.pe-minfo:hover{opacity:1;background:rgba(127,127,127,.14)}
+.pe-tabs-r{-webkit-mask-image:linear-gradient(to right,#000 82%,transparent);mask-image:linear-gradient(to right,#000 82%,transparent)}
+.pe-tabs-l{-webkit-mask-image:linear-gradient(to left,#000 82%,transparent);mask-image:linear-gradient(to left,#000 82%,transparent)}
+.pe-tabs-l.pe-tabs-r{-webkit-mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent)}
+.pe-file{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+/* 오른쪽 위 공통 버튼: ← 체육 앱 서랍 · (수업 모드) · ⓘ 정보 */
+.pe-nav{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin-left:auto}
+.pe-pill{display:inline-flex;align-items:center;gap:5px;height:auto;min-height:0;padding:6px 13px;border-radius:999px;border:1px solid color-mix(in srgb,currentColor 30%,transparent);background:color-mix(in srgb,currentColor 5%,transparent);color:inherit;font:inherit;font-size:13px;font-weight:600;line-height:1.2;text-decoration:none;white-space:nowrap;cursor:pointer;box-shadow:none;width:auto}
+.pe-pill:hover{background:color-mix(in srgb,currentColor 12%,transparent);text-decoration:none}
+.pe-pill:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+.pe-pill[hidden]{display:none!important}
+@media print{.pe-nav{display:none!important}}
+.pe-tnav{order:2}
+.mbar .pe-nav{margin-left:6px;flex-wrap:nowrap}
+.mbar .pe-pill{color:inherit}
+@media (max-width:560px){.pe-mpill .pe-t{display:none}.pe-mpill{padding:6px 10px;font-size:15px}}
+.side #backDrawer{display:none!important}
 </style>
 </head>
 <body>
@@ -602,7 +641,7 @@ details.sched[open] summary{margin-bottom:6px}
    스포츠 토너먼트 (범용 배포판) — 모든 기록은 이 기기(브라우저)에만 저장
    만든 이: 다정고 박성찬
    ============================================================ */
-var LS = 'pe-tournament-v1', APP_VER = '1.1';
+var LS = 'pe-tournament-v1', APP_VER = '1.2';
 var WD = ['일','월','화','수','목','금','토'];
 var COLORS = ['파랑','분홍','초록','주황'];
 var RN = {32:'32강',16:'16강',8:'8강',4:'4강',2:'결승'}, RID = {32:'R32',16:'R16',8:'QF',4:'SF',2:'F'};
@@ -856,7 +895,7 @@ function render(){
   if (!tabs.some(function(t){ return t[0] === ui.tab; })) ui.tab = 'home';
   var title = state.title || '스포츠 토너먼트', parts = title.trim().split(/\s+/), last = parts.pop();
   var h = '<header class="top"><div class="top-inner"><div class="brand-row"><div class="brand">'
-    + '<div class="eyebrow">' + esc(state.org || '바이브 코딩으로 만든 체육 대회 도구') + '</div>'
+    + (state.org ? '<div class="eyebrow">' + esc(state.org) + '</div>' : '')
     + '<h1>' + (parts.length ? esc(parts.join(' ')) + ' ' : '') + '<span>' + esc(last) + '</span>'
     + (state.sample ? '<em class="sample-tag">예시 자료</em>' + (teacher() ? '<button class="teacher-btn new-btn" data-act="new">새 대회 시작</button>' : '') : '') + '</h1></div>'
     + '<div class="row"><span class="meta">' + [periodTxt(), state.place, state.timeNote].filter(Boolean).map(esc).join(' · ') + '</span>'
@@ -888,7 +927,7 @@ function render(){
 function viewWelcome(){
   return '<section><div class="panel welcome"><h2>대회를 만들어 볼까요?</h2>'
     + '<p class="sub">반 대항 토너먼트를 종목별로 설정하면 부전승을 포함한 대진표, 날짜별 일정, 추첨 화면, 경기 기록지, 순위가 자동으로 만들어집니다. 모든 기록은 이 기기에만 저장됩니다.</p>'
-    + '<div class="actions" style="justify-content:flex-start">' + (teacher() ? '<button class="btn primary" data-act="sample">예시 대회로 둘러보기</button><button class="btn" data-act="go-admin">직접 만들기</button>' : '<span class="sub">수업 모드를 끈 뒤 관리 탭에서 대회를 만들어 주세요.</span>') + '</div></div></section>';
+    + '<div class="actions" style="justify-content:flex-start">' + (teacher() ? '<button class="btn primary" data-act="sample">예시로 둘러보기</button><button class="btn" data-act="go-admin">직접 만들기</button>' : '<span class="sub">수업 모드를 끈 뒤 관리 탭에서 대회를 만들어 주세요.</span>') + '</div></div></section>';
 }
 
 function viewHome(){
@@ -1323,7 +1362,7 @@ function viewAdmin(){
   h += '<div class="panel adm"><h3>데이터 관리 <span class="chip" style="background:var(--green-soft);color:var(--green)">이 기기에만 저장</span></h3>'
     + '<p class="sub">모든 기록은 이 브라우저에만 저장되고 인터넷 어디로도 보내지지 않습니다. 브라우저 기록을 지우거나 재부팅하면 초기화되는 PC에서는 사라지니 <b>백업 파일</b>을 꼭 받아 두세요.</p>'
     + '<div class="row datarow"><button class="btn primary" data-act="backup">백업 파일 내려받기</button><button class="btn" data-act="restore">백업 파일 불러오기</button><input type="file" id="restoreFile" accept=".json,application/json" hidden>'
-    + '<button class="btn" data-act="sample">예시 대회 불러오기</button><button class="btn" data-act="pin">' + (DB.pin ? '수업 모드 비밀번호 바꾸기' : '수업 모드 비밀번호 정하기') + '</button><button class="btn" data-act="csv">결과 CSV 받기</button>'
+    + '<button class="btn" data-act="sample">예시로 둘러보기</button><button class="btn" data-act="pin">' + (DB.pin ? '수업 모드 비밀번호 바꾸기' : '수업 모드 비밀번호 정하기') + '</button><button class="btn" data-act="csv">결과 CSV 받기</button>'
     + '<span style="flex:1"></span><button class="btn danger" data-act="new">새 대회 시작</button><button class="btn danger" data-act="wipe">이 기기 기록 모두 지우기</button></div>'
     + '<p class="sub">' + (DB.lastBackup ? '마지막 백업: ' + new Date(DB.lastBackup).toLocaleString('ko-KR') : '아직 백업한 적이 없습니다.') + '</p></div>';
   return h + '</section>';
@@ -1361,6 +1400,52 @@ function evEditor(e){
   h += '<div class="actions" style="justify-content:space-between"><button class="btn danger" data-act="ev-del" data-id="' + e.id + '">이 종목 삭제</button><button class="btn" data-act="ev-open" data-id="' + e.id + '">설정 닫기</button></div>';
   return h + '</div>';
 }
+function setRefList(names){
+  var old = state.refs.list, seen = {};
+  names = names.filter(function(n){ if (seen[n]) return false; seen[n] = 1; return true; });
+  state.refs.list = names.map(function(nm){ var hit = old.filter(function(x){ return x.name === nm; })[0]; return hit || { id: uid(), name: nm }; });
+  var keep = {}; state.refs.list.forEach(function(x){ keep[x.id] = 1; });
+  Object.keys(state.refs.assign).forEach(function(k){ if (!keep[state.refs.assign[k]]) delete state.refs.assign[k]; });
+}
+var XLSX_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+function loadXlsx(){
+  if (window.XLSX) return Promise.resolve(window.XLSX);
+  return new Promise(function(res, rej){ var sc = document.createElement('script'); sc.src = XLSX_SRC; sc.onload = function(){ window.XLSX ? res(window.XLSX) : rej(); }; sc.onerror = rej; document.head.appendChild(sc); });
+}
+function csvRows(text){ return String(text).replace(/^﻿/, '').split(/\r?\n/).map(function(l){ return l.split(/[,\t]/).map(function(c){ return c.replace(/^"|"$/g, '').trim(); }); }); }
+function namesFromRows(rows){
+  rows = rows.map(function(r){ return (r || []).map(function(c){ return c == null ? '' : String(c).trim(); }); }).filter(function(r){ return r.some(Boolean); });
+  var hi = -1, nc = -1, ic = -1, cc = -1, bc = -1;
+  for (var i = 0; i < Math.min(rows.length, 8) && hi < 0; i++){
+    rows[i].forEach(function(c, j){ if (nc < 0 && /^(이름|성명|심판|학생\s*이름|name)$/i.test(c.replace(/\s/g, ''))) { nc = j; hi = i; } });
+  }
+  if (hi >= 0){
+    rows[hi].forEach(function(c, j){ var k = c.replace(/\s/g, ''); if (/^학번$/.test(k)) ic = j; else if (/^(학년\-?반|반)$/.test(k)) cc = j; else if (/^(번호|번)$/.test(k)) bc = j; });
+    return rows.slice(hi + 1).map(function(r){
+      var nm = r[nc] || ''; if (!nm) return '';
+      var pre = ic >= 0 && r[ic] ? r[ic] : (cc >= 0 && r[cc] ? r[cc] + (bc >= 0 && r[bc] ? '-' + r[bc] : '') : '');
+      return (pre ? pre + ' ' : '') + nm;
+    }).filter(Boolean);
+  }
+  return rows.map(function(r){ return r.filter(Boolean).join(' '); }).filter(Boolean);
+}
+function refImport(file){
+  var isCsv = /\.csv$/i.test(file.name);
+  var go = function(rows){
+    var got = namesFromRows(rows).slice(0, 300);
+    if (!got.length){ toast('파일에서 이름을 찾지 못했습니다'); return; }
+    var before = state.refs.list.length;
+    setRefList(state.refs.list.map(function(x){ return x.name; }).concat(got));
+    var add = state.refs.list.length - before;
+    save(); render(); toast(add ? '심판 ' + add + '명을 명단에 더했습니다' : '새로 더할 이름이 없습니다 · 이미 명단에 있어요');
+  };
+  if (isCsv){ var fr = new FileReader(); fr.onload = function(){ go(csvRows(fr.result)); }; fr.readAsText(file, 'utf-8'); return; }
+  loadXlsx().then(function(X){
+    var fr2 = new FileReader();
+    fr2.onload = function(){ try { var wb = X.read(new Uint8Array(fr2.result), { type:'array' }); go(X.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header:1, defval:'' })); } catch(err){ toast('엑셀 파일을 읽지 못했습니다'); } };
+    fr2.readAsArrayBuffer(file);
+  }).catch(function(){ toast('엑셀을 읽으려면 인터넷 연결이 필요합니다 · CSV 파일은 연결 없이 넣을 수 있어요'); });
+}
 function refName(id){ var x = state.refs.list.filter(function(r){ return r.id === id; })[0]; return x ? x.name : ''; }
 function refAdmin(){
   var R = state.refs, h = '<div class="panel adm"><h3>심판 배정 <span class="sub" style="font-weight:500"></span></h3>'
@@ -1368,32 +1453,67 @@ function refAdmin(){
   if (!R.on) return h + '</div>';
   var cnt = {}; Object.keys(R.assign).forEach(function(k){ cnt[R.assign[k]] = (cnt[R.assign[k]] || 0) + 1; });
   h += '<div class="sub2">심판 명단 <span class="sub">(' + R.list.length + '명 · 한 줄에 한 명)</span></div><textarea rows="5" data-act="ref-list" style="width:100%" placeholder="예) 2-1 김하늘">' + esc(R.list.map(function(x){ return x.name; }).join('\n')) + '</textarea>'
-    + '<div class="row" style="margin-top:8px"><button class="btn primary" data-act="ref-auto">남은 경기 자동 배정</button><button class="btn" data-act="ref-print">배정표 인쇄</button><button class="btn danger" data-act="ref-clear">배정 모두 지우기</button></div>'
+    + '<div class="row reftools"><button class="btn" data-act="ref-xl">엑셀·CSV에서 명단 넣기</button><input type="file" id="refFile" accept=".xlsx,.xls,.csv" hidden><span class="sub">이름(또는 학번·이름) 열을 찾아 명단에 더합니다</span></div>'
+    + '<div class="row reftools"><button class="btn primary" data-act="ref-auto">남은 경기 자동 배정</button><button class="btn" data-act="ref-print">배정표 인쇄</button><button class="btn danger" data-act="ref-clear">배정 모두 지우기</button></div>'
     + (R.list.length ? '<p class="sub">배정 횟수: ' + R.list.map(function(x){ return esc(x.name) + ' ' + (cnt[x.id] || 0); }).join(' · ') + '</p>' : '')
-    + '<p class="sub">경기마다 심판은 기록지에서 바꿀 수 있습니다. 자동 배정은 같은 날 같은 시간에 한 사람이 두 경기를 맡지 않게, 맡은 횟수가 적은 사람부터 고릅니다.</p>';
+    + '<p class="sub">이름 앞에 학년-반(예: 1-3 김하늘)이나 학번을 적으면, 자동 배정은 <b>같은 학년 종목</b>에만 넣고 <b>자기 반 경기</b>는 뺍니다. 자기 반인지 알려면 대진이 정해져야 하니 추첨 뒤, 그리고 라운드가 끝날 때마다 다시 눌러 주세요. 같은 날 같은 시간에 한 사람이 두 경기를 맡지 않게, 맡은 횟수가 적은 사람부터 고릅니다. 경기마다 심판은 기록지에서 바꿀 수 있습니다.</p>';
   return h + '</div>';
+}
+function refGC(name){
+  var t = String(name || '').trim(), m = /^(\d)\s*[-–]\s*(\d{1,2})(?!\d)/.exec(t);
+  if (m) return { g: +m[1], c: +m[2] };
+  m = /^(\d)(\d{2})\d{2}(?!\d)/.exec(t); if (m) return { g: +m[1], c: +m[2] };
+  m = /^(\d)\s*학년\s*(\d{1,2})\s*반/.exec(t); if (m) return { g: +m[1], c: +m[2] };
+  return null;
+}
+function teamGC(name){
+  var t = String(name || ''), m = /(\d)\s*학년\s*(\d{1,2})\s*반/.exec(t) || /(?:^|\D)(\d)\s*[-–]\s*(\d{1,2})(?!\d)/.exec(t);
+  return m ? { g: +m[1], c: +m[2] } : null;
+}
+function evGrade(e){
+  var nm = (e.base || e).name || '', m = /([1-6])\s*학년/.exec(nm); if (m) return +m[1];
+  var gs = {}; teamsOf(e).forEach(function(tm){ var x = teamGC(tm.name || tm); if (x) gs[x.g] = 1; });
+  var k = Object.keys(gs); return k.length === 1 ? +k[0] : 0;
+}
+/* 심판 자격: 학년-반을 알면 같은 학년 종목만, 자기 반 경기는 제외. 대진이 아직 안 정해진 경기는 'wait' */
+function refOk(id, r){
+  var ref = state.refs.list.filter(function(x){ return x.id === id; })[0]; if (!ref) return 'no';
+  var gc = refGC(ref.name); if (!gc) return 'ok';
+  var eg = evGrade(r.e); if (eg && eg !== gc.g) return 'no';
+  if (r.A == null || r.B == null) return 'wait';
+  var own = [teamName(r.e, r.A), teamName(r.e, r.B)].some(function(nm){ var x = teamGC(nm); return x && x.g === gc.g && x.c === gc.c; });
+  return own ? 'no' : 'ok';
 }
 function refAuto(){
   var R = state.refs; if (!R.list.length){ toast('심판 명단을 먼저 넣어 주세요'); return; }
+  var all = allMatches('all').filter(function(r){ return !r.bye && r.status !== 'done'; }), fixed = 0;
+  all.forEach(function(r){ var a = R.assign[r.key]; if (a && refOk(a, r) === 'no'){ delete R.assign[r.key]; fixed++; } });
   var cnt = {}; R.list.forEach(function(x){ cnt[x.id] = 0; });
   Object.keys(R.assign).forEach(function(k){ if (cnt[R.assign[k]] != null) cnt[R.assign[k]]++; else delete R.assign[k]; });
   var busy = {}; Object.keys(R.assign).forEach(function(k){ var r = resultByKey(k); if (r) busy[r.d + ' ' + r.t + ' ' + R.assign[k]] = 1; });
-  var n = 0;
-  allMatches('all').forEach(function(r){
-    if (r.bye || r.status === 'done' || R.assign[r.key]) return;
-    var c = R.list.map(function(x){ return x.id; }).filter(function(id){ return !busy[r.d + ' ' + r.t + ' ' + id]; }).sort(function(a, b){ return cnt[a] - cnt[b]; });
-    var min = c.length ? cnt[c[0]] : 0, top = c.filter(function(id){ return cnt[id] === min; });
-    if (!top.length) return;
+  var n = 0, wait = 0, none = 0;
+  all.forEach(function(r){
+    if (R.assign[r.key]) return;
+    var st = R.list.map(function(x){ return [x.id, refOk(x.id, r)]; });
+    var c = st.filter(function(v){ return v[1] === 'ok' && !busy[r.d + ' ' + r.t + ' ' + v[0]]; }).map(function(v){ return v[0]; }).sort(function(a, b){ return cnt[a] - cnt[b]; });
+    if (!c.length){ if (st.some(function(v){ return v[1] === 'wait'; })) wait++; else none++; return; }
+    var min = cnt[c[0]], top = c.filter(function(id){ return cnt[id] === min; });
     var pick = top[Math.floor(Math.random() * top.length)];
     R.assign[r.key] = pick; cnt[pick]++; busy[r.d + ' ' + r.t + ' ' + pick] = 1; n++;
   });
-  save(); render(); toast(n + '경기에 심판을 배정했습니다');
+  save(); render();
+  var msg = n ? n + '경기에 심판을 배정했습니다' : '새로 배정한 경기가 없습니다';
+  if (fixed) msg += ' · 자기 반·다른 학년 배정 ' + fixed + '건을 고쳤습니다';
+  if (wait) msg += ' · 대진이 정해지지 않은 ' + wait + '경기는 추첨이나 이전 경기 결과 뒤에 다시 눌러 주세요';
+  else if (none) msg += ' · 맡을 수 있는 심판이 없는 경기 ' + none + '개';
+  else if (!n) msg = '배정할 경기가 없습니다 · 남은 경기에 이미 심판이 모두 배정되어 있어요';
+  toast(msg);
 }
 function resultByKey(k){ var i = k.indexOf(':'), e = EV(k.slice(0, i)); if (!e || !getMatch(e, k.slice(i + 1))) return null; return result(e, k.slice(i + 1)); }
 function refPrint(){
   var rows = allMatches('all').filter(function(r){ return !r.bye; });
   var h = '<div class="print-only"><h2>' + esc(state.title || '스포츠 토너먼트') + ' 심판 배정표</h2><table class="ptable"><thead><tr><th>날짜</th><th>시간</th><th>종목</th><th>경기</th><th>대진</th><th>심판</th></tr></thead><tbody>'
-    + rows.map(function(r){ return '<tr><td>' + fmtDate(r.d) + '</td><td>' + esc(r.t) + '</td><td>' + escr.e.short + '</td><td>' + roundName(r.m) + '</td><td>' + esc((r.A != null ? teamName(r.e, r.A) : sideTbd(r.e, r.m.a)) + ' vs ' + (r.B != null ? teamName(r.e, r.B) : sideTbd(r.e, r.m.b))) + '</td><td>' + esc(refName(state.refs.assign[r.key]) || '') + '</td></tr>'; }).join('')
+    + rows.map(function(r){ return '<tr><td>' + fmtDate(r.d) + '</td><td>' + esc(r.t) + '</td><td>' + esc(r.e.short) + '</td><td>' + roundName(r.m) + '</td><td>' + esc((r.A != null ? teamName(r.e, r.A) : sideTbd(r.e, r.m.a)) + ' vs ' + (r.B != null ? teamName(r.e, r.B) : sideTbd(r.e, r.m.b))) + '</td><td>' + esc(refName(state.refs.assign[r.key]) || '') + '</td></tr>'; }).join('')
     + '</tbody></table></div>';
   var host = document.createElement('div'); host.innerHTML = h; document.body.appendChild(host);
   document.body.classList.add('printing-refs'); window.print();
@@ -1417,12 +1537,11 @@ function makeSample(){
   ];
   s.milestones = [{ id: uid(), d: addDays(t, -1), t:'13:00', title:'참가 신청 마감', where:'반 대표가 체육과에 제출', note:'' }, { id: uid(), d: t, t:'13:20', title:'대진 추첨', where:'관리 → 대진 추첨에서 추첨 화면을 열어 진행', note:'' }];
   s.rules = '# 공통\n1) 경기 대진은 추첨으로 정한다.\n2) 경기 시작 5분이 지나도 입장하지 않으면 기권패로 한다.\n3) 판정에 대한 항의는 반 대표 1명만 운영진에게 할 수 있다.\n# 배드민턴 (남·녀부 같은 대진)\n1) 반마다 복식 3경기, 21점 단세트(듀스 없음)로 진행한다.\n2) 3경기 중 2경기를 먼저 이긴 반이 승리한다.\n- 11점에 코트를 교대한다.\n# 탁구\n1) 반마다 7경기(남단 2·여단 2·남복·여복·혼복), 11점 단세트(듀스 있음)로 진행한다.\n2) 7경기 중 4경기를 먼저 이긴 반이 승리한다.\n- 2점마다 서브를 교대한다.';
-  s.refs = { on:true, list: ['2-1 김하늘','2-2 이도현','2-3 박서윤','2-4 최준우','2-5 정민서','2-6 강시우','2-7 조예린','2-8 윤지호'].map(function(n){ return { id: uid(), name: n }; }), assign:{} };
+  s.refs = { on:true, list: ['1-2 김하늘','1-4 이도현','1-6 박서윤','1-8 최준우','1-10 정민서','1-12 강시우','2-1 조예린','2-3 윤지호','2-5 한서준','2-7 오하은','2-9 서지안','2-11 임도윤'].map(function(n){ return { id: uid(), name: n }; }), assign:{} };
   setState(s);
-  var ri = 0; allMatches('all').forEach(function(r){ if (!r.bye) state.refs.assign[r.key] = state.refs.list[ri++ % state.refs.list.length].id; });
   ui.tab = 'admin'; ui.ev = 'bm'; ui.admEv = null; editing = null; stageFor = null; drafts = {};
   save(); render(); window.scrollTo(0, 0);
-  toast('예시 대회를 만들었습니다 · ‘대진 추첨’에서 추첨 화면을 열어 보세요');
+  toast('예시 대회를 만들었습니다 · 대진 추첨을 한 뒤 ‘심판 배정’에서 남은 경기 자동 배정을 눌러 보세요');
   setTimeout(function(){ var el = document.getElementById('draw-panel'); if (el) el.scrollIntoView({ behavior:'smooth', block:'center' }); }, 300);
 }
 
@@ -1504,11 +1623,11 @@ function setupPin(){
 }
 function renderInfo(){
   var host = document.getElementById('modal'); if (!host) return;
-  var mail = 'mailto:schoolparksc@sje.ai.kr?subject=' + encodeURIComponent('[스포츠 토너먼트 v' + APP_VER + '] 버그 제보 · 기능 제안');
+  var mail = 'mailto:schoolparksc@sjeai.kr?subject=' + encodeURIComponent('[스포츠 토너먼트 v' + APP_VER + '] 버그 제보 · 기능 제안');
   host.innerHTML = '<div class="scrim" data-act="info-close"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="info-t"><div class="sheet-h"><div><h2 id="info-t">스포츠 토너먼트 v' + APP_VER + '</h2><div class="sub">만든 이 · 다정고 박성찬</div></div><button class="close" data-act="info-close" aria-label="닫기">×</button></div><div class="sheet-b">'
-    + '<p style="margin:0">바이브 코딩으로 만든 체육 대회 도구예요. 반 대항 토너먼트를 종목별로 설정하면 부전승을 포함한 대진표, 일정, 추첨 화면, 경기 기록지, 순위를 자동으로 만들어 줍니다.</p>'
+    + '<p style="margin:0">체육 대회 운영 도구예요. 반 대항 토너먼트를 종목별로 설정하면 부전승을 포함한 대진표, 일정, 추첨 화면, 경기 기록지, 순위를 자동으로 만들어 줍니다.</p>'
     + '<p class="sub" style="margin:0">모든 기록은 이 기기(브라우저)에만 저장되고 어디로도 보내지지 않아요. 자유롭게 쓰고, 자기 학교 대회에 맞게 고쳐 쓰셔도 됩니다.</p>'
-    + '<div class="note"><b>버그 제보 · 추가 기능 제안</b><br><a href="' + mail + '">schoolparksc@sje.ai.kr</a><br><span class="sub" style="font-size:12.5px">어떤 화면에서 무엇을 눌렀는지 적어 주시면 빨리 고칠 수 있어요. 학생 이름 등 개인정보는 보내지 말아 주세요.</span></div>'
+    + '<div class="note"><b>버그 제보 · 추가 기능 제안</b><br><a href="' + mail + '">schoolparksc@sjeai.kr</a><br><span class="sub" style="font-size:12.5px">어떤 화면에서 무엇을 눌렀는지 적어 주시면 빨리 고칠 수 있어요. 학생 이름 등 개인정보는 보내지 말아 주세요.</span></div>'
     + '<div class="actions"><button class="btn primary" data-act="info-close">닫기</button></div></div></div></div>';
 }
 
@@ -1579,8 +1698,8 @@ app.addEventListener('click', function(ev){
       for (var d = f; d <= to; d = addDays(d, 1)){ var w = dObj(d).getDay(); if (w !== 0 && w !== 6 && e.dates.indexOf(d) < 0) e.dates.push(d); }
       e.dates.sort(); save(); render(); return;
     case 'stage-open': stageFor = id; drafts[id] = null; render(); return;
-    case 'stage-close': if (drawing) return; stageFor = null; if (document.fullscreenElement) document.exitFullscreen(); render(); return;
-    case 'stage-full': var st = document.getElementById('stage'); if (!document.fullscreenElement && st && st.requestFullscreen) st.requestFullscreen(); else if (document.exitFullscreen) document.exitFullscreen(); return;
+    case 'stage-close': if (drawing) return; stageFor = null; if (document.fullscreenElement) document.exitFullscreen().catch(function(){}); render(); return;
+    case 'stage-full': var de = document.documentElement; if (!document.fullscreenElement && de.requestFullscreen) de.requestFullscreen().catch(function(){}); else if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(function(){}); return;
     case 'draw-run': runDraw(stageFor); return;
     case 'draw-cancel': drafts[stageFor] = null; render(); return;
     case 'draw-save': var oe = EV(stageFor); oe = oe.base || oe; state.draws[stageFor] = { at: new Date().toISOString(), slots: drafts[stageFor] }; drafts[stageFor] = null; save(); render(); toast(oe.name + ' 대진을 저장했습니다'); return;
@@ -1591,6 +1710,7 @@ app.addEventListener('click', function(ev){
     case 'ms-del': state.milestones = state.milestones.filter(function(n){ return n.id !== id; }); save(); render(); return;
     case 'ref-auto': refAuto(); return;
     case 'ref-print': refPrint(); return;
+    case 'ref-xl': var xf = document.getElementById('refFile'); xf.value = ''; xf.click(); return;
     case 'ref-clear': confirmBox('모든 심판 배정을 지웁니다. 계속할까요?', '지우기').then(function(ok){ if (!ok) return; state.refs.assign = {}; save(); render(); }); return;
     case 'backup': doBackup(); return;
     case 'restore': var rf = document.getElementById('restoreFile'); rf.value = ''; rf.click(); return;
@@ -1611,7 +1731,7 @@ document.addEventListener('keydown', function(ev){
     if (boxResolve !== null || document.getElementById('box-in')) { closeBox(false); return; }
     if (editing){ editing = null; document.getElementById('modal').innerHTML = ''; return; }
     if (infoOpen){ infoOpen = false; document.getElementById('modal').innerHTML = ''; return; }
-    if (stageFor && !drawing){ stageFor = null; render(); }
+    if (stageFor && !drawing){ stageFor = null; if (document.fullscreenElement) document.exitFullscreen().catch(function(){}); render(); }
   }
   if (ev.key === 'Enter' && document.getElementById('box-in')){ closeBox(true); }
   if (ev.key === ' ' && stageFor && !drawing && !/INPUT|TEXTAREA|SELECT|BUTTON/.test((ev.target.tagName || ''))){ ev.preventDefault(); var b = document.querySelector('[data-act="draw-run"]'); if (b && !b.disabled) runDraw(stageFor); }
@@ -1623,6 +1743,7 @@ app.addEventListener('input', function(ev){
 });
 app.addEventListener('change', function(ev){
   var t = ev.target, ds = t.dataset || {};
+  if (t.id === 'refFile'){ if (t.files && t.files[0]) refImport(t.files[0]); return; }
   if (t.id === 'restoreFile'){ if (t.files && t.files[0]) doRestore(t.files[0]); return; }
   if (editing){
     if (ds.act === 'forfeit'){ editing.forfeit = t.value; editing.err = ''; renderModal(); return; }
@@ -1647,13 +1768,7 @@ app.addEventListener('change', function(ev){
   if (ds.nt){ var n = state.notices.filter(function(x){ return x.id === ds.id; })[0]; if (n){ n[ds.nt] = t.value; save(); } return; }
   if (ds.ms){ var m = state.milestones.filter(function(x){ return x.id === ds.id; })[0]; if (m){ m[ds.ms] = t.value; save(); } return; }
   if (ds.act === 'ref-on'){ state.refs.on = t.checked; save(); render(); return; }
-  if (ds.act === 'ref-list'){
-    var old = state.refs.list, names = parseLines(t.value);
-    state.refs.list = names.map(function(nm, i){ var hit = old.filter(function(x){ return x.name === nm; })[0]; return hit || { id: uid(), name: nm }; });
-    var keep = {}; state.refs.list.forEach(function(x){ keep[x.id] = 1; });
-    Object.keys(state.refs.assign).forEach(function(k){ if (!keep[state.refs.assign[k]]) delete state.refs.assign[k]; });
-    save(); render(); return;
-  }
+  if (ds.act === 'ref-list'){ setRefList(parseLines(t.value)); save(); render(); return; }
 });
 function addEvent(){
   var n = state.events.length + 1, e = { id: 'e' + uid(), name: '종목 ' + n, teams: [], games: ['1세트','2세트','3세트'], mode: 'set', target: 21, deuce: false, split: false, time: '12:35', perDay: 1, dates: [] };
@@ -1673,6 +1788,17 @@ if (/unlock/i.test(location.hash)){
 }
 })();
 
+</script>
+
+<script id="pe-common-js">
+(function(){
+  var web=/^https?:/.test(location.protocol);
+  document.querySelectorAll('.pe-mback,.pe-back').forEach(function(a){a.hidden=!web});
+  function cue(el){var m=el.scrollWidth-el.clientWidth;el.classList.toggle('pe-tabs-r',m>4&&el.scrollLeft<m-4);el.classList.toggle('pe-tabs-l',m>4&&el.scrollLeft>4)}
+  function bind(){document.querySelectorAll('[data-pe-tabs]').forEach(function(el){if(el._pe)return;el._pe=1;el.addEventListener('scroll',function(){cue(el)},{passive:true});new ResizeObserver(function(){cue(el)}).observe(el);if(window.MutationObserver)new MutationObserver(function(){cue(el)}).observe(el,{childList:true});cue(el)})}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+  addEventListener('resize',function(){document.querySelectorAll('[data-pe-tabs]').forEach(cue)});
+})();
 </script>
 </body>
 </html>

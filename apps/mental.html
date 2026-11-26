@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="ko"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="ek-stamp" content="base-1">
+<title>스포츠멘탈 동아리 수업자료</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap">
+<style>
+/* 1280×720 무대를 화면에 맞춰 확대·축소. 브라우저 창 틀(남색 테두리, 베이지 탭, 검색창 제목) 디자인. 프로젝터용 라이트 테마. */
+:root{
+  --frame:#3B477A; --tab:#E7DFD7; --page:#FFFFFF; --box:#F4F0EA; --ink:#1E1E1E; --muted:#6B6660;
+  --head:#34489A; --hot:#E0281E; --pill:#ECE6DF; --calm:#2E7D73;
+  --f:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:#22283F;color:var(--ink);font-family:var(--f);overflow:hidden;word-break:keep-all}
+[hidden]{display:none!important}
+#viewport{position:fixed;inset:0;overflow:hidden}
+#stage{width:1280px;height:720px;position:absolute;left:50%;top:50%;transform-origin:center center;transform:translate(-50%,-50%);background:var(--frame)}
+
+.tab{position:absolute;left:10px;top:8px;width:290px;height:46px;background:var(--tab);border-radius:12px 12px 0 0;display:flex;align-items:center;padding-left:46px;font-size:17px;font-weight:500}
+.wctl{position:absolute;right:18px;top:12px;display:none;gap:18px;color:#fff;font-size:20px;line-height:1;opacity:.9}
+.chrome{position:absolute;left:10px;right:10px;top:54px;bottom:10px;background:var(--tab);padding:12px 14px 14px}
+.search{height:46px;background:#fff;border-radius:6px;display:flex;align-items:center;gap:14px;padding:0 18px 0 22px;font-size:21px;font-weight:700}
+.search svg{flex:none}
+.search .dots{margin-left:auto;display:grid;gap:4px}
+.search .dots i{width:4px;height:4px;border-radius:50%;background:#999;display:block}
+.page{position:absolute;left:14px;right:14px;top:70px;bottom:14px;background:var(--page);overflow:hidden}
+.slide{position:absolute;inset:0;padding:44px 64px 40px;display:none;flex-direction:column}
+.slide.on{display:flex;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide.on{animation:none}}
+
+.h{color:var(--head);font-size:34px;font-weight:700;text-align:center;margin:6px 0 30px;letter-spacing:-.01em}
+.box{background:var(--box);padding:30px 40px;font-size:21px;line-height:1.75}
+.hot{color:var(--hot);font-weight:700}
+.navy{color:var(--head);font-weight:700}
+.sm{font-size:17px;color:var(--muted)}
+.center{text-align:center}
+ol.list,ul.list{margin:0;padding-left:1.3em;display:grid;gap:14px}
+.pill{display:inline-block;background:var(--pill);color:#8B847C;font-size:14px;font-weight:700;padding:4px 14px;border-radius:999px;letter-spacing:.04em}
+
+.title-wrap{flex:1;display:grid;place-items:center;align-content:center;gap:22px;text-align:center}
+.big-title{font-size:104px;font-weight:300;letter-spacing:-.03em;line-height:1}
+.sub-band{background:var(--box);padding:12px 70px;font-size:21px;font-weight:500}
+.school{font-size:19px;font-weight:500;margin-top:40px}
+
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.card{background:var(--box);padding:22px 24px;font-size:18px;line-height:1.6}
+.card b{display:block;font-size:21px;color:var(--head);margin-bottom:6px}
+.card .n{font-size:13px;font-weight:700;color:#8B847C;letter-spacing:.06em;display:block;margin-bottom:6px}
+
+.steps{flex:1;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 6px}
+.st{display:grid;justify-items:center;gap:14px;text-align:center;width:180px}
+.st span.t{font-size:22px;font-weight:500;line-height:1.4}
+.st span.d{font-size:15px;color:var(--muted);line-height:1.5}
+.arr{color:var(--head);font-size:22px;padding-bottom:40px}
+
+.agenda{display:grid;gap:10px;max-width:880px;margin:-8px auto 0;width:100%}
+.ag{display:grid;grid-template-columns:70px 1fr auto;align-items:center;background:var(--box);padding:12px 26px;font-size:21px}
+.ag .k{font-size:15px;font-weight:700;color:#8B847C}
+.ag .m{font-size:16px;color:var(--muted)}
+
+.curve{display:grid;grid-template-columns:1.25fr 1fr;gap:34px;align-items:center;flex:1}
+.curve svg text{font-family:var(--f);font-size:14px;fill:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--hot)}
+
+.timer{display:flex;align-items:center;gap:14px;justify-content:center;margin-top:auto}
+.timer .t{font-size:40px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--head);min-width:120px;text-align:center}
+.tbtn{font:inherit;font-size:16px;font-weight:500;border:1px solid #CFC6BC;background:#fff;color:var(--ink);padding:8px 18px;border-radius:6px;cursor:pointer}
+.tbtn:hover{background:var(--box)}
+.timer.done .t{color:var(--hot)}
+
+.quote{font-size:40px;font-weight:700;text-align:center;line-height:1.45;letter-spacing:-.02em}
+.quote small{display:block;font-size:20px;font-weight:400;color:var(--muted);margin-top:18px;letter-spacing:0}
+
+.note-card{background:#fff;border:2px dashed #CFC6BC;padding:24px 30px;font-size:20px;line-height:1.9}
+.note-card .row{display:grid;grid-template-columns:150px 1fr;border-bottom:1px solid #E7DFD7;padding:6px 0}
+.note-card .row:last-child{border:0}
+.note-card .row b{color:var(--head)}
+
+.area{background:var(--box);padding:24px 28px;display:flex;flex-direction:column;gap:10px;font-size:17.5px;line-height:1.6}
+.area .n{font-size:13px;font-weight:700;color:#8B847C;letter-spacing:.06em}
+.area > b{font-size:25px;color:var(--head);margin-top:-6px}
+.area ul{margin:0;padding-left:1.2em;display:grid;gap:4px}
+.area .ex{background:#fff;padding:14px 18px;margin-top:6px;font-size:17px;line-height:1.6}
+.flow{display:flex;align-items:stretch;justify-content:space-between;gap:10px}
+.flow .arr{align-self:center}
+.fl{flex:1;background:var(--box);padding:22px 18px;display:grid;justify-items:center;align-content:start;gap:10px;text-align:center}
+.fl b{font-size:22px;color:var(--head)}
+.fl span:last-child{font-size:16px;color:var(--muted);line-height:1.6}
+.fl.loop{background:#FBE8E5}
+.fl.loop b{color:var(--hot)}
+
+#ctrl{position:fixed;left:50%;bottom:max(12px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;align-items:center;gap:6px;background:rgba(20,24,40,.82);color:#fff;border-radius:999px;padding:5px 8px;font-family:var(--f);font-size:14px;z-index:20;opacity:.25;transition:opacity .2s}
+#ctrl:hover,#ctrl:focus-within,body.ek-editing #ctrl{opacity:1}
+#ctrl button{font:inherit;background:transparent;border:0;color:#fff;cursor:pointer;padding:6px 12px;border-radius:999px}
+#ctrl button:hover{background:rgba(255,255,255,.15)}
+#count{font-variant-numeric:tabular-nums;min-width:62px;text-align:center}
+:focus-visible{outline:3px solid #F2B84B;outline-offset:2px}
+.qlv{display:grid;gap:12px}
+.ql{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:start;background:var(--box);padding:16px 24px;font-size:18px;line-height:1.7}
+.ql p{margin:0}.ql .pill{justify-self:start;margin-top:3px}
+.ql.on{background:#fff;border:2px solid var(--head);font-size:16.5px;line-height:1.72}
+.ql.on .pill{background:var(--head);color:#fff}
+.flow4{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.f4{background:var(--box);padding:14px 22px;font-size:16px;line-height:1.6;display:flex;flex-direction:column;gap:7px}
+.f4 p{margin:0}.f4 .pill{align-self:flex-start}
+.f4 ol{margin:0;padding-left:1.2em;display:grid;gap:4px}
+#progress{position:absolute;left:0;bottom:0;height:4px;background:var(--hot);transition:width .3s}
+/* editkit UI */
+.ek-ui{font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;-webkit-font-smoothing:antialiased}
+.ek-bar{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);right:12px;z-index:60;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 24px);opacity:.6;transition:opacity .2s}
+.ek-bar:hover,.ek-bar:focus-within,.ek-bar.open{opacity:1}
+.ek-tools{display:flex;align-items:center;gap:6px;background:rgba(20,24,34,.86);padding:5px;border-radius:999px;box-shadow:0 6px 20px -8px rgba(0,0,0,.45)}
+.ek-main{display:flex;align-items:center;gap:6px}
+.ek-main .ek-b{background:rgba(20,24,34,.78);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 13px;font-size:13px;font-weight:600;line-height:1.2;box-shadow:0 4px 14px -6px rgba(0,0,0,.45)}
+.ek-main .ek-b:hover{background:rgba(40,46,62,.92)}
+.ek-main .ek-b.on{background:#F2B84B;border-color:#F2B84B;color:#1d1d1d}
+.ek-tools{display:none;flex-wrap:wrap;border-radius:16px}
+.ek-bar.open .ek-tools{display:flex}
+.ek-b{font:inherit;font-size:13px;font-weight:600;line-height:1;border:0;border-radius:999px;padding:8px 13px;cursor:pointer;background:rgba(255,255,255,.12);color:#fff;text-decoration:none;white-space:nowrap}
+.ek-b:hover{background:rgba(255,255,255,.24)}
+.ek-b.on,.ek-b.em{background:#F2B84B;color:#1d1d1d}
+.ek-b.on:hover,.ek-b.em:hover{background:#f5c66a}
+.ek-b.ghost{background:transparent;color:#dfe3ee}
+.ek-b.ghost:hover{background:rgba(255,255,255,.14)}
+.ek-b.ek-i{width:30px;height:30px;padding:0;display:grid;place-items:center;font-size:15px}
+.ek-b:focus-visible{outline:2px solid #F2B84B;outline-offset:2px}
+.ek-st{font-size:12px;color:#b9f0cf;padding:0 8px 0 4px;white-space:nowrap}
+.ek-st.bad{color:#ffb4a8}
+@media (max-width:760px){}
+
+.ek-credit{position:fixed;z-index:4;font-size:11px;letter-spacing:.02em;color:rgba(255,255,255,.55);pointer-events:none}
+.ek-credit.ek-bl{left:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px)}
+.ek-credit.ek-tl{left:18px;top:calc(env(safe-area-inset-top,0px) + 14px);color:var(--muted,#888)}
+body.ek-editing .media-slot,body.ek-editing .timer[data-sec]{outline:2.5px dashed #F2B84B;outline-offset:3px;cursor:pointer}
+.ek-modal{position:fixed;inset:0;z-index:80;background:rgba(10,12,18,.55);display:grid;place-items:center;padding:20px}
+.ek-card{background:#fff;color:#1e1e1e;border-radius:16px;max-width:440px;width:100%;padding:24px 26px 20px;box-shadow:0 30px 60px -20px rgba(0,0,0,.5);font-size:14px;line-height:1.65}
+.ek-card h3{margin:0 0 2px;font-size:19px}
+.ek-card .ek-by{margin:0 0 14px;color:#6b6660;font-size:13px}
+.ek-card dl{margin:0 0 16px}
+.ek-card dt{font-weight:700;font-size:13px;color:#34489A;margin-top:10px}
+.ek-card dd{margin:2px 0 0}
+.ek-card a{color:#34489A}
+.ek-card .ek-close{float:right}
+/* 영상 칸 */
+.media-slot{position:relative;width:100%;background:#000}
+.media-slot iframe,.media-slot video{display:block;width:100%;border:0;aspect-ratio:16/9;background:#000;max-height:62vh}
+.video-frame.vertical .media-slot iframe,.video-frame.vertical .media-slot video{aspect-ratio:9/16;max-height:66vh}
+.media-slot.empty{background:var(--surface-2,#eee)}
+.media-slot.empty{aspect-ratio:16/9;display:grid;place-content:center;padding:16px;text-align:center}
+.video-frame.vertical .media-slot.empty{aspect-ratio:9/16}
+.media-slot.empty::before{content:"영상 자리\A ✏️ 편집 중에 여기를 눌러 유튜브 주소나 영상 파일을 넣으세요";white-space:pre-line;color:var(--muted,#777);font-size:.9rem;line-height:1.6}
+@media print{.ek-ui{display:none!important}}
+
+.ek-bar{z-index:40}
+
+.ek-vrow{display:flex;gap:8px;align-items:center;margin:10px 0}
+.ek-vrow.end{justify-content:flex-end;margin-top:14px}
+.ek-in{flex:1;min-width:0;border:1px solid #cfd6e0;border-radius:10px;padding:9px 11px;font:inherit;font-size:14px}
+.ek-card .ek-b{background:#eef1f6;color:#1e1e1e;border:1px solid #d8dde6}
+.ek-card .ek-b.on{background:#F2B84B;border-color:#F2B84B;color:#1d1d1d}
+.ek-file{cursor:pointer;display:inline-flex}
+.ek-note{font-size:12.5px;color:#6b6660;line-height:1.6;margin:6px 0 0}
+.media-slot.loading{aspect-ratio:16/9;background:#111}
+.video-frame.vertical .media-slot.loading{aspect-ratio:9/16}
+
+</style>
+</head>
+<body>
+
+<div id="viewport">
+<div id="stage" aria-roledescription="슬라이드 쇼">
+  <div class="tab">스포츠멘탈 동아리</div>
+  <div class="wctl" aria-hidden="true"><span>—</span><span>○</span><span>✕</span></div>
+  <div class="chrome">
+    <div class="search">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2.2" aria-hidden="true"><circle cx="10.5" cy="10.5" r="7"/><path d="M16 16l5 5"/></svg>
+      <span id="stitle">스포츠멘탈</span>
+      <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    </div>
+    <div class="page" id="page">
+
+<section class="slide" data-t="스포츠멘탈">
+  <div class="title-wrap">
+    <div class="big-title">스포츠멘탈</div>
+    <div class="sub-band">동아리 수업자료 · 마음도 훈련된다</div>
+    <div class="school">○○고등학교 스포츠멘탈 동아리</div>
+  </div>
+</section>
+
+<section class="slide" data-t="오늘의 흐름">
+  <h2 class="h">오늘의 흐름</h2>
+  <div class="agenda">
+    <div class="ag"><span class="k">01</span><span>마음 때문에 결과가 달라진 순간</span><span class="m">짝 활동 · 5분</span></div>
+    <div class="ag"><span class="k">02</span><span>스포츠 심리학이란?</span><span class="m">5분</span></div>
+    <div class="ag"><span class="k">03</span><span>탐구할 수 있는 여덟 가지 영역과 교과 연결</span><span class="m">12분</span></div>
+    <div class="ag"><span class="k">04</span><span>탐구 보고서는 이렇게 쓴다</span><span class="m">13분</span></div>
+    <div class="ag"><span class="k">05</span><span>나의 탐구 씨앗 정하기</span><span class="m">개인 활동 · 10분</span></div>
+    <div class="ag"><span class="k">06</span><span>앞으로의 진행</span><span class="m">5분</span></div>
+  </div>
+</section>
+
+<section class="slide" data-t="생각 열기">
+  <div class="title-wrap" style="gap:28px">
+    <div class="quote">"연습 땐 잘 들어가는데<br>시합만 되면 <span class="hot">안 들어가요</span>."<small>이런 경험, 나만 있는 걸까?</small></div>
+  </div>
+</section>
+
+<section class="slide" data-t="생각 열기">
+  <h2 class="h">손 들어 볼까요?</h2>
+  <div class="box">
+    <ol class="list">
+      <li>시합이나 수행평가 직전에 <span class="hot">심장이 쿵쾅거린</span> 적이 있다.</li>
+      <li>친구들이 지켜보면 평소보다 <span class="hot">더 잘하거나, 더 못한</span> 적이 있다.</li>
+      <li>한 번 실수하고 나서 <span class="hot">계속 실수가 이어진</span> 적이 있다.</li>
+      <li>시간 가는 줄 모르고 <span class="hot">완전히 빠져서</span> 운동한 적이 있다.</li>
+    </ol>
+  </div>
+  <p class="sm center" style="margin-top:22px">네 가지 모두 오늘부터 우리가 탐구할 스포츠 심리 현상입니다.</p>
+</section>
+
+<section class="slide" data-t="활동 1 · 마음이 결과를 바꾼 순간">
+  <h2 class="h">활동 1 · 마음이 결과를 바꾼 순간</h2>
+  <div class="g2">
+    <div class="box" style="font-size:19px">
+      <p class="navy" style="margin:0 0 10px">짝에게 이야기해 보세요</p>
+      <ol class="list" style="gap:10px">
+        <li><b>언제, 어떤 종목</b>이었나요?</li>
+        <li>그때 <b>몸</b>은 어땠나요? (심장, 손, 호흡, 근육)</li>
+        <li>그때 <b>머릿속</b>에는 무슨 생각이 있었나요?</li>
+        <li><b>결과</b>는 어떻게 되었나요?</li>
+      </ol>
+    </div>
+    <div class="box" style="font-size:18px;background:#fff;border:2px dashed #CFC6BC">
+      <p class="navy" style="margin:0 0 10px">예시</p>
+      <p style="margin:0">2학년 체육 시간 <span class="hot">농구 자유투 수행평가</span>. 반 친구들이 다 보고 있어서 손에 땀이 나고 숨이 얕아졌다. '이번에 못 넣으면 어떡하지'만 생각났다. 연습 땐 10개 중 7개였는데 <span class="hot">평가 땐 4개</span>.</p>
+    </div>
+  </div>
+  <div class="timer" data-sec="180"><button class="tbtn" type="button">3분 타이머 시작</button><span class="t">3:00</span><button class="tbtn" type="button" data-reset>초기화</button></div>
+</section>
+
+<section class="slide" data-t="스포츠 심리학이란?">
+  <h2 class="h">스포츠 심리학이란?</h2>
+  <div class="box center" style="font-size:24px;padding:34px 40px">
+    스포츠와 운동 상황에서 사람의 <span class="hot">생각 · 감정 · 행동</span>을 연구하고,<br>그 결과를 <span class="navy">경기력 향상</span>과 <span class="navy">건강한 성장</span>에 적용하는 학문
+  </div>
+  <div class="g2" style="margin-top:24px">
+    <div class="card"><span class="n">질문 하나</span><b>마음 → 몸</b>불안, 자신감, 집중은 경기 결과를 어떻게 바꿀까?</div>
+    <div class="card"><span class="n">질문 둘</span><b>몸 → 마음</b>운동을 하면 스트레스, 자존감, 집중력은 어떻게 달라질까?</div>
+  </div>
+</section>
+
+<section class="slide" data-t="스포츠 심리학이란?">
+  <h2 class="h">기술은 같은데, 왜 결과가 다를까?</h2>
+  <div class="g3">
+    <div class="card"><b>양궁 마지막 한 발</b>수천 번 쏜 같은 동작. 결승의 마지막 한 발에서는 바람보다 심장 소리가 더 크게 들린다.</div>
+    <div class="card"><b>승부차기 키커</b>11m 거리, 움직이지 않는 공. 그런데도 프로 선수들이 실축한다.</div>
+    <div class="card"><b>우리 반 자유투</b>연습 땐 들어가던 슛이 평가 때만 짧다. 손이 아니라 마음이 먼저 굳었다.</div>
+  </div>
+  <div class="box center" style="margin-top:26px;font-size:22px">경기력 = <span class="navy">기술</span> + <span class="navy">체력</span> + <span class="hot">마음(심리)</span><br><span class="sm">기술과 체력이 비슷한 선수들끼리라면, 승부를 가르는 것은 마음인 경우가 많습니다.</span></div>
+</section>
+
+<section class="slide" data-t="미리 보기 · 역U 가설">
+  <h2 class="h" style="margin-bottom:14px">미리 보기 · 긴장은 적당해야 한다</h2>
+  <div class="curve">
+    <svg viewBox="0 0 520 330" role="img" aria-label="역U 가설 그래프">
+      <rect x="205" y="20" width="110" height="262" fill="#E3F0EE" rx="6"/>
+      <text x="260" y="40" text-anchor="middle">최적 수행 구역</text>
+      <line x1="44" y1="282" x2="500" y2="282" stroke="#CFC6BC" stroke-width="2"/>
+      <line x1="44" y1="16" x2="44" y2="282" stroke="#CFC6BC" stroke-width="2"/>
+      <path id="cv" fill="none" stroke-width="5" stroke-linecap="round" stroke="url(#gr)"/>
+      <defs><linearGradient id="gr"><stop offset="0" stop-color="#2E7D73"/><stop offset=".5" stop-color="#2E7D73"/><stop offset=".65" stop-color="#E0281E"/><stop offset="1" stop-color="#E0281E"/></linearGradient></defs>
+      <circle id="cd" r="10" fill="#fff" stroke="#1E1E1E" stroke-width="3"/>
+      <text x="272" y="310" text-anchor="middle">각성(긴장) 수준 →</text>
+      <text x="50" y="310">낮음</text><text x="498" y="310" text-anchor="end">높음</text>
+      <text x="28" y="150" text-anchor="middle" transform="rotate(-90 28 150)">수행 →</text>
+    </svg>
+    <div>
+      <div class="box" style="padding:24px 28px" data-se-skip>
+        <p class="navy" id="cn" style="margin:0 0 8px;font-size:26px">최적 수행 구역</p>
+        <p id="cdsc" style="margin:0;font-size:18px;line-height:1.65;min-height:5em">적당히 긴장되어 집중이 선명한 상태. 몸은 깨어 있고 동작은 자연스럽다.</p>
+      </div>
+      <label for="ar" class="sm" style="display:block;margin:18px 0 4px">각성 수준 조절</label>
+      <input type="range" id="ar" min="0" max="100" value="50">
+      <p class="sm" style="margin-top:10px">역U 가설(Yerkes &amp; Dodson). 심박수를 재며 직접 확인해 볼 수 있습니다.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-t="탐구 영역">
+  <h2 class="h">스포츠 심리, 여덟 가지 탐구 영역</h2>
+  <div class="g4">
+    <div class="card"><span class="n">영역 1</span><b>동기와 목표</b>무엇이 나를 끝까지 뛰게 할까?</div>
+    <div class="card"><span class="n">영역 2</span><b>각성과 불안</b>긴장하면 왜 실력이 안 나올까?</div>
+    <div class="card"><span class="n">영역 3</span><b>주의집중과 루틴</b>결정적 순간에 어디를 봐야 할까?</div>
+    <div class="card"><span class="n">영역 4</span><b>자신감과 자기대화</b>자신감도 연습할 수 있을까?</div>
+    <div class="card"><span class="n">영역 5</span><b>심상 훈련</b>머릿속 연습도 효과가 있을까?</div>
+    <div class="card"><span class="n">영역 6</span><b>팀 응집력</b>잘하는 선수만 모으면 강팀일까?</div>
+    <div class="card"><span class="n">영역 7</span><b>몰입과 회복</b>시간 가는 줄 모르는 경기의 비밀</div>
+    <div class="card"><span class="n">영역 8</span><b>판단과 의사결정</b>골키퍼는 왜 가운데 서 있지 않을까?</div>
+  </div>
+  <p class="sm center" style="margin-top:22px">다음 네 장에서 영역별 핵심 개념과 탐구 주제 예시를 살펴봅니다.</p>
+</section>
+
+<section class="slide" data-t="탐구 영역 1 · 2">
+  <h2 class="h">동기와 목표 · 각성과 불안</h2>
+  <div class="g2">
+    <div class="area"><span class="n">영역 1</span><b>동기와 목표</b>
+      <ul><li>내적 동기(재미·성취감)와 외적 동기(보상·칭찬)</li><li>자기결정성 이론: 자율성·유능감·관계성</li><li>결과·수행·과정 목표</li></ul>
+      <div class="ex"><span class="navy">탐구 예시</span> 보상이 오히려 운동하고 싶은 마음을 줄일 수 있을까?<br><span class="sm">인간과 심리 · 경제 · 확률과 통계</span></div></div>
+    <div class="area"><span class="n">영역 2</span><b>각성과 불안</b>
+      <ul><li>역U 가설: 긴장은 너무 낮아도 높아도 손해</li><li>인지적 불안(걱정)과 신체적 불안(두근거림)</li><li>교감신경계와 아드레날린</li></ul>
+      <div class="ex"><span class="navy">탐구 예시</span> 관중이 있을 때 자유투 성공률은 달라질까?<br><span class="sm">생명과학 · 통합과학 · 확률과 통계</span></div></div>
+  </div>
+</section>
+
+<section class="slide" data-t="탐구 영역 3 · 4">
+  <h2 class="h">주의집중과 루틴 · 자신감과 자기대화</h2>
+  <div class="g2">
+    <div class="area"><span class="n">영역 3</span><b>주의집중과 루틴</b>
+      <ul><li>주의의 폭(넓은·좁은)과 방향(내적·외적)</li><li>압박 속 동작을 지나치게 의식하면 생기는 초킹</li><li>수행 전 루틴: 매번 같은 순서로 마음 정돈</li></ul>
+      <div class="ex"><span class="navy">탐구 예시</span> 프로 선수들의 서브·자유투 루틴에는 어떤 공통점이 있을까?<br><span class="sm">체육 · 정보 · 인간과 심리</span></div></div>
+    <div class="area"><span class="n">영역 4</span><b>자신감과 자기대화</b>
+      <ul><li>자기효능감의 네 원천: 성공 경험, 대리 경험, 언어적 설득, 몸과 감정 상태</li><li>지시적 자기대화와 동기적 자기대화</li></ul>
+      <div class="ex"><span class="navy">탐구 예시</span> 실수 뒤 나에게 하는 말이 다음 수행을 바꿀까?<br><span class="sm">국어 · 인간과 심리</span></div></div>
+  </div>
+</section>
+
+<section class="slide" data-t="탐구 영역 5 · 6">
+  <h2 class="h">심상 훈련 · 팀 응집력</h2>
+  <div class="g2">
+    <div class="area"><span class="n">영역 5</span><b>심상 훈련</b>
+      <ul><li>오감을 써서 동작을 머릿속에 생생하게 재현하기</li><li>내 눈으로 보는 내적 관점, 영상처럼 보는 외적 관점</li><li>상상할 때도 뇌의 운동 관련 영역이 활성화된다</li></ul>
+      <div class="ex"><span class="navy">탐구 예시</span> 이미지 트레이닝 전후로 슛 성공률이 달라질까?<br><span class="sm">생명과학 · 확률과 통계</span></div></div>
+    <div class="area"><span class="n">영역 6</span><b>팀 응집력</b>
+      <ul><li>과제 응집력(같은 목표)과 사회 응집력(서로 친함)</li><li>링겔만 효과: 인원이 늘수록 1인당 노력이 줄어든다</li><li>역할이 분명할 때 태만이 줄어든다</li></ul>
+      <div class="ex"><span class="navy">탐구 예시</span> 줄다리기 인원이 늘면 1인당 힘이 줄어들까?<br><span class="sm">사회와 문화 · 통합사회 · 물리학</span></div></div>
+  </div>
+</section>
+
+<section class="slide" data-t="탐구 영역 7 · 8">
+  <h2 class="h">몰입과 회복 · 판단과 의사결정</h2>
+  <div class="g2">
+    <div class="area"><span class="n">영역 7</span><b>몰입과 회복</b>
+      <ul><li>몰입의 조건: 도전과 실력의 균형, 분명한 목표, 즉각적 피드백</li><li>과훈련과 번아웃의 신호</li><li>수면과 휴식이 회복에 하는 역할</li></ul>
+      <div class="ex"><span class="navy">탐구 예시</span> 청소년 운동선수의 수면 시간과 경기력은 관계가 있을까?<br><span class="sm">생명과학 · 보건 · 인간과 심리</span></div></div>
+    <div class="area"><span class="n">영역 8</span><b>판단과 의사결정</b>
+      <ul><li>행동 편향: 가만히 있기보다 뭔가 하는 쪽을 택한다</li><li>뜨거운 손 오류: 연속 성공 뒤 또 성공할 거라는 착각</li><li>같은 상황도 표현 방식에 따라 판단이 바뀐다</li></ul>
+      <div class="ex"><span class="navy">탐구 예시</span> 농구의 '뜨거운 손'은 진짜일까? 경기 기록으로 확인하기<br><span class="sm">확률과 통계 · 경제</span></div></div>
+  </div>
+</section>
+
+<section class="slide" data-t="교과와 만나는 지점">
+  <h2 class="h">스포츠 심리, 교과와 만나다</h2>
+  <div class="g3">
+    <div class="card"><b>생명과학</b>긴장하면 심장이 빨라지는 이유 → <span class="hot">자율신경계</span>, 호르몬</div>
+    <div class="card"><b>사회와 문화</b>여럿이 당기면 덜 힘쓰는 이유 → <span class="hot">사회적 태만</span>, 집단의 특성</div>
+    <div class="card"><b>확률과 통계</b>연속 득점한 선수는 정말 '감'이 좋을까? → <span class="hot">뜨거운 손 오류</span></div>
+    <div class="card"><b>국어</b>실수 뒤 나에게 하는 말 → <span class="hot">자기대화</span>와 표현 효과</div>
+    <div class="card"><b>정보</b>반응속도·심박수 기록 → <span class="hot">데이터 수집과 시각화</span></div>
+    <div class="card"><b>인간과 심리 · 경제</b>보상이 동기를 줄일 수도 있다? → <span class="hot">동기 이론</span>, 인센티브</div>
+  </div>
+  <p class="sm center" style="margin-top:22px">내 진로·관심 과목과 연결하면 탐구가 훨씬 깊어집니다.</p>
+</section>
+
+<section class="slide" data-t="탐구 과정">
+  <h2 class="h">탐구 보고서는 이 다섯 단계로</h2>
+  <div class="steps">
+    <div class="st"><span class="pill">STEP 1</span><span class="t">질문 또는<br>선정 동기</span><span class="d">경험에서 생긴 '왜?'</span></div>
+    <span class="arr">→</span>
+    <div class="st"><span class="pill">STEP 2</span><span class="t">주제 조사</span><span class="d">교과서·책·기사·논문·AI</span></div>
+    <span class="arr">→</span>
+    <div class="st"><span class="pill">STEP 3</span><span class="t">해결 과정</span><span class="d">측정·실험·설문으로 직접 확인</span></div>
+    <span class="arr">→</span>
+    <div class="st"><span class="pill">STEP 4</span><span class="t">결론</span><span class="d">교과 개념으로 설명, 한계</span></div>
+    <span class="arr">→</span>
+    <div class="st"><span class="pill">STEP 5</span><span class="t">후속활동</span><span class="d">새 질문과 다음 계획</span></div>
+  </div>
+</section>
+
+<section class="slide" data-t="질문의 차이">
+  <h2 class="h" style="margin-bottom:22px">질문의 차이</h2>
+  <div class="qlv">
+    <div class="ql"><span class="pill">1 · 주제만</span><p>경쟁 불안에 대해 조사하여 발표함.</p></div>
+    <div class="ql"><span class="pill">2 · 조사·비교만</span><p>인지적 불안(걱정)과 신체적 불안(두근거림)을 비교, 분석하여 경기력에 미치는 영향을 발표함.</p></div>
+    <div class="ql on"><span class="pill">3 · 질문에서 출발</span><p>수행평가 때만 자유투가 안 들어가는 이유에 대한 <span class="hot">궁금증에서 출발</span>하여 체육 선생님께 질문하고, <span class="hot">스포츠 심리학 분야 중 각성(긴장 수준)과 경기력의 관계</span>를 다루는 이론이 있음을 알게 됨. 생명과학 교과서로 긴장할 때 교감신경이 심박수와 근긴장을 높이는 원리를 살펴본 뒤, 대표 이론인 <span class="hot">역U 가설</span>과 연결하여 각성이 너무 낮으면 집중이 흩어지고 너무 높으면 몸이 굳어 적당한 각성에서 가장 좋은 수행이 나온다는 결론을 도출하여 발표함. 일상에서 생긴 궁금증을 그냥 지나치지 않고, <span class="hot">교과의 개념과 연관 지어 질문을 통해 해답을 도출해 낸 점</span>이 인상적임.</p></div>
+  </div>
+</section>
+
+<section class="slide" data-t="탐구 예시">
+  <h2 class="h" style="margin:0 0 14px">예시 · 긴장을 아예 안 하면 더 잘할까?</h2>
+  <div class="flow4">
+    <div class="f4"><span class="pill">질문 또는 동기</span><p>연습 땐 자유투 10개 중 7개가 들어갔는데 수행평가 땐 4개만 들어감. 긴장 때문인 것 같은데, <span class="hot">그럼 긴장을 아예 하지 않으면 더 잘할까?</span> 하는 궁금증이 생김.</p></div>
+    <div class="f4"><span class="pill">탐구 과정</span><ol><li>체육 선생님께 질문 → 스포츠 심리학 분야 중 <b>각성(긴장 수준)과 경기력의 관계</b>를 다루는 이론이 있다는 것을 알게 됨</li><li>생명과학 교과서로 긴장할 때 교감신경이 심박수·근긴장을 높이는 원리를 살펴봄</li><li>스포츠 심리학 책에서 대표 이론인 <b>역U 가설</b>을 찾아, 그래프를 낮음, 적정, 과각성 구간으로 나눠 해석함</li></ol></div>
+    <div class="f4"><span class="pill">결론</span><p>각성이 너무 낮으면 집중이 흩어지고, 너무 높으면 근육이 굳어 정밀한 동작부터 흔들림. 수행평가 때의 나는 과각성 구간에 있었음. 긴장은 없앨 대상이 아니라 <span class="hot">적정 수준으로 조절할 대상</span>임을 이해함.</p></div>
+    <div class="f4"><span class="pill">후속활동</span><p><span class="navy">새 질문</span> 심호흡이나 수행 전 루틴으로 각성을 적정 구간까지 낮출 수 있을까?<br><span class="sm">선수들의 호흡법·루틴을 조사해 내 자유투에 적용해 보기로 함.</span></p></div>
+  </div>
+</section>
+
+<section class="slide" data-t="주제 선정 방법">
+  <h2 class="h">주제를 고르는 네 가지 길</h2>
+  <div class="g2">
+    <div class="card"><b>평소 궁금했던 것에서</b>운동하거나 경기를 보며 생긴 궁금증을 지금 배우는 교과와 연결하기<br><span class="sm">응원 소리가 크면 왜 더 잘 뛰게 될까? → 관중 효과</span></div>
+    <div class="card"><b>이미 한 활동을 더 깊게</b>수업이나 다른 활동에서 했던 탐구 중 아쉬웠던 것을 스포츠 심리로 확장하기<br><span class="sm">생명과학 신경계 수업 → 심상 훈련과 뇌</span></div>
+    <div class="card"><b>부족한 부분을 채우려고</b>내 기록에 비어 있는 역량(데이터 분석, 실험 설계 등)을 보충할 수 있는 주제 고르기<br><span class="sm">수치 분석이 부족했다면 → 측정·설문 중심 주제</span></div>
+    <div class="card"><b>교과서 목차에서 키워드로</b>교과서 목차를 펼쳐 진로와 관련된 키워드를 골라 스포츠 심리와 엮기<br><span class="sm">확률과 통계 '통계적 추정' → 홈 어드밴티지 분석</span></div>
+  </div>
+</section>
+
+<section class="slide" data-t="탐구 씨앗 노트">
+  <h2 class="h">탐구 씨앗 노트 · 이렇게 씁니다</h2>
+  <div class="g2" style="align-items:start">
+    <div class="note-card">
+      <div class="row"><b>관심 영역</b><span>각성과 불안</span></div>
+      <div class="row"><b>떠오른 내 경험</b><span>자유투 평가 때 손이 굳었다</span></div>
+      <div class="row"><b>나의 '왜?'</b><span class="hot">왜 보는 사람이 있으면 더 긴장될까?</span></div>
+      <div class="row"><b>연결할 교과</b><span>생명과학, 사회와 문화</span></div>
+      <div class="row"><b>확인 방법</b><span>관중 유무에 따라 자유투 성공률 비교</span></div>
+    </div>
+    <div class="box" style="font-size:19px">
+      <ul class="list">
+        <li>'~에 대해 알아보기'가 아니라 <span class="navy">'왜 ~할까?'</span>로 쓰세요.</li>
+        <li>언제, 어떤 종목, 무엇을 느꼈는지. <span class="hot">경험이 구체적일수록</span> 좋은 주제가 됩니다.</li>
+        <li>직접 확인할 방법(측정·실험·설문·기록 분석)이 떠오르는 주제를 고르세요.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-t="활동 2 · 나의 탐구 씨앗">
+  <h2 class="h">활동 2 · 나의 탐구 씨앗 정하기</h2>
+  <div class="box" style="font-size:19px">
+    <p style="margin:0 0 12px">활동 1에서 나눈 내 경험을 바탕으로 <span class="hot">탐구 씨앗 2개</span>를 쓰고, 더 끌리는 하나에 표시하세요.</p>
+    <p class="navy" style="margin:0 0 8px">'왜?'가 잘 안 떠오른다면 이렇게 시작해 보세요</p>
+    <ul class="list" style="gap:8px">
+      <li>왜 <span class="hot">______</span> 할 때는 <span class="hot">______</span> 해질까?</li>
+      <li><span class="hot">______</span> 하면 <span class="hot">______</span> 이 달라질까?</li>
+      <li>잘하는 선수들은 <span class="hot">______</span> 할 때 무엇이 다를까?</li>
+    </ul>
+  </div>
+  <div class="timer" data-sec="420"><button class="tbtn" type="button">7분 타이머 시작</button><span class="t">7:00</span><button class="tbtn" type="button" data-reset>초기화</button></div>
+</section>
+
+<section class="slide" data-t="앞으로의 진행">
+  <h2 class="h">앞으로는 이렇게 진행합니다</h2>
+  <div class="flow">
+    <div class="fl"><span class="pill">오늘</span><b>오리엔테이션</b><span>스포츠 심리 영역 살펴보기<br>탐구 씨앗 정하기</span></div>
+    <span class="arr" style="padding:0">→</span>
+    <div class="fl"><span class="pill">다음 시간부터</span><b>보고서 작성 시작</b><span>주제 확정, 자료 조사<br>STEP 1~2 초안 쓰기</span></div>
+    <span class="arr" style="padding:0">→</span>
+    <div class="fl loop"><span class="pill">작성하면서</span><b>피드백 → 수정</b><span>시간마다 선생님 피드백<br>보완하고 다음 단계로</span></div>
+    <span class="arr" style="padding:0">→</span>
+    <div class="fl"><span class="pill">마무리</span><b>최종 제출</b><span>완성한 보고서와<br>후속 탐구 계획</span></div>
+  </div>
+  <div class="box center" style="margin-top:30px;font-size:20px;padding:22px 30px">보고서는 한 번에 완성하지 않습니다. <span class="hot">쓰고 → 피드백 받고 → 고치기</span>를 반복하며 깊어집니다.</div>
+</section>
+
+<section class="slide" data-t="우리 동아리 약속">
+  <h2 class="h">우리 동아리 약속</h2>
+  <div class="g2">
+    <div class="card"><b>안전 먼저</b>측정·실험을 할 때는 준비 운동부터. 몸이 불편하면 바로 멈추고 쉬기.</div>
+    <div class="card"><b>기록은 존중</b>친구의 기록과 경험을 비교하거나 놀리지 않기. 모두가 연구 참여자입니다.</div>
+    <div class="card"><b>데이터는 정직하게</b>측정한 그대로 기록하기. 결과가 예상과 달라도 그것이 발견입니다.</div>
+    <div class="card"><b>AI는 확인하고 쓰기</b>AI 답변을 그대로 옮기지 않기. 교과서·책·기사·논문으로 다시 확인하고 출처 남기기.</div>
+  </div>
+</section>
+
+<section class="slide" data-t="스포츠멘탈">
+  <div class="title-wrap">
+    <div class="big-title" style="font-size:96px">감사합니다</div>
+    <div class="sub-band">스포츠멘탈 동아리</div>
+  </div>
+</section>
+
+    </div>
+  </div>
+  <div id="progress"></div>
+</div>
+</div>
+
+<div id="ctrl" role="group" aria-label="슬라이드 이동">
+  <button type="button" id="prev" aria-label="이전 슬라이드">◀</button>
+  <span id="count"></span>
+  <button type="button" id="next" aria-label="다음 슬라이드">▶</button>
+  <button type="button" id="fs">전체 화면</button>
+</div>
+
+<script>
+window.EK_CFG={
+  key:'pe-ed-mental1', title:'스포츠멘탈 동아리 수업자료',
+  regions:'.tab, #page', reveal:'', contentRoot:'#stage', slideSel:'#page > .slide', credit:'bl',
+  getPage:function(){return window.__deck?window.__deck.cur():0},
+  clean:function(root){
+    root.querySelectorAll('.slide.on').forEach(function(s){s.classList.remove('on')});
+    root.querySelectorAll('.timer[data-sec]').forEach(function(t){
+      var m=Math.round(+t.dataset.sec/60);t.classList.remove('done');
+      var b=t.querySelectorAll('button');if(b[0])b[0].textContent=m+'분 타이머 시작';if(b[1])b[1].textContent='초기화';
+      var o=t.querySelector('.t');if(o)o.textContent=m+':00';
+    });
+  },
+  onToggle:function(on){['#stitle','.tab'].forEach(function(q){var e=document.querySelector(q);if(!e)return;if(on){e.setAttribute('contenteditable','true');e.setAttribute('data-se-edit','')}else{e.removeAttribute('contenteditable')}})},
+  onInput:function(el){if(el.id==='stitle'){var s=document.querySelector('#page > .slide.on');if(s)s.setAttribute('data-t',el.textContent.trim())}},
+  exportClean:function(doc){
+    var st=doc.querySelector('#stage');if(st)st.removeAttribute('style');
+    var p=doc.querySelector('#progress');if(p)p.removeAttribute('style');
+    var c=doc.querySelector('#count');if(c)c.textContent='';
+    var f=doc.querySelector('#page > .slide');var s=doc.querySelector('#stitle');if(s&&f){s.textContent=f.getAttribute('data-t')||'';s.removeAttribute('data-se-edit')}
+    var tb=doc.querySelector('.tab');if(tb)tb.removeAttribute('data-se-edit');
+  }
+};
+/* =====================================================================
+   SlideEditor v1.1 — 슬라이드 HTML용 범용 편집기 + 판서 도구
+   - 편집(E): 글자 직접 수정, 서식(굵게·색·형광·크기), 요소 복제·삭제·이동,
+     실행 취소, 브라우저 임시 저장, 수정본 HTML 파일로 저장(Ctrl+S)
+   - 판서: 펜(P)·형광펜(H)·직선(L)·지우개(X)·모두 지우기(C), Esc로 끄기
+   사용: SlideEditor.init({ regions, reveal, contentRoot, launcher, getPage,
+         onToggle, getExtra, setExtra, cleanClone, skip })
+   v1.1: skip(편집 제외 선택자), flush(), 버튼 이름 'HTML 내려받기'
+   ===================================================================== */
+(function(){
+  if (window.SlideEditor) return;
+
+  var cfg, editing = false, regions = [], mediaMap = {}, sel = null, undoStack = [];
+  var saveTimer = null, ui = {}, keepSel = false;
+  var tool = null, strokes = {}, hist = {}, cur = null, erased = null;
+  var penColor = '#e0392b', hlColor = '#f5c400', widthIdx = 1, canvas, ctx, dpr = 1, lastPage = null;
+  var PEN_W = [2, 4, 8], HL_W = [14, 24, 36], ERASE_R = 14;
+  var DRAW_COLORS = [['#111111','검정'],['#e0392b','빨강'],['#2563eb','파랑'],['#16a34a','초록'],['#f5c400','노랑']];
+  var TEXT_COLORS = [['#e0392b','빨강'],['#2563eb','파랑'],['#1f7a4d','초록'],['#b4832a','금색']];
+  var MEDIA = 'video,audio,img,source,iframe';
+
+  function $$(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+
+  /* ---------- 스타일 ---------- */
+  function injectCSS(){
+    if (document.getElementById('se-style')) document.getElementById('se-style').remove();
+    var st = document.createElement('style');
+    st.id = 'se-style';
+    st.textContent = [
+      '#se-root{--se-bg:var(--surface,#fff);--se-fg:var(--fg,#142019);--se-line:var(--line,#d7e0d9);--se-ac:var(--accent,#1f7a4d);--se-muted:var(--muted,#5c6c62);font-family:var(--font-body,system-ui,sans-serif);}',
+      '#se-root [hidden]{display:none !important;}',
+      '.se-canvas{position:fixed;inset:0;width:100vw;height:100vh;z-index:14;pointer-events:none;touch-action:none;}',
+      'body.se-drawing .se-canvas{pointer-events:auto;cursor:crosshair;}',
+      'body.se-drawing.se-erasing .se-canvas{cursor:cell;}',
+      '.se-btn{appearance:none;height:30px;min-width:30px;padding:0 9px;border:1px solid var(--se-line);border-radius:8px;background:var(--se-bg);color:var(--se-fg);font:600 .78rem/1 inherit;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap;}',
+      '.se-btn:hover{border-color:var(--se-ac);}',
+      '.se-btn.on{background:var(--se-ac);color:var(--accent-ink,#fff);border-color:transparent;}',
+      '.se-btn:disabled{opacity:.35;cursor:default;border-color:var(--se-line);}',
+      '.se-bar{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);left:50%;transform:translateX(-50%);z-index:36;display:flex;flex-direction:column;align-items:center;gap:6px;width:max-content;max-width:calc(100% - 24px);}',
+      '.se-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px;background:var(--se-bg);border:1px solid var(--se-line);border-radius:14px;padding:5px 8px;box-shadow:0 12px 30px -18px rgba(0,0,0,.45);font-size:.78rem;}',
+      '.se-label{font-weight:700;color:var(--se-ac);padding:0 4px;}',
+      '.se-status{color:var(--se-muted);padding:0 6px;}',
+      '.se-sep{width:1px;height:20px;background:var(--se-line);margin:0 3px;}',
+      '.se-sw{width:20px;height:20px;border-radius:50%;border:2px solid var(--se-bg);box-shadow:0 0 0 1px var(--se-line);display:inline-block;}',
+      '.se-hl{background:#fff3a0;color:#111;padding:0 3px;border-radius:3px;}',
+      '.se-pal{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:36;display:flex;flex-direction:column;align-items:center;gap:5px;background:var(--se-bg);border:1px solid var(--se-line);border-radius:16px;padding:6px;box-shadow:0 12px 30px -18px rgba(0,0,0,.45);}',
+      '.se-pal .se-btn{width:44px;height:38px;padding:0;font-size:.7rem;flex-direction:column;gap:1px;}',
+      '.se-pal .se-btn svg{width:18px;height:18px;}',
+      '.se-pal .se-tools{display:none;flex-direction:column;align-items:center;gap:5px;}',
+      '.se-pal.open .se-tools{display:flex;}',
+      '.se-pal .se-cbtn{width:28px;height:28px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;}',
+      '.se-pal .se-cbtn.on{border-color:var(--se-fg);box-shadow:0 0 0 2px var(--se-bg) inset;}',
+      '.se-pal .se-wbtn{width:44px;height:26px;}',
+      '.se-pal .se-wbtn i{display:block;border-radius:9px;background:var(--se-fg);width:22px;}',
+      '.se-hsep{width:28px;height:1px;background:var(--se-line);margin:2px 0;}',
+      'body.se-editing [data-se-edit]{outline:1.5px dashed color-mix(in srgb,var(--se-ac,#1f7a4d) 55%,transparent);outline-offset:3px;border-radius:4px;cursor:text;min-width:1em;}',
+      'body.se-editing [data-se-edit]:hover{background:color-mix(in srgb,var(--accent,#1f7a4d) 7%,transparent);}',
+      'body.se-editing [data-se-edit]:focus{outline:2px solid var(--accent,#1f7a4d);}',
+      'body.se-editing .se-selected{outline:2.5px solid #e0392b !important;outline-offset:4px;}',
+      '.se-toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);z-index:60;background:var(--fg,#142019);color:var(--bg,#fff);font-size:.84rem;font-weight:600;padding:9px 16px;border-radius:999px;transition:opacity .4s;}',
+      '@media (max-width:640px){.se-pal{top:auto;bottom:70px;transform:none;}}'
+    ].join('\n');
+    if (cfg.reveal){
+      st.textContent += '\nbody.se-editing ' + cfg.reveal.split(',').join(',body.se-editing ') +
+        '{opacity:1 !important;transform:none !important;max-height:none !important;overflow:visible !important;visibility:visible !important;}';
+    }
+    document.head.appendChild(st);
+  }
+
+  /* ---------- UI ---------- */
+  var ICON = {
+    pen:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>',
+    hl:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l-6 6v3h9l3-3"/><path d="M22 12l-4.6 4.6a2 2 0 01-2.8 0l-5.2-5.2a2 2 0 010-2.8L14 4"/></svg>',
+    line:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 19L19 5"/></svg>',
+    eraser:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20H7L3 16a2 2 0 010-2.8L13.2 3a2 2 0 012.8 0L21 8a2 2 0 010 2.8L11 20"/><path d="M6 11l7 7"/></svg>',
+    undo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 010 11H11"/></svg>',
+    trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>',
+    close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>'
+  };
+
+  function buildUI(){
+    var old = document.getElementById('se-root'); if (old) old.remove();
+    var root = document.createElement('div');
+    root.id = 'se-root';
+
+    var tc = TEXT_COLORS.map(function(c){
+      return '<button class="se-btn" data-f="color" data-v="' + c[0] + '" title="글자색 ' + c[1] + '"><span class="se-sw" style="background:' + c[0] + '"></span></button>';
+    }).join('');
+    var dc = DRAW_COLORS.map(function(c){
+      return '<button class="se-cbtn" data-color="' + c[0] + '" title="' + c[1] + '" style="background:' + c[0] + '"></button>';
+    }).join('');
+    var wd = [0,1,2].map(function(i){
+      return '<button class="se-btn se-wbtn" data-w="' + i + '" title="' + ['가늘게','보통','굵게'][i] + '"><i style="height:' + [2,5,9][i] + 'px"></i></button>';
+    }).join('');
+
+    root.innerHTML =
+      '<canvas class="se-canvas"></canvas>' +
+      '<div class="se-bar" hidden>' +
+        '<div class="se-row">' +
+          '<span class="se-label">✏️ 편집 모드</span><span class="se-status">글자를 클릭해 고치고, 빈 곳을 누르면 카드째 선택돼요</span>' +
+          '<button class="se-btn" data-a="undo" title="실행 취소 (Ctrl+Z)">' + ICON.undo + ' 취소</button>' +
+          '<button class="se-btn" data-a="save" title="고친 자료를 HTML 파일로 받기 (Ctrl+S)">HTML 내려받기</button>' +
+          '<button class="se-btn" data-a="reset">처음 상태로</button>' +
+          '<button class="se-btn on" data-a="done">편집 끝 E</button>' +
+        '</div>' +
+        '<div class="se-row">' +
+          '<button class="se-btn" data-f="bold" title="굵게 (Ctrl+B)"><b>B</b></button>' +
+          tc +
+          '<button class="se-btn" data-f="hilite" title="형광 표시"><span class="se-hl">형광</span></button>' +
+          '<button class="se-btn" data-f="clear" title="서식 지우기">서식 지우기</button>' +
+          '<span class="se-sep"></span>' +
+          '<button class="se-btn" data-b="smaller" title="글자 작게">A−</button>' +
+          '<button class="se-btn" data-b="bigger" title="글자 크게">A+</button>' +
+          '<span class="se-sep"></span>' +
+          '<button class="se-btn" data-b="widen" title="선택 범위를 한 단계 넓히기">⬚ 범위 넓히기</button>' +
+          '<button class="se-btn" data-b="dup" title="선택한 요소 복제">복제</button>' +
+          '<button class="se-btn" data-b="up" title="위(앞)로">▲</button>' +
+          '<button class="se-btn" data-b="down" title="아래(뒤)로">▼</button>' +
+          '<button class="se-btn" data-b="del" title="선택한 요소 삭제 (Delete)">삭제</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="se-pal">' +
+        '<button class="se-btn" data-p="toggle" title="판서 도구 열기/닫기">' + ICON.pen + '판서</button>' +
+        '<div class="se-tools">' +
+          '<span class="se-hsep"></span>' +
+          '<button class="se-btn" data-tool="pen" title="펜 (P)">' + ICON.pen + '펜</button>' +
+          '<button class="se-btn" data-tool="hl" title="형광펜 (H)">' + ICON.hl + '형광</button>' +
+          '<button class="se-btn" data-tool="line" title="직선 (L)">' + ICON.line + '직선</button>' +
+          '<button class="se-btn" data-tool="eraser" title="지우개 (X) — 닿은 선을 지워요">' + ICON.eraser + '지우개</button>' +
+          '<span class="se-hsep"></span>' + dc +
+          '<span class="se-hsep"></span>' + wd +
+          '<span class="se-hsep"></span>' +
+          '<button class="se-btn" data-p="undo" title="방금 그린 것 취소 (Ctrl+Z)">' + ICON.undo + '취소</button>' +
+          '<button class="se-btn" data-p="clear" title="이 화면 판서 모두 지우기 (C)">' + ICON.trash + '전체</button>' +
+          '<button class="se-btn" data-p="off" title="판서 끄기 (Esc)">' + ICON.close + '끄기</button>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(root);
+
+    ui.root = root;
+    ui.bar = root.querySelector('.se-bar');
+    ui.status = root.querySelector('.se-status');
+    ui.pal = root.querySelector('.se-pal');
+    canvas = root.querySelector('.se-canvas');
+    ctx = canvas.getContext('2d');
+
+    root.addEventListener('mousedown', function(e){ if (e.target.closest('button')) e.preventDefault(); });
+
+    ui.bar.addEventListener('click', function(e){
+      var b = e.target.closest('button'); if (!b) return;
+      if (b.dataset.a === 'undo') undo();
+      else if (b.dataset.a === 'save') saveFile();
+      else if (b.dataset.a === 'reset') resetDraft();
+      else if (b.dataset.a === 'done') setEditing(false);
+      else if (b.dataset.f) format(b.dataset.f, b.dataset.v);
+      else if (b.dataset.b) blockOp(b.dataset.b);
+    });
+
+    ui.pal.addEventListener('click', function(e){
+      var b = e.target.closest('button'); if (!b) return;
+      if (b.dataset.tool) setTool(tool === b.dataset.tool ? null : b.dataset.tool);
+      else if (b.dataset.color){
+        if (tool === 'hl') hlColor = b.dataset.color; else penColor = b.dataset.color;
+        if (!tool || tool === 'eraser') setTool('pen'); else syncPal();
+      }
+      else if (b.dataset.w){ widthIdx = +b.dataset.w; if (!tool || tool === 'eraser') setTool('pen'); else syncPal(); }
+      else if (b.dataset.p === 'toggle'){
+        var open = !ui.pal.classList.contains('open');
+        ui.pal.classList.toggle('open', open);
+        if (open && !tool) setTool('pen'); if (!open) setTool(null);
+      }
+      else if (b.dataset.p === 'undo') drawUndo();
+      else if (b.dataset.p === 'clear') clearPage();
+      else if (b.dataset.p === 'off'){ setTool(null); ui.pal.classList.remove('open'); }
+    });
+    syncPal();
+  }
+
+  function status(msg){ if (ui.status) ui.status.textContent = msg; }
+  function toast(msg){
+    var t = document.createElement('div');
+    t.className = 'se-toast'; t.textContent = msg;
+    ui.root.appendChild(t);
+    setTimeout(function(){ t.style.opacity = '0'; }, 2400);
+    setTimeout(function(){ t.remove(); }, 2900);
+  }
+
+  /* ---------- 편집 대상 표시 ---------- */
+  function skipSel(){ return MEDIA + ',svg,script,style,canvas,button,input,select,textarea,[data-se-skip]' + (cfg.skip ? ',' + cfg.skip : ''); }
+  function markEditables(){
+    var SK = skipSel();
+    regions.forEach(function(rg){
+      (function walk(el){
+        for (var c = el.firstElementChild; c; c = c.nextElementSibling){
+          if (c.matches(SK)) continue;
+          if (c.hasAttribute('data-se-edit')) continue;
+          var hasText = Array.prototype.some.call(c.childNodes, function(n){ return n.nodeType === 3 && n.textContent.trim(); });
+          if (hasText && !c.querySelector(SK)) c.setAttribute('data-se-edit', ''); else walk(c);
+        }
+      })(rg);
+    });
+  }
+  function setCE(on){
+    $$('[data-se-edit]').forEach(function(el){
+      if (on){ el.setAttribute('contenteditable', 'true'); el.setAttribute('spellcheck', 'false'); }
+      else { el.removeAttribute('contenteditable'); el.removeAttribute('spellcheck'); }
+    });
+  }
+
+  /* ---------- 미디어(영상) 보존 ---------- */
+  function indexMedia(){
+    var max = -1;
+    $$('[data-se-media]').forEach(function(m){
+      var id = m.getAttribute('data-se-media');
+      max = Math.max(max, parseInt(id, 10) || 0);
+      if (mediaMap[id] == null && m.getAttribute('src')) mediaMap[id] = m.getAttribute('src');
+    });
+    $$(MEDIA).forEach(function(m){
+      if (m.hasAttribute('data-se-media') || !m.getAttribute('src') || (cfg.skip && m.closest(cfg.skip))) return;
+      var id = String(++max);
+      m.setAttribute('data-se-media', id);
+      mediaMap[id] = m.getAttribute('src');
+    });
+  }
+  var inert = null;
+  function snapshot(){
+    inert = inert || document.implementation.createHTMLDocument('');
+    return regions.map(function(rg){
+      var c = inert.importNode(rg, true);
+      $$('[data-se-media]', c).forEach(function(m){ m.removeAttribute('src'); });
+      $$('.se-selected', c).forEach(function(x){ x.classList.remove('se-selected'); });
+      $$('[contenteditable]', c).forEach(function(x){ x.removeAttribute('contenteditable'); x.removeAttribute('spellcheck'); });
+      if (cfg.cleanSnap) cfg.cleanSnap(c);
+      return c.innerHTML;
+    });
+  }
+  function restore(arr){
+    var now = snapshot();
+    regions.forEach(function(rg, i){
+      if (typeof arr[i] !== 'string' || arr[i] === now[i]) return;
+      rg.innerHTML = arr[i];
+      $$('[data-se-media]', rg).forEach(function(m){
+        if (m.getAttribute('src')) return;
+        var s = mediaMap[m.getAttribute('data-se-media')];
+        if (s){ m.setAttribute('src', s); if (m.tagName === 'SOURCE' && m.parentElement.load) m.parentElement.load(); }
+      });
+    });
+    markEditables();
+    if (editing) setCE(true);
+    select(null);
+    if (cfg.onRestore) cfg.onRestore();
+  }
+
+  /* ---------- 임시 저장 / 실행 취소 ---------- */
+  function storeKey(){ return 'se:' + (cfg.key || (location.pathname + ':' + (cfg.title || document.title))); }
+  function writeDraft(){
+    try{
+      localStorage.setItem(storeKey(), JSON.stringify({ v:1, html: snapshot(), extra: cfg.getExtra ? cfg.getExtra() : null, t: Date.now() }));
+      var d = new Date();
+      status('이 기기에 임시 저장됨 ' + d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0'));
+      return true;
+    }catch(err){ status('임시 저장 안 됨 — "HTML 내려받기"를 눌러 주세요'); return false; }
+  }
+  function saveDraft(){ clearTimeout(saveTimer); saveTimer = setTimeout(writeDraft, 500); }
+  function loadDraft(){
+    try{
+      var raw = localStorage.getItem(storeKey()); if (!raw) return false;
+      var d = JSON.parse(raw);
+      if (!d || !Array.isArray(d.html) || d.html.length !== regions.length) return false;
+      restore(d.html);
+      if (cfg.setExtra && d.extra) cfg.setExtra(d.extra);
+      return true;
+    }catch(err){ return false; }
+  }
+  function hasDraft(){ try{ return !!localStorage.getItem(storeKey()); }catch(err){ return false; } }
+  function resetDraft(){
+    if (!confirm('이 기기에 저장된 수정 내용을 지우고, 이 파일의 원래 내용으로 되돌릴까요?\n(되돌리기 전에 "HTML 내려받기"로 보관해 두면 안전해요)')) return;
+    try{ localStorage.removeItem(storeKey()); }catch(err){}
+    location.reload();
+  }
+  function pushUndo(){ undoStack.push(snapshot()); if (undoStack.length > 40) undoStack.shift(); }
+  function undo(){
+    if (!undoStack.length){ status('되돌릴 작업이 없어요 (글자 입력은 Ctrl+Z로 취소)'); return; }
+    restore(undoStack.pop()); saveDraft(); status('한 단계 되돌렸어요');
+  }
+
+  /* ---------- 선택 ---------- */
+  function inRegion(el){ return regions.some(function(r){ return r !== el && r.contains(el); }); }
+  function select(el){
+    if (sel) sel.classList.remove('se-selected');
+    sel = el && inRegion(el) ? el : null;
+    if (sel) sel.classList.add('se-selected');
+    if (ui.bar) $$('[data-b]', ui.bar).forEach(function(b){ b.disabled = !sel; });
+  }
+
+  /* ---------- 서식 ---------- */
+  function hostOf(node){
+    var el = node && (node.nodeType === 1 ? node : node.parentElement);
+    return el && el.closest('[contenteditable="true"]');
+  }
+  function exec(cmd, val){
+    try{ document.execCommand('styleWithCSS', false, true); }catch(err){}
+    if (cmd === 'hilite'){ if (!document.execCommand('hiliteColor', false, val)) document.execCommand('backColor', false, val); }
+    else document.execCommand(cmd, false, val);
+  }
+  function format(kind, val){
+    var cmd = kind === 'bold' ? 'bold' : kind === 'color' ? 'foreColor' : kind === 'hilite' ? 'hilite' : 'removeFormat';
+    if (kind === 'hilite') val = '#fff3a0';
+    var s = window.getSelection();
+    if (s.rangeCount && !s.isCollapsed && hostOf(s.anchorNode) && hostOf(s.anchorNode) === hostOf(s.focusNode)){
+      pushUndo(); exec(cmd, val); saveDraft(); return;
+    }
+    if (!sel){ status('먼저 글자를 드래그하거나, 바꿀 부분을 클릭하세요'); return; }
+    var targets = sel.hasAttribute('data-se-edit') ? [sel] : $$('[data-se-edit]', sel);
+    if (!targets.length) return;
+    pushUndo();
+    var keep = sel; keepSel = true;
+    targets.forEach(function(t){
+      t.focus();
+      var r = document.createRange(); r.selectNodeContents(t);
+      s.removeAllRanges(); s.addRange(r);
+      exec(cmd, val);
+    });
+    if (kind === 'clear') [keep].concat($$('*', keep)).forEach(function(el){ el.style && el.style.removeProperty('font-size'); });
+    s.removeAllRanges();
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+    keepSel = false; select(keep); saveDraft();
+  }
+
+  /* ---------- 요소 조작 ---------- */
+  function blockOp(op){
+    if (!sel) return;
+    var el = sel;
+    if (op === 'widen'){
+      var p = el.parentElement;
+      if (p && inRegion(p)) select(p); else status('더 넓힐 수 없어요');
+      return;
+    }
+    pushUndo();
+    if (op === 'dup'){
+      var c = el.cloneNode(true);
+      c.classList.remove('se-selected');
+      el.after(c); markEditables(); setCE(true); select(c);
+      status('복제했어요');
+    } else if (op === 'del'){
+      select(null); el.remove(); status('삭제했어요 (취소 버튼으로 되돌릴 수 있어요)');
+    } else if (op === 'up'){
+      if (el.previousElementSibling) el.previousElementSibling.before(el); else { undoStack.pop(); status('맨 앞이에요'); return; }
+    } else if (op === 'down'){
+      if (el.nextElementSibling) el.nextElementSibling.after(el); else { undoStack.pop(); status('맨 뒤예요'); return; }
+    } else if (op === 'bigger' || op === 'smaller'){
+      var f = op === 'bigger' ? 1.1 : 1 / 1.1;
+      var els = [el].concat($$('*', el)).filter(function(x){ return !x.matches(MEDIA + ',svg,svg *,br'); });
+      var sizes = els.map(function(x){ return parseFloat(getComputedStyle(x).fontSize); });
+      els.forEach(function(x, i){ x.style.fontSize = (sizes[i] * f).toFixed(2) + 'px'; });
+    }
+    saveDraft();
+  }
+
+  /* ---------- 편집 모드 켜고 끄기 ---------- */
+  function setEditing(on){
+    if (on === editing) return;
+    editing = on;
+    if (on){ setTool(null); ui.pal.classList.remove('open'); }
+    document.body.classList.toggle('se-editing', on);
+    markEditables(); setCE(on);
+    ui.bar.hidden = !on;
+    ui.pal.hidden = on;
+    if (cfg.launcher) $$(cfg.launcher).forEach(function(b){ b.classList.toggle('on', on); });
+    if (!on){ select(null); if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); }
+    else { select(null); status('글자를 클릭해 고치고, 빈 곳을 누르면 카드째 선택돼요'); }
+    if (cfg.onToggle) cfg.onToggle(on);
+  }
+
+  /* ---------- 파일로 저장 ---------- */
+  function saveFile(){
+    status('파일 만드는 중…');
+    setTimeout(function(){
+      var doc = document.implementation.createHTMLDocument('');
+      var clone = doc.importNode(document.documentElement, true);
+      ['#se-root', '#se-style'].forEach(function(s){ var x = clone.querySelector(s); if (x) x.remove(); });
+      $$('[contenteditable]', clone).forEach(function(x){ x.removeAttribute('contenteditable'); });
+      $$('[spellcheck]', clone).forEach(function(x){ x.removeAttribute('spellcheck'); });
+      $$('.se-selected', clone).forEach(function(x){ x.classList.remove('se-selected'); });
+      var b = clone.querySelector('body');
+      if (b){ b.classList.remove('se-editing', 'se-drawing', 'se-erasing'); if (!b.className) b.removeAttribute('class'); }
+      if (cfg.launcher) $$(cfg.launcher, clone).forEach(function(x){ x.classList.remove('on'); });
+      if (cfg.cleanClone) cfg.cleanClone(clone);
+      var html = '<!doctype html>\n' + clone.outerHTML;
+      var url = URL.createObjectURL(new Blob([html], { type: 'text/html;charset=utf-8' }));
+      var a = document.createElement('a');
+      var dt = new Date(), ds = dt.getFullYear() + String(dt.getMonth() + 1).padStart(2, '0') + String(dt.getDate()).padStart(2, '0');
+      a.href = url; a.download = String(cfg.title || document.title || 'slides').replace(/[\\/:*?"<>|]/g, '') + '_' + ds + '.html';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 5000);
+      status('파일 저장 완료 — 다운로드 폴더를 확인하세요');
+      toast('수정본 파일을 저장했어요');
+    }, 30);
+  }
+
+  /* ---------- 판서 ---------- */
+  function page(){ try{ return String(cfg.getPage ? cfg.getPage() : 0); }catch(err){ return '0'; } }
+  function list(){ var p = page(); return strokes[p] || (strokes[p] = []); }
+  function hlist(){ var p = page(); return hist[p] || (hist[p] = []); }
+  function fit(){
+    dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.round(innerWidth * dpr); canvas.height = Math.round(innerHeight * dpr);
+    redraw();
+  }
+  function drawStroke(s){
+    var W = innerWidth, H = innerHeight;
+    ctx.save();
+    ctx.lineCap = s.tool === 'hl' ? 'butt' : 'round'; ctx.lineJoin = 'round';
+    ctx.strokeStyle = s.color; ctx.lineWidth = s.w;
+    ctx.globalAlpha = s.tool === 'hl' ? 0.38 : 1;
+    ctx.beginPath();
+    s.pts.forEach(function(p, i){ var x = p[0] * W, y = p[1] * H; if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y); });
+    if (s.pts.length === 1) ctx.lineTo(s.pts[0][0] * W + 0.1, s.pts[0][1] * H);
+    ctx.stroke();
+    ctx.restore();
+  }
+  function redraw(){
+    if (!ctx) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    list().forEach(drawStroke);
+    if (cur) drawStroke(cur);
+  }
+  function setTool(t){
+    tool = t; cur = null;
+    document.body.classList.toggle('se-drawing', !!t);
+    document.body.classList.toggle('se-erasing', t === 'eraser');
+    if (t){ if (editing) setEditing(false); ui.pal.classList.add('open'); }
+    syncPal();
+  }
+  function syncPal(){
+    if (!ui.pal) return;
+    $$('[data-tool]', ui.pal).forEach(function(b){ b.classList.toggle('on', b.dataset.tool === tool); });
+    var col = tool === 'hl' ? hlColor : penColor;
+    $$('[data-color]', ui.pal).forEach(function(b){ b.classList.toggle('on', b.dataset.color === col && tool !== 'eraser'); });
+    $$('[data-w]', ui.pal).forEach(function(b){ b.classList.toggle('on', +b.dataset.w === widthIdx && tool !== 'eraser'); });
+    ui.pal.querySelector('[data-p="toggle"]').classList.toggle('on', !!tool);
+  }
+  function pt(e){ return [e.clientX / innerWidth, e.clientY / innerHeight]; }
+  function segDist(px, py, ax, ay, bx, by){
+    var dx = bx - ax, dy = by - ay, l = dx * dx + dy * dy;
+    var t = l ? Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / l)) : 0;
+    var x = ax + t * dx - px, y = ay + t * dy - py;
+    return Math.sqrt(x * x + y * y);
+  }
+  function eraseAt(p){
+    var W = innerWidth, H = innerHeight, px = p[0] * W, py = p[1] * H, arr = list();
+    for (var i = arr.length - 1; i >= 0; i--){
+      var s = arr[i], r = ERASE_R + s.w / 2, hit = false;
+      for (var j = 0; j < s.pts.length && !hit; j++){
+        var a = s.pts[j], b = s.pts[j + 1] || a;
+        if (segDist(px, py, a[0] * W, a[1] * H, b[0] * W, b[1] * H) <= r) hit = true;
+      }
+      if (hit){ erased.push(arr.splice(i, 1)[0]); }
+    }
+  }
+  function drawUndo(){
+    var h = hlist(), a = h.pop(); if (!a) return;
+    var arr = list();
+    if (a.add){ var k = arr.indexOf(a.add); if (k >= 0) arr.splice(k, 1); }
+    else if (a.erase){ Array.prototype.push.apply(arr, a.erase); }
+    else if (a.clear){ Array.prototype.push.apply(arr, a.clear); }
+    redraw();
+  }
+  function clearPage(){
+    var arr = list(); if (!arr.length) return;
+    hlist().push({ clear: arr.slice() }); arr.length = 0; redraw();
+  }
+  function bindCanvas(){
+    canvas.addEventListener('pointerdown', function(e){
+      if (!tool) return;
+      e.preventDefault();
+      try{ canvas.setPointerCapture(e.pointerId); }catch(err){}
+      var p = pt(e);
+      if (tool === 'eraser'){ erased = []; eraseAt(p); redraw(); return; }
+      cur = { tool: tool, color: tool === 'hl' ? hlColor : penColor, w: (tool === 'hl' ? HL_W : PEN_W)[widthIdx], pts: tool === 'line' ? [p, p] : [p] };
+      redraw();
+    });
+    canvas.addEventListener('pointermove', function(e){
+      if (!tool) return;
+      if (tool === 'eraser'){ if (erased){ eraseAt(pt(e)); redraw(); } return; }
+      if (!cur) return;
+      var p = pt(e);
+      if (cur.tool === 'line'){
+        if (e.shiftKey){ var a = cur.pts[0], dx = Math.abs(p[0] - a[0]) * innerWidth, dy = Math.abs(p[1] - a[1]) * innerHeight; if (dx > dy) p[1] = a[1]; else p[0] = a[0]; }
+        cur.pts[1] = p;
+      } else {
+        var last = cur.pts[cur.pts.length - 1];
+        if (Math.abs(p[0] - last[0]) * innerWidth + Math.abs(p[1] - last[1]) * innerHeight < 1.5) return;
+        cur.pts.push(p);
+      }
+      redraw();
+    });
+    function end(){
+      if (erased){ if (erased.length) hlist().push({ erase: erased }); erased = null; }
+      if (cur){ list().push(cur); hlist().push({ add: cur }); cur = null; redraw(); }
+    }
+    canvas.addEventListener('pointerup', end);
+    canvas.addEventListener('pointercancel', end);
+    ['touchstart', 'touchmove', 'touchend', 'click'].forEach(function(t){
+      canvas.addEventListener(t, function(e){ e.stopPropagation(); }, { passive: true });
+    });
+    canvas.addEventListener('contextmenu', function(e){ e.preventDefault(); e.stopPropagation(); });
+    window.addEventListener('resize', fit);
+  }
+
+  /* ---------- 전역 이벤트 (슬라이드 진행보다 먼저 가로챔) ---------- */
+  function bindGlobal(){
+    window.addEventListener('keydown', function(e){
+      var k = e.key, c = e.code, inField = e.target && e.target.isContentEditable;
+      var mod = e.ctrlKey || e.metaKey;
+      if (mod && c === 'KeyS'){ if (editing){ e.preventDefault(); e.stopImmediatePropagation(); saveFile(); } return; }
+      if (inField){
+        e.stopImmediatePropagation();
+        if (k === 'Escape') e.target.blur();
+        else if (k === 'Enter' && !e.isComposing && e.keyCode !== 229){ e.preventDefault(); document.execCommand('insertLineBreak'); }
+        return;
+      }
+      if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName || '')) return;
+      if (mod && c === 'KeyZ'){
+        if (editing){ e.preventDefault(); e.stopImmediatePropagation(); undo(); }
+        else if (tool || list().length){ e.preventDefault(); e.stopImmediatePropagation(); drawUndo(); }
+        return;
+      }
+      if (mod || e.altKey) return;
+      var done = true;
+      if (c === 'KeyE') setEditing(!editing);
+      else if (c === 'KeyP') setTool(tool === 'pen' ? null : 'pen');
+      else if (c === 'KeyH') setTool(tool === 'hl' ? null : 'hl');
+      else if (c === 'KeyL') setTool(tool === 'line' ? null : 'line');
+      else if (c === 'KeyX') setTool(tool === 'eraser' ? null : 'eraser');
+      else if (c === 'KeyC' && !editing) clearPage();
+      else if (k === 'Escape' && tool){ setTool(null); ui.pal.classList.remove('open'); }
+      else if (k === 'Escape' && editing && sel) select(null);
+      else if (k === 'Escape' && editing) setEditing(false);
+      else if ((k === 'Delete' || k === 'Backspace') && editing && sel) blockOp('del');
+      else done = false;
+      if (done){ e.preventDefault(); e.stopImmediatePropagation(); }
+    }, true);
+
+    window.addEventListener('click', function(e){
+      if (!editing || e.target.closest('#se-root')) return;
+      if (!e.target.closest(cfg.contentRoot)) return;
+      if (!keepSel){
+        var t = e.target.closest('[data-se-edit]') || e.target;
+        select(inRegion(t) ? t : null);
+      }
+      if (!e.target.closest('video,audio')) e.stopPropagation();
+    }, true);
+
+    window.addEventListener('focusin', function(e){
+      if (editing && !keepSel && e.target.hasAttribute && e.target.hasAttribute('data-se-edit')) select(e.target);
+    });
+
+    ['contextmenu', 'touchend'].forEach(function(t){
+      window.addEventListener(t, function(e){
+        if (editing && !e.target.closest('#se-root')) e.stopImmediatePropagation();
+      }, true);
+    });
+
+    document.addEventListener('input', function(e){
+      if (editing && e.target.closest && e.target.closest('[data-se-edit]')) saveDraft();
+    });
+
+    document.addEventListener('paste', function(e){
+      if (!e.target || !(e.target.isContentEditable || (e.target.parentElement && e.target.parentElement.isContentEditable))) return;
+      e.preventDefault();
+      var text = (e.clipboardData || window.clipboardData).getData('text/plain');
+      document.execCommand('insertText', false, text);
+    });
+  }
+
+  window.SlideEditor = {
+    init: function(c){
+      cfg = Object.assign({ regions: '.step', reveal: '.step', contentRoot: 'body', title: document.title,
+        launcher: null, getPage: null, onToggle: null, getExtra: null, setExtra: null, cleanClone: null, cleanSnap: null, onRestore: null, skip: null, key: null }, c || {});
+      injectCSS(); buildUI(); bindCanvas(); bindGlobal();
+      regions = $$(cfg.regions);
+      indexMedia(); markEditables(); select(null);
+      if (cfg.launcher) $$(cfg.launcher).forEach(function(b){ b.addEventListener('click', function(){ setEditing(!editing); }); });
+      fit(); lastPage = page();
+      if (loadDraft()) setTimeout(function(){ toast('지난번에 고친 내용을 불러왔어요'); }, 300);
+    },
+    refresh: function(){ var p = page(); if (p !== lastPage){ lastPage = p; cur = null; erased = null; redraw(); } },
+    markDirty: function(){ saveDraft(); },
+    flush: function(){ clearTimeout(saveTimer); return writeDraft(); },
+    save: function(){ saveFile(); },
+    hasDraft: hasDraft,
+    bar: function(){ return ui.bar; },
+    status: status,
+    toast: toast,
+    setEditing: function(on){ setEditing(!!on); },
+    isEditing: function(){ return editing; }
+  };
+})();
+
+/* editkit v2 — 슬라이드 자료 겉 틀 (SlideEditor와 함께 씀)
+   - 오른쪽 위: ← 체육 앱 서랍 · ✏️ 편집 · ⓘ 정보, 크레딧, 정보 창
+   - 편집 중: 장 복제·삭제·순서(편집 막대 3번째 줄), 영상 칸(유튜브 주소), 타이머 시간
+   - 글자·서식·카드·판서·임시 저장·HTML 내려받기는 SlideEditor가 맡음
+   window.EK_CFG = {key,title,regions,reveal,contentRoot,slideSel,credit,clean(root),exportClean(doc),onToggle(on),onInput(el),getPage()} */
+(function(){
+var C=window.EK_CFG, D=document, MAIL='schoolparksc@sjeai.kr';
+// 내려받은 파일마다 따로 저장되게: 파일에 붙은 표식(ek-stamp)을 저장 이름에 붙인다
+var STAMP=(D.querySelector('meta[name="ek-stamp"]')||{}).content||'base';
+var KEY=C.key+(STAMP==='base-1'||STAMP==='base'?'':'@'+STAMP);
+var SS='ek:'+KEY;
+
+/* ---------- 영상 칸: 유튜브 주소 · 영상 주소 · 내 컴퓨터 영상 파일 ---------- */
+// 내 컴퓨터 영상은 이 기기의 IndexedDB에 저장하고, HTML 내려받기 때는 파일 안에 넣는다(data URI).
+var IDB=null;
+function idb(){ if(IDB) return IDB; IDB=new Promise(function(res,rej){ try{ var r=indexedDB.open('pe-media',1); r.onupgradeneeded=function(){ r.result.createObjectStore('v'); }; r.onsuccess=function(){ res(r.result); }; r.onerror=function(){ rej(r.error); }; }catch(e){ rej(e); } }); return IDB; }
+function idbDo(mode,fn){ return idb().then(function(db){ return new Promise(function(res,rej){ var tx=db.transaction('v',mode), st=tx.objectStore('v'), q=fn(st); tx.oncomplete=function(){ res(q&&q.result); }; tx.onerror=function(){ rej(tx.error); }; }); }); }
+function mkey(mid){ return KEY+':'+mid; }
+function vget(mid){ return idbDo('readonly',function(st){ return st.get(mkey(mid)); }); }
+function vput(mid,blob){ return idbDo('readwrite',function(st){ return st.put(blob,mkey(mid)); }); }
+function vdel(mid){ return idbDo('readwrite',function(st){ return st.delete(mkey(mid)); }).catch(function(){}); }
+var fileSrc={}, objURL={}, dataCache={};
+// 내려받은 파일을 다시 열면 영상이 data URI로 들어 있다 → 기억해 두고, 임시 저장에는 '@file' 표시만 남긴다
+D.querySelectorAll('.media-slot[data-src^="data:"]').forEach(function(s){ fileSrc[s.getAttribute('data-mid')||'']=s.getAttribute('data-src'); });
+function ytId(u){var m=/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/))([\w-]{11})/.exec(u||'');return m?m[1]:''}
+function videoEl(src){var v=D.createElement('video');v.src=src;v.controls=true;v.playsInline=true;v.preload='metadata';return v}
+function renderSlot(s){
+  var mid=s.getAttribute('data-mid')||'', src=s.getAttribute('data-src')||'', id=ytId(src);
+  s.innerHTML=''; s.classList.remove('empty','loading');
+  if(s.hasAttribute('data-local')){
+    s.classList.add('loading');
+    if(objURL[mid]){ s.classList.remove('loading'); s.appendChild(videoEl(objURL[mid])); return; }
+    vget(mid).then(function(blob){ s.classList.remove('loading'); if(!blob){ s.classList.add('empty'); return; } objURL[mid]=URL.createObjectURL(blob); s.innerHTML=''; s.appendChild(videoEl(objURL[mid])); })
+      .catch(function(){ s.classList.remove('loading'); s.classList.add('empty'); });
+    return;
+  }
+  if(src==='@file') src=fileSrc[mid]||'';
+  if(id){var f=D.createElement('iframe');f.src='https://www.youtube.com/embed/'+id;f.allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen';f.allowFullscreen=true;f.title='영상';s.appendChild(f)}
+  else if(src) s.appendChild(videoEl(src));
+  else s.classList.add('empty');
+}
+function renderMedia(root){ (root||D).querySelectorAll('.media-slot').forEach(renderSlot); }
+function cleanCommon(root){
+  root.querySelectorAll('.media-slot').forEach(function(s){ s.innerHTML=''; s.classList.remove('empty','loading'); if(/^data:/.test(s.getAttribute('data-src')||'')) s.setAttribute('data-src','@file'); });
+  if(C.clean)C.clean(root);
+}
+function blobToData(b){ return new Promise(function(res,rej){ var fr=new FileReader(); fr.onload=function(){ res(fr.result); }; fr.onerror=rej; fr.readAsDataURL(b); }); }
+function prepareExport(){
+  var mids=[]; D.querySelectorAll('.media-slot[data-local]').forEach(function(s){ var m=s.getAttribute('data-mid'); if(m&&mids.indexOf(m)<0) mids.push(m); });
+  return Promise.all(mids.map(function(m){ return dataCache[m] ? null : vget(m).then(function(b){ return b ? blobToData(b).then(function(d){ dataCache[m]=d; }) : null; }); }));
+}
+function exportSlots(doc){
+  doc.querySelectorAll('.media-slot').forEach(function(s){
+    var m=s.getAttribute('data-mid')||'';
+    if(s.hasAttribute('data-local')){ s.removeAttribute('data-local'); s.setAttribute('data-src', dataCache[m]||''); }
+    else if(s.getAttribute('data-src')==='@file') s.setAttribute('data-src', fileSrc[m]||'');
+  });
+}
+function exportNow(){
+  var big=D.querySelectorAll('.media-slot[data-local]').length;
+  if(big && window.SlideEditor) SlideEditor.status('영상을 파일에 넣는 중… 잠시 기다려 주세요');
+  prepareExport().then(function(){ SlideEditor.save(); }).catch(function(){ SlideEditor.save(); });
+}
+// HTML 내려받기(버튼·Ctrl+S)는 영상을 먼저 준비한 뒤 저장
+addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-a="save"]'); if(!b) return; e.preventDefault(); e.stopImmediatePropagation(); exportNow(); },true);
+addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.code==='KeyS'&&window.SlideEditor&&SlideEditor.isEditing()){ e.preventDefault(); e.stopImmediatePropagation(); exportNow(); } },true);
+
+function slotDialog(slot){
+  var mid=slot.getAttribute('data-mid')||('m'+Date.now().toString(36)); slot.setAttribute('data-mid',mid);
+  var m=D.createElement('div'); m.className='ek-ui ek-modal';
+  m.innerHTML='<div class="ek-card" role="dialog" aria-modal="true" aria-label="영상 칸"><h3>영상 칸</h3>'+
+    '<p class="ek-by">유튜브 주소를 넣거나, 내 컴퓨터의 영상 파일을 넣을 수 있어요.</p>'+
+    '<div class="ek-vrow"><input class="ek-in" type="url" placeholder="https://youtu.be/…" value="'+((slot.getAttribute('data-src')||'').replace(/^(data:|@file).*/,'').replace(/"/g,'&quot;'))+'"><button type="button" class="ek-b on" data-v="url">주소 넣기</button></div>'+
+    '<div class="ek-vrow"><label class="ek-b on ek-file">내 컴퓨터 영상 파일 고르기<input type="file" accept="video/*" hidden></label></div>'+
+    '<p class="ek-note">영상 파일은 <b>이 기기에만</b> 저장되고 인터넷에 올라가지 않아요. <b>HTML 내려받기</b>를 하면 영상이 파일 안에 들어가 다른 컴퓨터에서도 재생돼요(파일이 커져요).</p>'+
+    '<div class="ek-vrow end"><button type="button" class="ek-b" data-v="clear">영상 칸 비우기</button><button type="button" class="ek-b ek-close">닫기</button></div></div>';
+  function done(){ m.remove(); renderSlot(slot); SlideEditor.markDirty(); }
+  m.addEventListener('click',function(e){ e.stopPropagation(); var t=e.target;
+    if(t===m||t.classList.contains('ek-close')){ m.remove(); return; }
+    if(t.dataset.v==='url'){ var u=m.querySelector('.ek-in').value.trim(); if(slot.hasAttribute('data-local')){ slot.removeAttribute('data-local'); vdel(mid); delete objURL[mid]; delete dataCache[mid]; } slot.setAttribute('data-src',u); done(); }
+    if(t.dataset.v==='clear'){ slot.removeAttribute('data-local'); slot.setAttribute('data-src',''); vdel(mid); delete objURL[mid]; delete dataCache[mid]; done(); }
+  });
+  m.querySelector('input[type=file]').addEventListener('change',function(e){
+    var f=e.target.files&&e.target.files[0]; if(!f) return;
+    if(f.size>300*1024*1024 && !confirm('영상이 '+Math.round(f.size/1048576)+'MB로 커요. 그래도 넣을까요? (내려받은 HTML도 그만큼 커져요)')) return;
+    SlideEditor.status('영상 저장 중…');
+    vput(mid,f).then(function(){ if(objURL[mid]) URL.revokeObjectURL(objURL[mid]); objURL[mid]=URL.createObjectURL(f); delete dataCache[mid]; slot.setAttribute('data-local','1'); slot.setAttribute('data-src',''); done(); SlideEditor.toast('영상을 이 기기에 저장했어요'); })
+      .catch(function(){ alert('영상을 저장하지 못했어요. 브라우저 저장 공간이 부족할 수 있어요.'); });
+  });
+  m.addEventListener('keydown',function(e){ e.stopPropagation(); if(e.key==='Escape') m.remove(); if(e.key==='Enter'&&e.target.classList.contains('ek-in')) m.querySelector('[data-v=url]').click(); },true);
+  D.body.appendChild(m); m.querySelector('.ek-in').focus();
+}
+
+/* ---------- 편집 중 클릭: 영상 칸 · 타이머 (SlideEditor보다 먼저) ---------- */
+addEventListener('click',function(e){
+  if(!window.SlideEditor||!SlideEditor.isEditing())return;
+  var t=e.target;if(!t.closest)return;
+  var slot=t.closest('.media-slot');
+  if(slot){e.preventDefault();e.stopImmediatePropagation();slotDialog(slot);return}
+  var tm=t.closest('.timer[data-sec]');
+  if(tm){e.preventDefault();e.stopImmediatePropagation();
+    var m=prompt('타이머 시간(분)을 입력하세요.',String(Math.round(+tm.dataset.sec/60)));
+    if(m===null)return;m=Math.max(1,Math.min(90,parseInt(m,10)||1));tm.dataset.sec=String(m*60);
+    var b=tm.querySelector('button');if(b)b.textContent=m+'분 타이머 시작';var o=tm.querySelector('.t');if(o)o.textContent=m+':00';
+    reloadAt(cur(),true);return}
+},true);
+D.addEventListener('input',function(e){if(window.SlideEditor&&SlideEditor.isEditing()&&e.target.isContentEditable&&C.onInput){C.onInput(e.target);SlideEditor.markDirty()}});
+
+/* ---------- 장 조작 (바꾼 뒤 저장하고 다시 열기) ---------- */
+function slides(){return Array.prototype.slice.call(D.querySelectorAll(C.slideSel))}
+function cur(){try{return C.getPage?+C.getPage():0}catch(e){return 0}}
+function reloadAt(k,edit){
+  D.querySelectorAll('.se-selected').forEach(function(x){x.classList.remove('se-selected')});
+  SlideEditor.flush();
+  try{sessionStorage.setItem(SS+':go',String(k));if(edit)sessionStorage.setItem(SS+':ed','1')}catch(e){}
+  location.reload();
+}
+function dup(){var s=slides(),k=cur(),el=s[k];if(!el)return;var c=el.cloneNode(true);c.classList.remove('on');
+  var jobs=[];c.querySelectorAll('.media-slot').forEach(function(sl){var om=sl.getAttribute('data-mid')||'',nm=(om||'m')+'-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);sl.setAttribute('data-mid',nm);
+    if(sl.hasAttribute('data-local'))jobs.push(vget(om).then(function(b){return b?vput(nm,b):null}));
+    if(sl.getAttribute('data-src')==='@file'||/^data:/.test(sl.getAttribute('data-src')||''))fileSrc[nm]=fileSrc[om];});
+  el.parentNode.insertBefore(c,el.nextSibling);Promise.all(jobs).then(function(){reloadAt(k+1,true)},function(){reloadAt(k+1,true)})}
+function del(){var s=slides(),k=cur();if(s.length<=1){alert('마지막 한 장은 지울 수 없어요.');return}if(!confirm((k+1)+'번째 장을 지울까요?'))return;s[k].remove();reloadAt(Math.min(k,s.length-2),true)}
+function move(d){var s=slides(),k=cur(),j=k+d;if(j<0||j>=s.length)return;var a=s[k],b=s[j];if(d<0)b.parentNode.insertBefore(a,b);else b.parentNode.insertBefore(b,a);reloadAt(j,true)}
+
+/* ---------- 정보 창 ---------- */
+function info(){
+  var m=D.createElement('div');m.className='ek-ui ek-modal';
+  m.innerHTML='<div class="ek-card" role="dialog" aria-modal="true" aria-label="정보"><h3>'+C.title+'</h3>'+
+  '<p class="ek-by">만든 이 · 다정고 박성찬</p>'+
+  '<dl><dt>고쳐 쓰기 (✏️ 편집 · E)</dt><dd>글자를 눌러 바로 고치고, 굵게·글자색·형광·글자 크기를 바꿀 수 있어요. 카드의 빈 곳을 누르면 카드째 골라 복제·삭제·순서를 바꾸고, 맨 아랫줄 버튼으로 장을 복제·삭제·이동해요. 영상 칸과 타이머는 편집 중에 누르면 바뀌어요.</dd>'+
+  '<dt>판서 (왼쪽 판서 버튼)</dt><dd>펜 P · 형광펜 H · 직선 L · 지우개 X · 이 화면 모두 지우기 C · 끄기 Esc. 판서는 수업 중에만 쓰고 파일에는 남지 않아요.</dd>'+
+  '<dt>저장</dt><dd>고친 내용은 <b>이 기기의 브라우저</b>에 자동 저장돼요. 다른 컴퓨터에서 쓰려면 편집 중 <b>HTML 내려받기</b>(Ctrl+S)로 파일을 받아 옮기세요. 받은 파일도 다시 편집할 수 있어요.</dd>'+
+  '<dt>버그 제보 · 기능 제안</dt><dd><a href="mailto:'+MAIL+'?subject='+encodeURIComponent('['+C.title+'] 제보')+'">'+MAIL+'</a></dd></dl>'+
+  '<button type="button" class="ek-b on ek-close">닫기</button></div>';
+  m.addEventListener('click',function(e){e.stopPropagation();if(e.target===m||e.target.classList.contains('ek-close'))m.remove()});
+  m.addEventListener('keydown',function(e){e.stopPropagation();if(e.key==='Escape')m.remove()},true);
+  D.body.appendChild(m);m.querySelector('.ek-close').focus();
+}
+
+/* ---------- 겉 틀 UI ---------- */
+function btn(txt,fn,cls,tip,id){var b=D.createElement('button');b.type='button';b.className='ek-b'+(cls?' '+cls:'');b.textContent=txt;if(tip)b.title=tip;if(id)b.id=id;if(fn)b.addEventListener('click',function(e){e.stopPropagation();fn()});return b}
+var bar=D.createElement('div');bar.className='ek-ui ek-bar';
+var main=D.createElement('div');main.className='ek-main';
+if(/^https?:/.test(location.protocol)){var a=D.createElement('a');a.className='ek-b';a.href='../';a.textContent='← 체육 앱 서랍';a.addEventListener('click',function(e){e.stopPropagation()});main.append(a)}
+main.append(btn('✏️ 편집',null,'','편집 모드 (E)','ekEdit'),btn('ⓘ 정보',info,'','정보 · 만든 이 · 제보'));
+bar.append(main);D.body.appendChild(bar);
+var cr=D.createElement('div');cr.className='ek-ui ek-credit ek-'+(C.credit||'bl');cr.textContent='만든 이 · 다정고 박성찬';D.body.appendChild(cr);
+
+/* ---------- SlideEditor 연결 ---------- */
+SlideEditor.init({
+  key:KEY, title:C.title, regions:C.regions, reveal:C.reveal||'', contentRoot:C.contentRoot,
+  launcher:'#ekEdit', skip:'.timer,.media-slot,.ek-ui',
+  getPage:function(){return cur()},
+  onToggle:function(on){D.body.classList.toggle('ek-editing',on);if(C.onToggle)C.onToggle(on)},
+  cleanSnap:function(root){cleanCommon(root)},
+  onRestore:function(){renderMedia()},
+  cleanClone:function(doc){
+    doc.querySelectorAll('.ek-ui').forEach(function(e){e.remove()});
+    var b=doc.querySelector('body');if(b)b.classList.remove('ek-editing');
+    var ms=doc.querySelector('meta[name="ek-stamp"]'); if(ms) ms.setAttribute('content','ex-'+Date.now().toString(36));
+    exportSlots(doc); doc.querySelectorAll('.media-slot').forEach(function(s){ s.innerHTML=''; s.classList.remove('empty','loading'); }); if(C.clean)C.clean(doc); if(C.exportClean)C.exportClean(doc);
+  }
+});
+renderMedia();
+var sbar=SlideEditor.bar();
+if(sbar){var row=D.createElement('div');row.className='se-row';
+  var lb=D.createElement('span');lb.className='se-label';lb.textContent='장';row.append(lb);
+  [['장 복제',dup,'지금 장을 하나 더 만들어 바로 뒤에 넣어요'],['장 삭제',del,'지금 장을 지워요'],['◀ 앞으로',function(){move(-1)},'지금 장을 한 칸 앞으로'],['뒤로 ▶',function(){move(1)},'지금 장을 한 칸 뒤로']].forEach(function(x){var b=D.createElement('button');b.type='button';b.className='se-btn';b.textContent=x[0];b.title=x[2];b.addEventListener('click',x[1]);row.append(b)});
+  sbar.append(row)}
+
+function after(){
+  var go=null,ed=null;try{go=sessionStorage.getItem(SS+':go');ed=sessionStorage.getItem(SS+':ed');sessionStorage.removeItem(SS+':go');sessionStorage.removeItem(SS+':ed')}catch(e){}
+  if(go!==null&&window.__deck)window.__deck.go(+go);
+  if(ed)SlideEditor.setEditing(true);
+}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',after);else setTimeout(after,0);
+})();
+
+</script>
+
+<script>
+(function(){
+const stage=document.getElementById('stage'),slides=[...document.querySelectorAll('#page > .slide')],N=slides.length;
+let i=0;
+function fit(){const s=Math.min(innerWidth/1280,innerHeight/720);stage.style.transform=`translate(-50%,-50%) scale(${s})`}
+addEventListener('resize',fit);fit();
+function go(k){i=Math.max(0,Math.min(N-1,k));slides.forEach((s,j)=>s.classList.toggle('on',j===i));
+ document.getElementById('stitle').textContent=slides[i].dataset.t;
+ document.getElementById('count').textContent=`${i+1} / ${N}`;
+ document.getElementById('progress').style.width=((i+1)/N*100)+'%';
+ try{history.replaceState(null,'','#s'+(i+1))}catch(e){}
+ if(window.SlideEditor)SlideEditor.refresh();}
+window.__deck={cur:()=>i,go:go};
+const _go=go;
+const m=/^#s(\d+)$/.exec(location.hash);go(m?+m[1]-1:0);
+document.getElementById('prev').onclick=()=>go(i-1);
+document.getElementById('next').onclick=()=>go(i+1);
+addEventListener('keydown',e=>{if(e.target.tagName==='INPUT'||e.target.isContentEditable)return;
+ if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(i+1)}
+ else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(i-1)}
+ else if(e.key==='Home')go(0);else if(e.key==='End')go(N-1)});
+document.getElementById('page').addEventListener('click',e=>{if(e.target.closest('button,input,label'))return;
+ const r=stage.getBoundingClientRect();go(e.clientX<r.left+r.width*0.3?i-1:i+1)});
+let sx=null;addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true});
+addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50)go(dx<0?i+1:i-1);sx=null});
+document.getElementById('fs').onclick=()=>{try{const p=document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();p&&p.catch&&p.catch(()=>{})}catch(e){}};
+
+document.querySelectorAll('.timer').forEach(t=>{const out=t.querySelector('.t'),[b,r]=t.querySelectorAll('button');const total=+t.dataset.sec,label=b.textContent;let left=total,h=null;
+ const show=()=>{out.textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0')};
+ const stop=()=>{clearInterval(h);h=null};
+ b.onclick=()=>{if(h){stop();b.textContent='계속';return}
+  if(left<=0)left=total;t.classList.remove('done');b.textContent='일시정지';
+  h=setInterval(()=>{left--;show();if(left<=0){stop();t.classList.add('done');out.textContent='끝!';b.textContent='다시 시작'}},1000)};
+ r.onclick=()=>{stop();left=total;t.classList.remove('done');show();b.textContent=label};
+ show()});
+
+const cv=document.getElementById('cv');
+if(cv){
+const X0=44,X1=500,Y0=282,px=v=>X0+(X1-X0)*v/100,py=v=>{const t=(v-50)/22;return Y0-12-215*Math.exp(-t*t)};
+let d='';for(let v=0;v<=100;v++)d+=(v?'L':'M')+px(v).toFixed(1)+','+py(v).toFixed(1);
+cv.setAttribute('d',d);
+const st=[[0,24,'각성 부족','몸이 덜 깨어 있고 집중이 흩어진다. 긴장감이 너무 없어 반응이 느려진다.'],[25,37,'올라가는 중','몸이 데워지고 주의가 모이기 시작한다. 준비 운동이 필요한 이유.'],[38,62,'최적 수행 구역','적당히 긴장되어 집중이 선명한 상태. 몸은 깨어 있고 동작은 자연스럽다.'],[63,79,'과각성','심박이 빨라지고 어깨와 손에 힘이 들어간다. 정밀한 동작부터 흔들린다.'],[80,100,'초킹 위험','시야가 좁아지고 익숙한 동작을 하나하나 의식하게 된다. 평소 실력이 나오지 않는다.']];
+const ar=document.getElementById('ar'),cd=document.getElementById('cd');
+function u(){const v=+ar.value;cd.setAttribute('cx',px(v));cd.setAttribute('cy',py(v));const s=st.find(s=>v>=s[0]&&v<=s[1]);
+ document.getElementById('cn').textContent=s[2];document.getElementById('cdsc').textContent=s[3];
+ document.getElementById('cn').style.color=v>62?'var(--hot)':(v>=38?'var(--head)':'var(--calm)')}
+ar.addEventListener('input',u);u();
+}
+})();
+</script>
+</body></html>

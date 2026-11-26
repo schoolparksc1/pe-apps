@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<base target="_top">
+<style>[hidden]{display:none!important} body{margin:0}</style>
+<title>배구 로테이션 보드</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;600&display=swap">
+<style>
+/* Layout: one column, court board on top, rotation controls and live fault report below */
+:root{
+  --bg:#f3f5f8; --panel:#ffffff; --fg:#14202e; --muted:#5b6878; --line:#d5dbe3;
+  --accent:#1f5fbf; --accent-bg:#e3ecfa; --bad:#d6312b; --bad-bg:#fde9e8; --ok:#1d8a52; --ok-bg:#e2f4ea;
+  --court:#e8873a; --free:#2f6fa8; --courtline:#ffffff;
+  --rcv:#1d8a6a; --set:#7a3fc4; --hide:#56606d; --blk:#c0661a; --front:#2b4fa3; --back:#1d8a6a;
+  --display:"Black Han Sans","IBM Plex Sans KR",system-ui,sans-serif;
+  --body:"IBM Plex Sans KR",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f151d; --panel:#18212c; --fg:#e7edf4; --muted:#9aa7b6; --line:#2c3846;
+  --accent:#7fb0ff; --accent-bg:#1c2d47; --bad:#ff6b63; --bad-bg:#3a1a19; --ok:#5fd394; --ok-bg:#15301f;
+  --court:#b8642a; --free:#22517c; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0f151d; --panel:#18212c; --fg:#e7edf4; --muted:#9aa7b6; --line:#2c3846;
+  --accent:#7fb0ff; --accent-bg:#1c2d47; --bad:#ff6b63; --bad-bg:#3a1a19; --ok:#5fd394; --ok-bg:#15301f;
+  --court:#b8642a; --free:#22517c; color-scheme:dark }
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.6}
+.wrap{max-width:560px;margin:0 auto;padding-inline:16px;padding-block:14px 28px;display:flex;flex-direction:column;gap:10px}
+h1{font-family:var(--display);font-weight:400;font-size:24px;margin:0;letter-spacing:.5px;line-height:1.2}
+.sub{color:var(--muted);font-size:13px;margin:0;line-height:1.55}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:8px;padding:5px 10px;cursor:pointer;min-height:34px;white-space:nowrap}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.on{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);font-weight:600}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel);max-width:100%}
+.seg button{border:0;border-radius:0;border-right:1px solid var(--line);min-width:0}
+.seg button:last-child{border-right:0}
+.seg button.on{border-color:transparent}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}
+.tabs button{border:0;border-radius:0;background:transparent;border-bottom:3px solid transparent;font-size:14px;min-height:38px;color:var(--muted)}
+.tabs button.on{background:transparent;color:var(--accent);border-bottom-color:var(--accent)}
+.panel{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:36px}
+[hidden]{display:none!important}
+.panel.atk{flex-wrap:nowrap;gap:3px}
+.panel.atk .seg{flex:4 1 0;display:flex;min-width:0}
+.panel.atk .seg:last-child{flex:3.4 1 0}
+.panel.def .seg{flex:4.3 1 0}
+.panel.def>button{flex:1.9 1 0}
+.srvl{font-size:clamp(10.5px,3.1vw,13px);color:var(--muted);white-space:nowrap;letter-spacing:-.02em}
+.panel.atk>button{flex:1.5 1 0;min-width:0}
+.panel.atk button{font-size:clamp(8.5px,2.5vw,13px);padding:4px 0;letter-spacing:-.04em;min-height:32px;white-space:nowrap;overflow:hidden;text-overflow:clip}
+.panel.atk .seg button{flex:1 1 0;min-width:0}
+.panel.atk .rvl{flex:none;font-size:clamp(8.5px,2.3vw,11.5px);line-height:1.15;color:var(--muted);text-align:center;white-space:nowrap}
+.lbl{font-size:12px;color:var(--muted);letter-spacing:.04em}
+.board{background:var(--free);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:6px}
+.board svg{touch-action:none}
+.btop{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:space-between}
+.btop .grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-width:0}
+.btop .grp.r{flex-basis:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+.btop .grp.r .ftog{font-size:11px;padding:2px 3px;min-height:26px;overflow:hidden;text-overflow:ellipsis}
+.ftog{min-height:26px;padding:2px 10px;font-size:12px;white-space:nowrap;border-radius:12px;background:rgba(14,22,32,.75);color:#fff;border:1px solid rgba(255,255,255,.5)}
+.flabel{padding:3px 10px;font-size:12px;font-weight:600;border-radius:12px;background:rgba(14,22,32,.75);color:#fff;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:18px}
+.ftog.on{background:#fff;color:#0e1620;border-color:#fff}
+svg{display:block;width:100%;height:auto;user-select:none;-webkit-user-select:none}
+.tools{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.tools button{padding:3px 2px;min-height:30px;font-size:clamp(11px,3.3vw,12.5px);letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:rgba(14,22,32,.75);color:#fff;border:1px solid rgba(255,255,255,.45);border-radius:15px}
+.tools button.on{background:#fff;color:#0e1620;border-color:#fff}
+.status{border-radius:10px;padding:9px 12px;font-weight:600;font-size:14px}
+.status.ok{background:var(--ok-bg);color:var(--ok)}
+.status.bad{background:var(--bad-bg);color:var(--bad)}
+ul.faults{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+ul.faults li{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--bad);border-radius:0;padding:8px 12px;font-size:14px}
+details.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:13px;color:var(--muted)}
+details.card summary{color:var(--fg);font-weight:600;cursor:pointer}
+.libchk{display:flex;align-items:center;gap:6px;margin:0 0 8px;color:var(--fg);font-size:13px;cursor:pointer}
+.libchk input{width:16px;height:16px;margin:0}
+table.roster{width:100%;border-collapse:collapse;font-size:13px;color:var(--fg)}
+table.roster th{text-align:left;font-weight:600;padding:4px 6px 4px 0;color:var(--muted);white-space:nowrap}
+table.roster td{padding:3px 4px 3px 0}
+table.roster td:nth-child(2) input{width:4.2em}
+table.roster input{width:100%;min-width:0;box-sizing:border-box;font:inherit;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg)}
+.notice{margin:0;font-size:12.5px;font-weight:600;color:var(--bad)}
+.order{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;font-size:12px;color:var(--muted)}
+.order .oc{padding:1px 7px;border-radius:10px;border:1px solid var(--line);background:var(--panel);white-space:nowrap}
+.order .oc.cur{border-color:var(--accent);color:var(--accent);background:var(--accent-bg);font-weight:600}
+select{font:inherit;font-size:13px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);min-height:34px;max-width:100%}
+.poslegend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12.5px;color:var(--muted);margin-top:-4px}
+.poslegend b{color:var(--fg);font-weight:600;margin-right:2px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--muted)}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:4px}
+.p{cursor:grab}
+.rnav{cursor:pointer}
+.rnav:hover rect{fill-opacity:1}
+.p.drag{cursor:grabbing}
+.pe-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:2px}
+.pe-head .pe-pill{min-height:0}
+</style>
+
+<style id="pe-common">
+.pe-mback{display:inline-flex;align-items:center;justify-content:center;flex:none;width:34px;height:34px;border-radius:10px;font-size:20px;line-height:1;text-decoration:none;color:inherit;opacity:.85}
+.pe-mback:hover{opacity:1;background:rgba(127,127,127,.14)}
+.pe-minfo{display:inline-flex;align-items:center;justify-content:center;flex:none;width:34px;height:34px;border-radius:10px;border:0;background:transparent;color:inherit;font:inherit;font-size:17px;cursor:pointer;opacity:.85}
+.pe-minfo:hover{opacity:1;background:rgba(127,127,127,.14)}
+.pe-tabs-r{-webkit-mask-image:linear-gradient(to right,#000 82%,transparent);mask-image:linear-gradient(to right,#000 82%,transparent)}
+.pe-tabs-l{-webkit-mask-image:linear-gradient(to left,#000 82%,transparent);mask-image:linear-gradient(to left,#000 82%,transparent)}
+.pe-tabs-l.pe-tabs-r{-webkit-mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent)}
+.pe-file{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+/* 오른쪽 위 공통 버튼: ← 체육 앱 서랍 · (수업 모드) · ⓘ 정보 */
+.pe-nav{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin-left:auto}
+.pe-pill{display:inline-flex;align-items:center;gap:5px;height:auto;min-height:0;padding:6px 13px;border-radius:999px;border:1px solid color-mix(in srgb,currentColor 30%,transparent);background:color-mix(in srgb,currentColor 5%,transparent);color:inherit;font:inherit;font-size:13px;font-weight:600;line-height:1.2;text-decoration:none;white-space:nowrap;cursor:pointer;box-shadow:none;width:auto}
+.pe-pill:hover{background:color-mix(in srgb,currentColor 12%,transparent);text-decoration:none}
+.pe-pill:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+.pe-pill[hidden]{display:none!important}
+@media print{.pe-nav{display:none!important}}
+.pe-tnav{order:2}
+.mbar .pe-nav{margin-left:6px;flex-wrap:nowrap}
+.mbar .pe-pill{color:inherit}
+@media (max-width:560px){.pe-mpill .pe-t{display:none}.pe-mpill{padding:6px 10px;font-size:15px}}
+.side #backDrawer{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <div class="pe-head"><h1>배구 로테이션 보드</h1><div class="pe-nav"><a class="pe-pill pe-back" href="../" hidden>← 체육 앱 서랍</a><button type="button" class="pe-pill" id="peInfoBtn">ⓘ 정보</button></div></div>
+    <p class="sub">선수를 끌어 옮기면 리시브 팀 포지션 폴트를 바로 판정합니다. 네트는 위쪽입니다.</p>
+  </div>
+
+  <div class="row">
+    <span class="seg"><button id="s51" class="on">세터 1명</button><button id="s42">세터 2명</button></span>
+    <span id="rots" class="seg"></span>
+  </div>
+
+  <div class="tabs">
+    <button id="tRcv" class="on">리시브</button>
+    <button id="tSrv">서브</button>
+    <button id="tDef">수비</button>
+    <button id="tAtk">공격 전환</button>
+  </div>
+  <div id="pRcv" class="panel"><span class="seg"><button id="mW" class="on">기초(W)</button><button id="mRcv">3인 리시브</button><button id="mBase">기본 위치</button></span></div>
+  <div id="pSrv" class="panel" hidden><span class="srvl">3단계: 기본 위치 → 서버 제외 최적 위치 → 서브 후</span></div>
+  <div id="pDef" class="panel atk def" hidden><span class="rvl" aria-hidden="true">상대<br>공격</span><span class="seg" aria-label="상대 공격"><button id="dR">레프트</button><button id="dC">센터속공</button><button id="dP">파이프</button><button id="dL">라이트</button></span><button id="trans">블로킹 후 반격</button></div>
+  <div id="pAtk" class="panel atk" hidden><span class="seg" aria-label="공격 방향"><button id="aL">레프트</button><button id="aC">센터</button><button id="aR">라이트</button><button id="aP">파이프</button></span><button id="sideout">사이드아웃</button><span class="rvl" aria-hidden="true">서브 받는<br>선수</span><span class="seg" aria-label="서브 받는 선수"><button id="rvL" class="on" title="서브 받는 선수: 리베로">리베로</button><button id="rvF" title="서브 받는 선수: 전위 OH">전위OH</button><button id="rvB" title="서브 받는 선수: 후위 OH">후위OH</button></span></div>
+
+  <div class="board">
+    <div class="btop"><div class="grp" style="flex:1 1 100%"><div id="flabel" class="flabel"></div><button id="libTog" class="ftog" aria-pressed="true" style="margin-left:auto">리베로 있음</button></div>
+    <div class="grp r"><button id="swTog" class="ftog">공격 스위치 꺼짐</button><button id="ftog" class="ftog" aria-pressed="false">폴트 판정 끄기</button><button id="toRcv" class="ftog">원위치로</button></div></div>
+    <svg id="court" viewBox="0 0 384 372" aria-label="배구 코트"></svg>
+    <div class="tools"><button id="pp">재생</button><button id="replay">다시 보기</button><button id="clr">경로 표시</button><button id="zon">구역 숨기기</button></div></div>
+
+  <div id="status" class="status ok">포지션 정상</div>
+  <p id="cap" class="sub"></p>
+  <ul id="faults" class="faults"></ul>
+
+  <div class="legend">
+    <span><i class="dot" style="background:var(--front)"></i>전위 (2·3·4번)</span>
+    <span><i class="dot" style="background:var(--back)"></i>후위 (1·5·6번)</span>
+    <span><i class="dot" style="background:var(--bad)"></i>폴트</span>
+  </div>
+  <div class="poslegend" aria-label="포지션 약자">
+    <span><b>S</b> 세터</span>
+    <span><b>OH</b> 아웃사이드 히터(레프트)</span>
+    <span><b>MB</b> 미들 블로커(센터)</span>
+    <span><b>OP</b> 아포짓(라이트)</span>
+    <span><b>L</b> 리베로</span>
+  </div>
+
+  <details class="card" id="rosterBox">
+    <summary>선수 명단</summary>
+    <p style="margin:6px 0 8px">등번호를 넣으면 원 안에 번호가, 아래에 포지션과 이름이 표시됩니다. 명단은 이 기기에만 저장됩니다.</p>
+    <div class="row" style="margin:0 0 6px"><label for="sOrder" class="lbl">세터의 서브 순서</label><select id="sOrder"><option value="1">1번째</option><option value="2">2번째</option><option value="3">3번째</option><option value="4">4번째</option><option value="5">5번째</option><option value="6">6번째</option></select></div>
+    <p id="srvLine" class="order" style="margin:0 0 6px"></p>
+    <p class="notice" style="margin:0 0 8px">포지션 순서는 가장 많이 쓰는 S → OH → MB → OP → OH → MB로 고정되고, 세터가 몇 번째로 서브할지만 정할 수 있습니다. R1이 첫 서버의 로테이션이 됩니다.</p>
+    <label class="libchk"><input type="checkbox" id="noLib"> 리베로 없음 (6명으로 진행)</label>
+    <table class="roster"><thead><tr><th>포지션</th><th>번호</th><th>이름</th></tr></thead><tbody id="rosterBody"></tbody></table>
+    <button id="rosterClear" style="margin-top:8px">명단 비우기</button>
+  </details>
+
+  <details class="card">
+    <summary>포지션 폴트 판정 기준</summary>
+    <p style="margin:8px 0 0">서브가 맞는 순간 리시브 팀에만 적용합니다.<br>
+    앞뒤: 1번은 2번보다, 6번은 3번보다, 5번은 4번보다 엔드라인 쪽에 있어야 합니다.<br>
+    좌우: 전위는 4번-3번-2번, 후위는 5번-6번-1번 순서로 왼쪽부터 서야 합니다.<br>
+    2025-2028 FIVB 규칙부터 서브 팀은 자기 코트 안 어디에 서도 됩니다. 선수 원을 발이 닿을 수 있는 범위로 보고, 기준 선수의 원 지름의 60%까지 넘어가는 것은 발 일부가 걸쳐 있는 것으로 보아 정상, 그 이상 넘어가면 폴트로 판정합니다.</p>
+  </details>
+  <p class="pe-foot">배구 로테이션 보드 v1.0 · 만든 이 다정고 박성찬 · 명단은 이 기기에만 저장 · 제보·제안 <a href="mailto:schoolparksc@sjeai.kr">schoolparksc@sjeai.kr</a></p>
+</div>
+
+<script>
+const M=34, OX=39, OY=30;               // 1m = 34 units
+const X=v=>OX+v*M, Y=v=>OY+v*M, iX=u=>(u-OX)/M, iY=u=>(u-OY)/M;
+const ROT=[
+ [["S",1,8.45,7.3,"s"],["OH1",2,1.9,6.3,"r"],["MB1",3,1.5,3.6,"h"],["OP",4,1.6,0.8,"h"],["OH2",5,4.6,6.6,"r"],["L",6,7.4,6.5,"r"]],
+ [["OH1",1,7.5,6.4,"r"],["MB1",2,7.6,1.8,"h"],["OP",3,7.7,3.3,"h"],["OH2",4,2.1,6.4,"r"],["L",5,4.9,6.7,"r"],["S",6,6.6,3.4,"s"]],
+ [["L",1,7.6,6.7,"r"],["OP",2,8.45,3.8,"h"],["OH2",3,2.2,6.5,"r"],["MB2",4,0.6,3.8,"h"],["S",5,4.6,3.8,"s"],["OH1",6,4.7,6.8,"r"]],
+ [["OP",1,8.5,7.6,"h"],["OH2",2,1.7,6.8,"r"],["MB2",3,1.9,3.6,"h"],["S",4,2.4,0.8,"s"],["OH1",5,4.6,6.9,"r"],["L",6,7.3,6.8,"r"]],
+ [["OH2",1,7.4,6.6,"r"],["MB2",2,6.5,3.5,"h"],["S",3,6.4,0.8,"s"],["OH1",4,1.9,6.3,"r"],["L",5,4.6,6.6,"r"],["OP",6,7.4,8.2,"h"]],
+ [["L",1,7.4,6.5,"r"],["S",2,8.0,1.6,"s"],["OH1",3,2.2,6.2,"r"],["MB1",4,0.7,3.8,"h"],["OP",5,5.1,8.3,"h"],["OH2",6,4.8,6.6,"r"]]
+];
+const BASE={1:[7.5,7.5],2:[7.5,1.5],3:[4.5,1.5],4:[1.5,1.5],5:[1.5,7.5],6:[4.5,7.5]};
+const W=[
+ {1:[8.5,5.0],2:[7.5,4.0],3:[4.5,4.0],4:[1.5,4.0],5:[3.0,7.0],6:[6.0,7.0]},
+ {1:[6.5,7.0],2:[7.5,4.0],3:[4.5,4.0],4:[1.5,4.0],5:[3.0,7.0],6:[5.0,5.0]},
+ {1:[6.5,7.0],2:[7.5,4.0],3:[4.5,4.0],4:[1.8,4.0],5:[1.0,5.0],6:[3.5,7.0]},
+ {1:[6.0,7.0],2:[7.5,4.0],3:[4.5,4.0],4:[3.8,0.8],5:[1.5,4.0],6:[3.0,7.0]},
+ {1:[6.0,7.0],2:[7.5,4.0],3:[6.2,0.8],4:[1.5,4.0],5:[3.0,7.0],6:[4.5,4.3]},
+ {1:[7.5,4.3],2:[6.4,0.8],3:[4.5,4.0],4:[1.5,4.0],5:[3.0,7.0],6:[5.5,7.0]}
+];
+const W42=[
+ {1:[6.0,7.0],2:[7.5,4.0],3:[4.5,4.0],4:[3.8,0.8],5:[1.5,4.0],6:[3.0,7.0]},
+ {1:[6.0,7.0],2:[7.5,4.0],3:[6.2,0.8],4:[1.5,4.0],5:[3.0,7.0],6:[4.5,4.3]},
+ {1:[7.5,4.3],2:[6.4,0.8],3:[4.5,4.0],4:[1.5,4.0],5:[3.0,7.0],6:[6.0,7.0]}
+];
+let sys="51", curTab="rcv", faultOff=false, curAtk=null, autoOff=false, swOn=false;
+const SRVX=[5.3,5.9,1.5,7.5,5.7,1.5];
+const BENCH=[-0.55,6.0];
+const SERVE={1:[7.5,9.8],2:[7.5,0.7],3:[4.5,0.7],4:[1.5,0.7],5:[1.5,6.5],6:[4.5,6.8]};
+let sStart=0;
+const disp=()=>(rot-sStart+6)%6+1;
+let rot=sStart, mode="w", team="rcv", P=[];
+
+function slot(pos,n){
+  const front=[2,3,4].includes(pos), t=n.replace(/\d/,"");
+  if(front)return t==="OH"?"FL":t==="MB"?"FM":"FR";
+  return (t==="S"||t==="OP")?"BR":t==="OH"?"BM":"BL";
+}
+const DEF={
+ dR:{FL:[1.0,3.3],FM:[6.9,0.6,"b"],FR:[7.8,0.6,"b"],BL:[1.2,6.2],BM:[4.5,8.3],BR:[8.2,6.0]},
+ dC:{FL:[2.4,0.6],FM:[4.5,0.6,"b"],FR:[6.6,0.6],BL:[1.5,5.6],BM:[4.5,7.0],BR:[7.5,5.6]},
+ dP:{FL:[3.9,0.6,"b"],FM:[4.9,0.6,"b"],FR:[7.3,3.0],BL:[1.2,5.8],BM:[4.0,8.3],BR:[7.8,6.3]},
+ dL:{FL:[1.2,0.6,"b"],FM:[2.1,0.6,"b"],FR:[8.0,3.3],BL:[0.8,6.0],BM:[4.5,8.3],BR:[7.8,6.2]}
+};
+const BALL={dR:8.0,dC:4.5,dP:4.5,dL:1.0};
+const SW={FL:[3.4,0.8],FM:[4.6,0.8],FR:[5.5,1.5],BL:[1.5,6.5],BM:[4.5,7.3],BR:[7.5,6.3],SB:[7.6,4.5]};
+let phase=0, timer=null;
+const BLK={FL:[1.2,0.6],FM:[4.5,0.6],FR:[7.8,0.6]};
+function switched(arr,spread){return arr.map(p=>{if(p.pos===0)return p;const k=slot(p.pos,p.n);const s=(spread&&BLK[k])?BLK[k]:(p.n==="S"&&k==="BR")?SW.SB:SW[k];return {...p,x:s[0],y:s[1]}})}
+let showZones=true, showPath=false, TR=[], anim=null, lastStart=null;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let paused=false; const pend=new Set();
+function later(fn,ms){const t={ms,start:performance.now(),id:null};t.fire=()=>{pend.delete(t);fn();ppUI()};pend.add(t);if(!paused)t.id=setTimeout(t.fire,ms);return t}
+function cancel(t){if(t){clearTimeout(t.id);pend.delete(t)}}
+function pauseAll(){paused=true;const n=performance.now();pend.forEach(t=>{clearTimeout(t.id);t.ms-=n-t.start});ppUI()}
+function resumeAll(){paused=false;const n=performance.now();pend.forEach(t=>{t.start=n;t.id=setTimeout(t.fire,Math.max(0,t.ms))});ppUI()}
+function ppUI(){const b=document.getElementById("pp");if(!b)return;const run=!paused&&(anim||pend.size);b.textContent=run?"일시정지":"재생";b.classList.toggle("on",paused)}
+function formation(r,md,tm){
+  const arr=ROT[r].map(([n,pos,x,y,ro])=>{
+    if(sys==="42"){n=n==="S"?"S1":n==="OP"?"S2":n; if(n[0]==="S")ro=[2,3,4].includes(pos)?"s":"h"}
+    if(md[0]==="d"){const s=DEF[md][slot(pos,n)];x=s[0];y=s[1];if(s[2]==="b")ro="b";else if(ro!=="s")ro="r"}
+    else if(tm==="srv"){[x,y]=SERVE[pos]; if(pos===1){x=SRVX[r];y=9.5}
+      if(pos===1&&n==="L"){const used=ROT[r].map(q=>q[0]);n=["MB1","MB2"].find(m=>!used.includes(m));ro="h"}}
+    else if(md==="base"){[x,y]=BASE[pos]}
+    else if(md==="w"){[x,y]=(sys==="42"&&r<3?W42:W)[r][pos]; if(ro!=="s")ro="r"}
+    return {n,pos,x,y,ro};
+  });
+  const names=arr.map(p=>p.n);
+  const off=names.includes("L")?["MB1","MB2"].find(m=>!names.includes(m)):"L";
+  if(noLib){const l=arr.find(p=>p.n==="L");if(l)l.n=off;return arr}
+  arr.push({n:off,pos:0,x:BENCH[0],y:BENCH[1],ro:"h"});
+  return arr;
+}
+let swapMsg="", flow=false, B=null, tok=0, ftimer=null, flowSt="", lastReplay=null;
+function load(){
+  tok++; flow=false; B=null; cancel(ftimer); paused=false; curAtk=null;
+  if(autoOff){autoOff=false;setFault(false)}
+  const prev=P;
+  const next=formation(rot,mode,team);
+  const pb=prev.find(p=>p.pos===0), nb=next.find(p=>p.pos===0);
+  swapMsg=(pb&&nb&&pb.n!==nb.n)?`리베로 교체: ${nb.n} 선수가 교체 구역으로 나가고 ${pb.n} 선수가 들어옵니다.`:"";
+  if(!prev.length){P=next;TR=[];render();return}
+  const start=next.map(p=>{
+    let q=prev.find(o=>o.n===p.n);
+    if(!q)q=prev.find(o=>o.pos===p.pos);
+    return q?{x:q.x,y:q.y}:{x:p.x,y:p.y};
+  });
+  lastStart={start,next:next.map(p=>({...p}))};
+  lastReplay=play;
+  play();
+}
+function play(){
+  const {start,next}=lastStart;
+  cancel(timer); phase=1;
+  const srv=team==="srv"&&mode[0]!=="d";
+  const full=switched(next,true), bunch=switched(next,false);
+  const mid=bunch.map((p,i)=>p.pos===1?{...next[i]}:p);
+  const pos=a=>a.map(p=>({x:p.x,y:p.y}));
+  const gap=reduce?0:600;
+  const sv=next.find(p=>p.pos===1), hand=sv?{x:sv.x+0.45,y:sv.y-0.55}:null;
+  const tgt=sv?{x:Math.max(1,Math.min(8,4.5+(4.5-sv.x)*0.6)),y:-0.6}:null;
+  if(srv)B=null;
+  const p3=full.map((p,i)=>[2,3,4].includes(p.pos)?{...bunch[i]}:p);
+  const step3=()=>{timer=later(()=>{phase=3;run(pos(mid),p3,()=>{timer=later(()=>run(pos(p3),full,()=>render()),reduce?0:100)},tgt);sync()},gap)};
+  const step2=()=>{timer=later(()=>{phase=2;run(pos(next),mid,step3,hand);sync()},gap)};
+  run(start,next.map(p=>({...p})),srv?step2:null,srv?hand:undefined);
+  sync();
+}
+let curNext=null;
+function run(start,next,done,ball){
+  const bS=ball?(B?{...B}:{...ball}):null; if(ball===null)B=null;
+  if(anim)cancelAnimationFrame(anim);
+  curNext=next;
+  const nt=next.map((p,i)=>({x0:start[i].x,y0:start[i].y,x1:p.x,y1:p.y,n:p.n})).filter(t=>Math.hypot(t.x1-t.x0,t.y1-t.y0)>0.15);
+  TR=phase===3?TR.concat(nt):nt;
+  P=next.map((p,i)=>({...p,x:start[i].x,y:start[i].y}));
+  const dur=reduce?0:1100; let el=0,last=performance.now();
+  const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+  const step=now=>{
+    if(!paused)el+=now-last; last=now;
+    const k=dur?Math.min(1,el/dur):1, e=ease(k);
+    P.forEach((p,i)=>{p.x=start[i].x+(next[i].x-start[i].x)*e;p.y=start[i].y+(next[i].y-start[i].y)*e});
+    if(ball)B={x:bS.x+(ball.x-bS.x)*e,y:bS.y+(ball.y-bS.y)*e};
+    render(k<1);
+    anim=k<1?requestAnimationFrame(step):null;
+    if(k>=1&&done)done();
+    ppUI();
+  };
+  anim=requestAnimationFrame(step);
+}
+
+const OVL=0.6*2*19/34;
+const PAIRS_FB=[[1,2],[6,3],[5,4]];
+const ORDER=[[4,3,2],[5,6,1]];
+function check(){
+  const by={}; P.forEach(p=>by[p.pos]=p);
+  const skip=p=>team==="srv"&&p===1;
+  const out=[], bad=new Set();
+  if(faultOff||flow||mode[0]==="d"||team==="srv")return {out,bad,by};
+  PAIRS_FB.forEach(([b,f])=>{
+    if(skip(b))return;
+    if(by[f].y-by[b].y>OVL){out.push({a:b,b:f,t:`${tag(by[b])}가 ${tag(by[f])}보다 너무 네트 쪽으로 넘어갔습니다. ${b}번은 ${f}번보다 뒤에 서야 합니다.`});bad.add(b);bad.add(f)}
+  });
+  ORDER.forEach(row=>{
+    for(let i=0;i<2;i++){
+      const l=row[i], r=row[i+1];
+      if(skip(l)||skip(r))continue;
+      if(by[l].x-by[r].x>OVL){out.push({a:l,b:r,t:`${tag(by[l])}가 ${tag(by[r])}보다 너무 오른쪽으로 넘어갔습니다. ${l}번은 ${r}번의 왼쪽에 서야 합니다.`});bad.add(l);bad.add(r)}
+    }
+  });
+  return {out,bad,by};
+}
+const tag=p=>`${p.n}(${p.pos}번)`;
+
+const ROLES=["S","OH1","MB1","OP","OH2","MB2","L"];
+let roster={}, noLib=false;
+try{noLib=localStorage.getItem("vb-nolib")==="1"}catch(e){}
+try{roster=JSON.parse(localStorage.getItem("vb-roster")||"{}")||{}}catch(e){roster={}}
+if(roster.OPP&&!roster.OP){roster.OP=roster.OPP;delete roster.OPP}
+const rkey=n=>n==="S1"?"S":n==="S2"?"OP":n;
+const rlabel=k=>sys==="42"?(k==="S"?"S1":k==="OP"?"S2":k):k;
+const rnum=p=>((roster[rkey(p.n)]||{}).no||"").trim();
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function under(p,dy){const r=roster[rkey(p.n)]||{},nm=(r.name||"").trim(),no=(r.no||"").trim();
+  const t=no?(nm?p.n+" "+nm:p.n):nm; if(!t)return "";
+  return `<text y="${dy}" text-anchor="middle" fill="#fff" stroke="#0e1620" stroke-width="3" paint-order="stroke" font-size="11" font-weight="600" font-family="IBM Plex Sans KR,sans-serif">${esc(t)}</text>`}
+function buildRoster(){
+  const tb=document.getElementById("rosterBody"); if(!tb)return;
+  tb.innerHTML=ROLES.filter(k=>!(noLib&&k==="L")).map(k=>{const r=roster[k]||{};return `<tr><th scope="row">${rlabel(k)}</th>
+   <td><input id="no-${k}" data-k="${k}" data-f="no" inputmode="numeric" maxlength="3" value="${esc(r.no||"")}" aria-label="${rlabel(k)} 등번호" placeholder="번호"></td>
+   <td><input id="nm-${k}" data-k="${k}" data-f="name" maxlength="8" value="${esc(r.name||"")}" aria-label="${rlabel(k)} 이름" placeholder="이름"></td></tr>`}).join("");
+}
+document.addEventListener("input",e=>{const t=e.target; if(!t.dataset||!t.dataset.k)return;
+  const k=t.dataset.k; roster[k]={...(roster[k]||{}),[t.dataset.f]:t.value};
+  try{localStorage.setItem("vb-roster",JSON.stringify(roster))}catch(_){}
+  render(!!anim); srvLine()});
+const svg=document.getElementById("court");
+function render(moving){
+  let {out,bad,by}=check();
+  if(moving){out=[];bad=new Set()}
+  let h=`<rect x="${X(0)}" y="${Y(0)}" width="${9*M}" height="${9*M}" fill="var(--court)"/>
+  <g stroke="var(--courtline)" stroke-width="2" fill="none">
+   <rect x="${X(0)}" y="${Y(0)}" width="${9*M}" height="${9*M}"/>
+   <line x1="${X(0)}" y1="${Y(3)}" x2="${X(9)}" y2="${Y(3)}"/></g>
+  <line x1="${X(-0.8)}" y1="${Y(0)}" x2="${X(9.8)}" y2="${Y(0)}" stroke="#0e1620" stroke-width="5"/>
+  ${mode[0]==="d"?"":`<text x="${X(4.5)}" y="${Y(0)-10}" text-anchor="middle" fill="#ffffff" font-size="12" font-family="IBM Plex Sans KR,sans-serif">네트</text>`}
+  <text x="${X(8.9)}" y="${Y(3)-6}" text-anchor="end" fill="#ffffff" fill-opacity=".85" font-size="11" font-family="IBM Plex Sans KR,sans-serif">어택라인</text>
+  <text x="${X(8.9)}" y="${Y(9)+16}" text-anchor="end" fill="#ffffff" fill-opacity=".85" font-size="11" font-family="IBM Plex Sans KR,sans-serif">엔드라인</text>
+  ${noLib?"":`<rect x="${X(-1.05)}" y="${Y(3)}" width="${M}" height="${6*M}" fill="#ffffff" fill-opacity=".08" stroke="#fff" stroke-opacity=".6" stroke-dasharray="4 3"/>
+  <text x="2" y="${Y(9)+16}" fill="#ffffff" fill-opacity=".85" font-size="11" font-family="IBM Plex Sans KR,sans-serif">리베로 교체 구역</text>`}`;
+  const pr=(disp()+4)%6+1, nx=disp()%6+1, PF='font-family="IBM Plex Sans KR,sans-serif"';
+  h+=`<g class="rnav" data-act="prev" role="button" aria-label="이전 로테이션 R${pr}"><rect x="3" y="2" width="58" height="22" rx="11" fill="#0e1620" fill-opacity=".8" stroke="#fff" stroke-opacity=".55"/><text x="32" y="17.5" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" ${PF}>◀ R${pr}</text></g>
+  <g class="rnav" data-act="next" role="button" aria-label="다음 로테이션 R${nx}"><rect x="323" y="2" width="58" height="22" rx="11" fill="#0e1620" fill-opacity=".8" stroke="#fff" stroke-opacity=".55"/><text x="352" y="17.5" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" ${PF}>R${nx} ▶</text></g>`;
+  h+=`<defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L9 5L1 9z" fill="#fff"/></marker></defs>`;
+  if(showZones){
+    h+=`<g stroke="#fff" stroke-opacity=".55" stroke-width="1.2" stroke-dasharray="4 4">
+      <line x1="${X(3)}" y1="${Y(0)}" x2="${X(3)}" y2="${Y(9)}"/><line x1="${X(6)}" y1="${Y(0)}" x2="${X(6)}" y2="${Y(9)}"/></g>`;
+    [[4,1.5,1.5,118],[3,4.5,1.5,118],[2,7.5,1.5,118],[5,1.5,6,118],[6,4.5,6,118],[1,7.5,6,118]].forEach(([z,x,y,f])=>{
+      h+=`<text x="${X(x)}" y="${Y(y)+f*0.36}" text-anchor="middle" fill="#fff" fill-opacity=".3" font-size="${f}" font-family="Black Han Sans,IBM Plex Sans KR,sans-serif">${z}</text>`});
+  }
+  if(showPath)TR.forEach(t=>{
+    const ax=X(t.x0),ay=Y(t.y0),bx=X(t.x1),by2=Y(t.y1),L=Math.hypot(bx-ax,by2-ay),s=Math.max(0,(L-22)/L);
+    h+=`<circle cx="${ax}" cy="${ay}" r="5" fill="#fff" fill-opacity=".85"/>
+    <line x1="${ax}" y1="${ay}" x2="${ax+(bx-ax)*s}" y2="${ay+(by2-ay)*s}" stroke="#fff" stroke-opacity=".9" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ah)"/>`});
+  out.forEach(f=>{const a=by[f.a],b=by[f.b];
+    h+=`<line x1="${X(a.x)}" y1="${Y(a.y)}" x2="${X(b.x)}" y2="${Y(b.y)}" stroke="var(--bad)" stroke-width="2.5" stroke-dasharray="6 4"/>`});
+  if(mode[0]==="d"){const bx=X(BALL[mode]);
+    h+=`<circle cx="${bx}" cy="${Y(-0.45)}" r="8" fill="#ffd23f" stroke="#0e1620" stroke-width="1.5"/>
+    <text x="${bx+(BALL[mode]>6?-13:13)}" y="${Y(-0.45)+4}" text-anchor="${BALL[mode]>6?"end":"start"}" fill="#fff" font-size="11" font-family="IBM Plex Sans KR,sans-serif">${mode==="dP"?"상대 파이프(후위)":mode==="dC"?"상대 속공":"상대 공격"}</text>`}
+  P.forEach((p,i)=>{
+    if(p.pos===0){h+=`<g transform="translate(${X(p.x)},${Y(p.y)})"><circle r="16" fill="#6b7480" stroke="#fff" stroke-width="1.5" stroke-dasharray="3 2"/><text text-anchor="middle" dy="4" fill="#fff" font-size="${rnum(p)?13:11}" font-weight="600" font-family="IBM Plex Sans KR,sans-serif">${rnum(p)||p.n}</text>${under(p,28)}</g>`;return}
+    const isBad=bad.has(p.pos), ex=team==="srv"&&p.pos===1;
+    h+=`<g class="p" data-i="${i}" transform="translate(${X(p.x)},${Y(p.y)})" opacity="${ex?.75:1}">
+      <circle r="19" fill="${isBad?"var(--bad)":[2,3,4].includes(p.pos)?"var(--front)":"var(--back)"}" stroke="${isBad?"#fff":"rgba(255,255,255,.7)"}" stroke-width="${isBad?3:1.5}"/>
+      <text text-anchor="middle" dy="${rnum(p)?5.5:4.5}" fill="#fff" font-size="${rnum(p)?16:12.5}" font-weight="600" font-family="IBM Plex Sans KR,sans-serif">${rnum(p)||p.n}</text>${under(p,32)}
+      <circle cx="15" cy="-15" r="9" fill="#0e1620"/>
+      <text x="15" y="-11" text-anchor="middle" fill="#fff" font-size="11" font-family="IBM Plex Sans KR,sans-serif">${p.pos}</text>
+    </g>`;
+  });
+  if(B)h+=`<circle cx="${X(B.x)}" cy="${Y(B.y)}" r="8" fill="#ffd23f" stroke="#0e1620" stroke-width="1.5"/>`;
+  svg.innerHTML=h;
+  const RN={w:"기초 서브리시브(W)",rcv:"3인 리시브",base:"기본 위치"}, DN={dR:"상대 레프트",dC:"상대 센터 속공",dP:"상대 파이프",dL:"상대 라이트"};
+  const lt=flow?(curAtk==="SO"?"사이드아웃":curAtk==="TR"?"블로킹 후 반격":"공격 전환 · "+SIDE[curAtk]):mode[0]==="d"?"수비 · "+DN[mode]:team==="srv"?"서브 "+phase+"단계":RN[mode];
+  document.getElementById("flabel").textContent=`R${disp()} · ${lt}`;
+  const st=document.getElementById("status"), ul=document.getElementById("faults");
+  if(flow){st.className="status ok";st.textContent=flowSt}
+  else if(out.length){st.className="status bad";st.textContent=`포지션 폴트 ${out.length}건`}
+  else if(mode[0]==="d"){st.className="status ok";st.textContent="랠리 중 수비 대형 · 서브 이후라 포지션 폴트 판정 없음"}
+  else if(faultOff&&team!=="srv"){st.className="status ok";st.textContent="포지션 폴트 판정 꺼짐 · 자유롭게 옮겨 보세요"}
+  else{st.className="status ok";st.textContent=team==="srv"?(["","1단계 · 기본 위치","2단계 · 서버 제외 최적 위치","3단계 · 서브 후 서버까지 제자리"][phase]+" (서브 팀 자유 배치)"):"포지션 정상"}
+  ul.innerHTML=out.map(f=>`<li>${f.t}</li>`).join("");
+}
+
+let drag=null;
+function pt(e){const m=svg.getScreenCTM().inverse();const q=new DOMPoint(e.clientX,e.clientY).matrixTransform(m);return q}
+svg.addEventListener("click",e=>{const a=e.target.closest(".rnav");if(!a)return;rot=(rot+(a.dataset.act==="next"?1:5))%6;sync();load()});
+svg.addEventListener("pointerdown",e=>{
+  const g=e.target.closest(".p"); if(!g)return;
+  e.preventDefault();
+  if(anim||pend.size){if(anim)cancelAnimationFrame(anim);anim=null;cancel(timer);timer=null;paused=false;const n=curNext;P.forEach((p,i)=>{p.x=n[i].x;p.y=n[i].y})}
+  tok++; cancel(ftimer); if(flow){flow=false;B=null} ppUI();
+  drag=+g.dataset.i; svg.setPointerCapture(e.pointerId);
+  TR=TR.filter(t=>t.n!==P[drag].n);
+});
+svg.addEventListener("pointermove",e=>{
+  if(drag===null)return;
+  const q=pt(e), p=P[drag];
+  p.x=Math.max(-0.6,Math.min(9.6,iX(q.x)));
+  p.y=Math.max(0.3,Math.min(10.8,iY(q.y)));
+  render();
+  const g=svg.querySelector(`.p[data-i="${drag}"]`); if(g)g.classList.add("drag");
+});
+const end=()=>{drag=null};
+svg.addEventListener("pointerup",end); svg.addEventListener("pointercancel",end);
+
+const rots=document.getElementById("rots");
+ROT.forEach((_,i)=>{const b=document.createElement("button");b.id="r"+i;b.textContent="R"+(i+1);b.onclick=()=>{rot=(sStart+i)%6;sync();load()};rots.appendChild(b)});
+const tog=(a,b,on)=>{document.getElementById(a).classList.toggle("on",on);document.getElementById(b).classList.toggle("on",!on)};
+document.getElementById("ftog").onclick=()=>{autoOff=false;setFault(!faultOff);render(!!anim)};
+document.getElementById("noLib").checked=noLib;
+function setNoLib(v){noLib=v;document.getElementById("noLib").checked=v;try{localStorage.setItem("vb-nolib",v?"1":"0")}catch(_){};buildRoster();sync();load()}
+document.getElementById("noLib").onchange=e=>setNoLib(e.target.checked);
+document.getElementById("libTog").onclick=()=>setNoLib(!noLib);
+const SRVO=["S","OH1","MB1","OP","OH2","MB2"];
+function srvLine(){const el=document.getElementById("srvLine");if(!el)return;
+  el.innerHTML='<span class="lbl">서브 순서</span>'+[0,1,2,3,4,5].map(i=>{const k=SRVO[(sStart+i)%6],r=roster[k]||{},no=(r.no||"").trim(),nm=(r.name||"").trim();
+   return `<span class="oc${(sStart+i)%6===rot?" cur":""}">${i+1}. ${esc(rlabel(k))}${no?" "+esc(no)+"번":""}${nm?" "+esc(nm):""}</span>`}).join("")}
+document.getElementById("sOrder").value=String((6-sStart)%6+1);
+document.getElementById("sOrder").onchange=e=>{const k=+e.target.value;sStart=(7-k)%6;rot=sStart;sync();load()};
+document.getElementById("rosterClear").onclick=()=>{roster={};try{localStorage.removeItem("vb-roster")}catch(_){};buildRoster();render(!!anim)};
+document.getElementById("pp").onclick=()=>{
+  if(paused)resumeAll();
+  else if(anim||pend.size)pauseAll();
+  else if(lastReplay)lastReplay();
+};
+document.getElementById("replay").onclick=()=>{if(lastReplay)lastReplay()};
+document.getElementById("zon").onclick=e=>{showZones=!showZones;e.currentTarget.textContent=showZones?"구역 숨기기":"구역 표시";render(!!anim)};
+document.getElementById("clr").onclick=e=>{showPath=!showPath;e.currentTarget.textContent=showPath?"경로 지우기":"경로 표시";render(!!anim)};
+document.getElementById("s51").onclick=()=>{sys="51";sync();load()};
+document.getElementById("s42").onclick=()=>{sys="42";sync();load()};
+let lastRcv="w";
+const backRcv=()=>{if(mode[0]==="d"){mode=lastRcv;swOn=lastRcv!=="w"}};
+const rcvMode=m=>()=>{mode=m;lastRcv=m;swOn=m!=="w";team="rcv";curTab="rcv";sync();load()};
+document.getElementById("mRcv").onclick=rcvMode("rcv");
+document.getElementById("mBase").onclick=rcvMode("base");
+document.getElementById("mW").onclick=rcvMode("w");
+["dR","dC","dP","dL"].forEach(id=>document.getElementById(id).onclick=()=>{mode=id;curTab="def";sync();load()});
+document.getElementById("tRcv").onclick=()=>{team="rcv";curTab="rcv";backRcv();sync();load()};
+document.getElementById("tSrv").onclick=()=>{team="srv";curTab="srv";backRcv();sync();load()};
+document.getElementById("tDef").onclick=()=>{curTab="def";if(mode[0]!=="d")mode="dR";sync();load()};
+document.getElementById("tAtk").onclick=()=>{curTab="atk";const was=mode;team="rcv";backRcv();sync();if(was!==mode)load()};
+const SET=[6.3,0.8], AP={OH:[0.9,3.4],MB:[4.6,2.4],OP:[8.4,3.4]}, BK={BL:[1.5,6.0],BM:[4.5,7.0],BR:[7.5,6.0]};
+const HP={L:[1.0,0.8],C:[4.7,0.8],R:[8.1,0.8],P:[4.5,3.5],RB:[7.8,3.5]};
+let recvSel="L";
+const COV={
+ L:[[2.2,2.3],[1.3,3.5],[3.4,4.5],[5.4,3.0]],
+ C:[[3.5,2.3],[5.9,2.4],[3.0,4.8],[6.4,4.8]],
+ R:[[7.0,2.4],[7.9,3.7],[5.6,4.5],[3.8,3.0]],
+ P:[[2.8,2.2],[6.2,2.2],[3.2,6.2],[6.0,6.2]],
+ RB:[[6.4,4.8],[5.2,2.4],[3.2,2.6],[7.4,6.6]]};
+const SIDE={L:"레프트",C:"센터",R:"라이트",P:"파이프"};
+function coverAssign(appr,side,excl){
+  const others=appr.filter(p=>p.pos&&!excl.includes(p.n));
+  let best=null,bd=1e9;
+  perms([0,1,2,3]).forEach(o=>{const d=others.reduce((t,p,k)=>t+(p.x-COV[side][o[k]][0])**2+(p.y-COV[side][o[k]][1])**2,0);if(d<bd){bd=d;best=o}});
+  return p=>{const k=others.findIndex(o=>o.n===p.n);return k>=0?{...p,x:COV[side][best[k]][0],y:COV[side][best[k]][1]}:p};
+}
+function perms(a){if(a.length<2)return[a];return a.flatMap((x,i)=>perms(a.filter((_,j)=>j!==i)).map(r=>[x,...r]))}
+function attackSteps(side){
+  const base=formation(rot,mode==="w"?"w":"rcv","rcv");
+  const fr=p=>[2,3,4].includes(p.pos), ty=p=>p.n.replace(/\d/,"");
+  const setter=sys==="51"?base.find(p=>p.n==="S"):base.find(p=>ty(p)==="S"&&fr(p));
+  const want={L:"OH",C:"MB",R:"OP",P:"OH"}[side];
+  const noSw=!swOn, ZN={L:4,C:3,R:2}, ZA={4:AP.OH,3:AP.MB,2:AP.OP};
+  const zAtt=noSw&&ZN[side]?base.find(p=>p.pos===ZN[side]&&p!==setter):null;
+  const rb=sys==="51"&&side==="R"&&!zAtt&&base.some(p=>p.pos&&!fr(p)&&ty(p)==="OP");
+  if(noSw&&ZN[side]&&!zAtt&&!rb)return null;
+  const att=zAtt?zAtt:rb?base.find(p=>p.pos&&!fr(p)&&ty(p)==="OP"):side==="P"?base.find(p=>p.pos&&!fr(p)&&ty(p)==="OH"):base.find(p=>p.pos&&fr(p)&&ty(p)===want);
+  if(!att)return null;
+  const fOH=base.find(p=>p.pos&&fr(p)&&ty(p)==="OH"), bOH=base.find(p=>p.pos&&!fr(p)&&ty(p)==="OH"), lib=base.find(p=>p.n==="L");
+  const libR=lib||base.find(p=>p.pos&&!fr(p)&&ty(p)==="MB");
+  const recv=(recvSel==="F"?fOH:recvSel==="B"?bOH:libR)||libR||bOH;
+  const at=(p,c)=>({...p,x:c[0],y:c[1]});
+  const backs=base.filter(p=>p.pos&&!fr(p)&&p!==setter);
+  const bOHp=backs.find(p=>ty(p)==="OH"), bOPp=sys==="51"?backs.find(p=>ty(p)==="OP"):null;
+  const rest=backs.filter(p=>p!==bOHp&&p!==bOPp);
+  const appr=base.map(p=>{
+    if(!p.pos)return p;
+    if(p===setter)return at(p,SET);
+    if(p===bOHp)return at(p,[4.5,6.3]);
+    if(p===bOPp)return at(p,[8.0,6.3]);
+    if(fr(p))return at(p,(noSw?ZA[p.pos]:AP[ty(p)])||SET);
+    return p;
+  });
+  const isBack=p=>backs.some(b=>b.n===p.n);
+  const sk=rb?"RB":side;
+  const cov=coverAssign(appr,sk,[setter.n,att.n]);
+  const hit=appr.map(p=>p.n===att.n?at(p,HP[sk]):cov(p));
+  const hp=HP[sk], over={x:hp[0]+(side==="L"?1.2:side==="R"?-1.2:0),y:-0.7};
+  const ex4=rb?`④ 토스와 커버: 세터가 전위에 있어 전위 라이트 공격수가 없으므로, 후위 ${att.n} 선수가 어택라인 뒤 오른쪽에서 뛰어올라 라이트 백어택을 합니다(어택라인을 밟거나 넘어서 뛰면 안 됩니다). 나머지는 공격수 주위를 둘러싸 커버합니다.`:side==="P"?`④ 토스와 커버: 후위 ${att.n} 선수가 어택라인 뒤에서 뛰어올라 파이프 공격을 합니다(후위 선수는 어택라인을 밟거나 넘어서 뛰면 안 됩니다). 전위 공격수들은 네트 앞에서 속임 동작으로 블로커를 붙잡고, 나머지는 공격수 주위를 둘러싸 커버합니다.`:null;
+  return [
+   {P:base,ball:{x:4.5,y:-0.6},st:"1 · 리시브 대형",cap:"① 리시브 대형: 상대 서브를 기다립니다."},
+   {P:appr.map(p=>{const b0=base.find(b=>b.n===p.n);return (p.n===recv.n||(isBack(p)&&b0.ro==="r"))?b0:p}),ball:{x:recv.x,y:recv.y},st:"2 · 서브와 동시에 이동",cap:`② 서브가 맞는 순간부터 자유롭게 움직일 수 있습니다. 공이 날아오는 동안 세터 ${setter.n} 선수는 네트 오른쪽 토스 자리로, 전위 공격수들은 어택라인 근처 공격 준비 자리로 갑니다. 리시브를 맡은 선수들은 리시브 자리를 지키며 공을 받을 준비를 합니다.${bOPp&&mode!=="w"?` 리시브에 참여하지 않는 후위 ${bOPp.n} 선수는 서브 순간 바로 오른쪽 뒤 라이트 백어택 준비 자리로 갑니다.`:""}`},
+   {P:appr,ball:{x:SET[0],y:SET[1]},st:"3 · 리시브와 패스",cap:`③ 리시브: ${recv.n} 선수가 세터에게 공을 올립니다.${recv===fOH?" 전위 OH는 리시브 직후 바로 공격 준비 자리로 빠집니다.":""} 후위 OH는 가운데 뒤(6번 구역)에서 파이프를${bOPp?", 후위 OP는 오른쪽 뒤에서 라이트 백어택을":""} 준비합니다. 리베로 등 나머지 후위는 굳이 멀리 이동하지 않고 리시브한 자리 근처에서 수비 위치를 지킵니다. 공격수들은 도움닫기를 시작할 준비를 마쳤습니다.${noSw?" 공격 스위치 없이, 전위 선수들은 서 있는 자리(4번 레프트, 3번 센터, 2번 라이트)에서 그대로 공격합니다.":""}`},
+   {P:hit,ball:{x:hp[0],y:hp[1]},st:"4 · 토스와 공격 커버",cap:ex4||`④ 토스와 커버: ${SIDE[side]} 공격수 ${att.n} 선수가 뛰어오릅니다. 후위 공격을 준비하던 선수들도 공격하지 않으면 바로 커버로 들어갑니다. 나머지 4명은 공격수 주위를 가까운 2명, 먼 2명으로 둘러싸 블로킹에 맞고 떨어지는 공을 받을 준비를 합니다(공격 커버). 세터도 그 자리에서 커버에 참여합니다.`},
+   {P:hit,ball:over,st:"5 · 공격",cap:"⑤ 공격: 공이 상대 코트로 넘어갑니다.",hold:900}
+  ];
+}
+function transSteps(){
+  const dm=mode[0]==="d"?mode:"dR";
+  const base=formation(rot,dm,"rcv");
+  const fr=p=>[2,3,4].includes(p.pos), ty=p=>p.n.replace(/\d/,""), at=(p,c)=>({...p,x:c[0],y:c[1]});
+  const setter=sys==="51"?base.find(p=>p.n==="S"):base.find(p=>ty(p)==="S"&&fr(p));
+  const att=base.find(p=>p.pos&&fr(p)&&ty(p)==="OH");
+  const want={dR:"BL",dL:"BR",dC:"BM",dP:"BM"}[dm];
+  let dig=base.find(p=>p.pos&&!fr(p)&&slot(p.pos,p.n)===want);
+  if(!dig||dig===setter)dig=base.find(p=>p.pos&&!fr(p)&&slot(p.pos,p.n)==="BM");
+  const tr=base.map(p=>{
+    if(!p.pos)return p;
+    if(p===setter)return at(p,SET);
+    if(fr(p))return at(p,AP[ty(p)]||SET);
+    return p;
+  });
+  const cov=coverAssign(tr,"L",[setter.n,att.n]);
+  const hit=tr.map(p=>p.n===att.n?at(p,HP.L):cov(p));
+  const bx=BALL[dm], DN={dR:"상대 레프트",dC:"상대 센터 속공",dP:"상대 파이프",dL:"상대 라이트"}[dm];
+  return [
+   {P:base,ball:{x:bx,y:-0.45},st:"1 · 수비 대형",cap:`① 수비 대형: ${DN} 공격에 맞춰 블로킹과 수비 위치를 잡습니다.`},
+   {P:base,ball:{x:dig.x,y:dig.y},st:"2 · 디그",cap:`② 디그: 블로킹을 지나온 공을 ${dig.n} 선수가 받아 올립니다. 블로커들은 착지합니다.`},
+   {P:tr,ball:{x:SET[0],y:SET[1]},st:"3 · 반격 준비",cap:`③ 반격 준비(트랜지션): 세터 ${setter.n} 선수가 토스 자리로 가고, 블로킹하던 전위 선수들은 네트에서 빠르게 물러나 어택라인 근처에서 다시 도움닫기를 준비합니다. 네트에서 물러나는 이 동작이 반격의 핵심입니다.`},
+   {P:hit,ball:{x:HP.L[0],y:HP.L[1]},st:"4 · 반격 토스와 커버",cap:`④ 반격: 가장 안정적인 레프트 ${att.n} 선수에게 토스합니다. 나머지는 공격수 주위를 둘러싸 커버합니다.`},
+   {P:hit,ball:{x:2.2,y:-0.7},st:"5 · 반격 공격",cap:"⑤ 공격: 공이 상대 코트로 넘어갑니다. 수비 → 반격으로 이어지는 이 흐름을 트랜지션이라고 합니다.",hold:900}
+  ];
+}
+function capSet(t){document.getElementById("cap").textContent=t}
+function seq(list,i,my){
+  if(my!==tok||i>=list.length)return;
+  const s=list[i]; flowSt=s.st; capSet(s.cap);
+  if(s.fn){s.fn();return}
+  const start=s.P.map(p=>{const q=P.find(o=>o.n===p.n)||p;return{x:q.x,y:q.y}});
+  run(start,s.P.map(p=>({...p})),()=>{if(my!==tok)return;ftimer=later(()=>seq(list,i+1,my),reduce?300:(s.hold||700))},s.ball);
+}
+function setFault(off){faultOff=off;const b=document.getElementById("ftog");b.textContent=off?"폴트 판정 켜기":"폴트 판정 끄기";b.classList.toggle("on",off);b.setAttribute("aria-pressed",off)}
+function startFlow(build,keep){
+  const list=build(); if(!list)return;
+  if(!faultOff){setFault(true);autoOff=true}
+  tok++; cancel(ftimer); cancel(timer); paused=false;
+  team="rcv"; if(!keep){backRcv(); if(mode==="base"){mode="rcv";swOn=true}} sync();
+  flow=true; phase=1; B=null; swapMsg="";
+  lastReplay=()=>startFlow(build,keep);
+  seq(list,0,tok);
+}
+document.getElementById("swTog").onclick=()=>{swOn=!swOn;sync();if(flow&&curAtk&&curAtk!=="TR"&&curAtk!=="SO"&&lastReplay)lastReplay()};
+document.getElementById("toRcv").onclick=()=>{team="rcv";backRcv();sync();load()};
+document.getElementById("trans").onclick=()=>{if(mode[0]!=="d")mode="dR";curTab="def";curAtk="TR";startFlow(transSteps,true)};
+[["rvL","L"],["rvF","F"],["rvB","B"]].forEach(([id,v])=>document.getElementById(id).onclick=()=>{recvSel=v;sync();if(curAtk&&curAtk!=="TR"&&lastReplay)lastReplay()});
+["L","C","R","P"].forEach(k=>document.getElementById("a"+k).onclick=()=>{
+  const st=attackSteps(k);
+  if(!st&&!swOn){capSet(`공격 스위치가 꺼져 있어 전위 ${{L:4,C:3,R:2}[k]}번 자리 선수가 ${SIDE[k]} 공격을 맡는데, 이 로테이션은 그 자리에 세터가 있습니다. 다른 공격을 고르거나 공격 스위치를 켜 주세요.`);return}
+  if(!st){capSet(sys==="42"?"세터 2명 시스템에서는 전위 세터가 라이트 자리에서 토스하므로 라이트 공격수가 없습니다. 레프트나 센터 공격을 선택해 주세요.":"이 로테이션은 전위에 라이트 공격수(OP)가 없습니다. 세터가 전위에 있어 전위 공격수가 레프트와 센터 2명뿐인 로테이션입니다.");return}
+  curAtk=k; startFlow(()=>attackSteps(k));
+});
+document.getElementById("sideout").onclick=()=>{curAtk="SO";startFlow(()=>{
+  const st=attackSteps("L")||attackSteps("R")||attackSteps("C");
+  st[st.length-1].cap="⑤ 공격 성공! 상대 코트에 떨어져 득점합니다.";
+  st.push({st:"6 · 사이드아웃",cap:"⑥ 사이드아웃: 서브권을 가져온 팀은 시계 방향으로 한 칸 로테이션한 뒤 서브합니다.",fn:()=>{
+    const my=tok;
+    ftimer=later(()=>{if(my!==tok)return;rot=(rot+1)%6;team="srv";curTab="srv";sync();load()},reduce?300:1400);
+  }});
+  return st;
+})};
+function sync(){sync0();
+  if(sys!==sync.lastSys){sync.lastSys=sys;buildRoster()}
+  if(swapMsg){const c=document.getElementById("cap");c.textContent=swapMsg+" "+c.textContent}
+  if(sys==="42"){const c=document.getElementById("cap");c.textContent=("세터 2명(4-2 시스템): 전위에 있는 세터(S1 또는 S2)가 토스하고, 후위 세터는 리시브와 수비를 맡습니다. 세터가 후위에서 뛰어 들어오는 움직임이 없어 학교 수준에서 운영하기 쉽습니다. "+c.textContent).trim()}
+}
+function sync0(){
+  ROT.forEach((_,i)=>document.getElementById("r"+i).classList.toggle("on",(sStart+i)%6===rot));
+  srvLine();
+  const D=mode[0]==="d";
+  [["rvL","L"],["rvF","F"],["rvB","B"]].forEach(([id,v])=>document.getElementById(id).classList.toggle("on",recvSel===v));
+  document.getElementById("rvL").textContent=noLib?"후위 MB":"리베로";
+  const lt=document.getElementById("libTog"); lt.textContent=noLib?"리베로 없음":"리베로 있음"; lt.classList.toggle("on",!noLib); lt.setAttribute("aria-pressed",!noLib);
+  document.getElementById("trans").classList.toggle("on",curAtk==="TR");
+  [["aL","L"],["aC","C"],["aR","R"],["aP","P"],["sideout","SO"]].forEach(([id,k])=>document.getElementById(id).classList.toggle("on",curAtk===k));
+  [["mRcv","rcv"],["mW","w"],["mBase","base"]].forEach(([id,m])=>document.getElementById(id).classList.toggle("on",mode===m));
+  const tab=curTab==="atk"?"atk":D?"def":team==="srv"?"srv":"rcv";
+  document.getElementById("toRcv").hidden=!(tab==="rcv"||tab==="atk");
+  const sw=document.getElementById("swTog"); sw.hidden=!(tab==="rcv"||tab==="atk"); sw.textContent=swOn?"공격 스위치 켜짐":"공격 스위치 꺼짐"; sw.classList.toggle("on",swOn); sw.setAttribute("aria-pressed",swOn);
+  [["tRcv","rcv","pRcv"],["tSrv","srv","pSrv"],["tDef","def","pDef"],["tAtk","atk","pAtk"]].forEach(([b,t,pn])=>{document.getElementById(b).classList.toggle("on",tab===t);document.getElementById(pn).hidden=tab!==t});
+  ["dR","dC","dP","dL"].forEach(id=>document.getElementById(id).classList.toggle("on",mode===id));
+  tog("s51","s42",sys==="51");
+  const DC={dR:"상대 레프트 공격은 우리 코트 오른쪽(2번 쪽)으로 들어옵니다. 라이트와 미들이 2인 블로킹, 레프트는 어택라인까지 물러나 연타를 받고, 후위는 라인·딥·크로스를 나눠 지킵니다.",
+   dC:"상대 센터 속공은 토스가 빨라 양쪽 블로커가 빠질 시간이 없어 네트에 붙어 있습니다. 미들이 블로킹하고, 레프트와 라이트는 네트 앞에서 다음 공격(혹은 2인 블로킹 합류)에 대비합니다. 연타를 받을 전위가 없으므로 후위 3명이 평소보다 앞으로 당겨 섭니다.",
+   dP:"상대 파이프(후위 공격)는 3m 뒤에서 뛰고 토스가 높아 블로커가 모일 시간이 있습니다. 미들과 레프트가 가운데로 모여 2인 블로킹을 하고, 라이트는 어택라인으로 내려와 연타를 받습니다. 공이 깊게 들어오므로 후위 가운데는 엔드라인 가까이 섭니다.",
+   dL:"상대 라이트 공격은 우리 코트 왼쪽(4번 쪽)으로 들어옵니다. 레프트와 미들이 2인 블로킹, 라이트는 어택라인까지 물러나고, 후위는 라인·딥·크로스를 나눠 지킵니다."};
+  document.getElementById("cap").textContent=D?DC[mode]+" 서브 이후에는 선수들이 전문 포지션으로 자리를 바꾼 상태입니다.":team==="srv"?(["",
+ "1단계 기본 위치: 6명이 로테이션 자리에 서고, 1번 서버는 공을 들고 엔드라인 뒤 서브 자리에서 준비합니다. 서브 자리는 미국·일본 대표팀 자료를 기준으로 했고, OP는 1번 자리 쪽(오른쪽), MB는 5번 자리 쪽(왼쪽)에서 서브하는 것을 기본으로 합니다.",
+ "2단계 서버 제외 최적 위치: 서브 팀은 자유 배치가 허용되므로 서브 전에 미리 자리를 잡습니다. 대표팀처럼 전위 3명은 네트 가운데에 모이고(OH 왼쪽, MB 가운데, 오른쪽 공격수는 MB 바로 뒤), 후위는 리베로 왼쪽, OH 깊은 가운데, 세터·OP 오른쪽에 섭니다. 전위 선수들은 손을 머리 위로 들지 않고 뒤통수에 얹어 둡니다. 일부러 가리는 동작만 없으면 이렇게 모여 서는 것은 자연스러운 배치로 인정되는 경우가 대부분입니다.",
+ "3단계 서브 후: 공이 상대 코트로 날아가는 동안 서버는 코트로 들어와 자기 수비 자리(후위 세터는 1번 어택라인 근처)에 섭니다. 공이 네트를 넘어가면 전위 3명이 가운데 모임에서 양쪽으로 벌어져 기본 블로킹 자리(레프트·센터·라이트)로 갑니다. 위 번호는 로테이션상 자리 번호 그대로입니다."][phase])
+   :(mode==="rcv"&&sys==="51"&&(rot===4||rot===5))?"OP가 후위인 로테이션: OP는 리시버 바로 뒤 깊은 곳에 숨어 리시브를 방해하지 않고, 서브가 맞는 순간 오른쪽 뒤 라이트 백어택 준비 자리로 갑니다. (미국·일본 대표팀 공통 배치)"
+   :(mode==="rcv"&&sys==="51"&&rot===3)?`R${disp()} 3인 리시브: 세터는 네트 왼쪽, MB2는 그 아래 어택라인 바로 뒤에 서고, OH2가 왼쪽, OH1이 가운데, 리베로가 오른쪽에서 받습니다. OH2는 리시브한 자리에서 바로 레프트 공격, MB2는 센터, 후위 OP는 오른쪽 뒤에서 라이트 백어택을 준비합니다.`
+   :(mode==="rcv"&&sys==="51"&&rot===0)?`R${disp()} 3인 리시브: OP는 네트 왼쪽, MB1은 그 아래 어택라인 바로 뒤, OH1은 그 아래에 세로로 쌓아 섭니다. 리시브는 OH1이 왼쪽, OH2가 가운데, 리베로가 오른쪽에서 받습니다. 서브가 맞는 순간 OP는 오른쪽으로 이동해 라이트 공격을 준비하고, OH1은 리시브한 자리에서 바로 레프트 공격, MB1은 센터로 갑니다.`
+   :mode==="w"?"기초 서브리시브(W 대형): 세터를 뺀 5명이 앞 3명, 뒤 2명의 W 모양으로 섭니다. 후위 세터는 짝이 되는 전위 선수 바로 뒤에 숨습니다. W 대형에서는 공격 스위치 없이 전위 선수가 서 있는 자리(4번 레프트, 3번 센터, 2번 라이트)에서 공격하는 것이 기본입니다.":"";
+}
+sync(); load();
+</script>
+
+<div class="pe-info" id="peInfo" hidden><div class="pe-info-box" role="dialog" aria-modal="true" aria-labelledby="peInfoT">
+  <h2 id="peInfoT">배구 로테이션 보드 v1.0</h2><p class="pe-by">만든 이 · 다정고 박성찬</p>
+  <p>수업용 배구 로테이션 보드예요. 로테이션(R1~R6)마다 리시브·서브·수비·공격 전환 대형을 보여 주고, 선수를 끌어 옮기면 리시브 팀의 포지션 폴트를 바로 판정해요. 세터 1명·2명 시스템, 리베로 유무를 고를 수 있어요. 선수 명단은 이 기기(브라우저)에만 저장되고 어디로도 보내지지 않아요.</p>
+  <div class="pe-mail">버그 제보 · 추가 기능 제안<br><a href="mailto:schoolparksc@sjeai.kr?subject=%5B배구 로테이션 보드%5D%20%EC%A0%9C%EB%B3%B4">schoolparksc@sjeai.kr</a><br><span>어떤 화면에서 무엇을 눌렀는지 적어 주시면 빨리 고칠 수 있어요. 학생 이름 등 개인정보는 보내지 말아 주세요.</span></div>
+  <div style="text-align:right"><button type="button" class="pe-pill" id="peInfoClose">닫기</button></div>
+</div></div>
+<style>
+.pe-info{position:fixed;inset:0;z-index:300;background:rgba(6,14,24,.5);display:flex;align-items:center;justify-content:center;padding:20px}
+.pe-info[hidden]{display:none!important}
+.pe-info-box{background:#fff;color:#14202e;border-radius:14px;max-width:440px;width:100%;padding:20px 22px;font-size:14.5px;line-height:1.65;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.pe-info-box h2{margin:0;font-size:18px} .pe-by{margin:2px 0 10px;color:#5b6878;font-size:13.5px}
+.pe-mail{border:1px solid #d5dbe3;border-radius:10px;padding:10px 12px;margin:10px 0 14px;background:#f5f7fa;font-size:13.5px}
+.pe-mail a{color:#1f5fbf;font-weight:700} .pe-mail span{color:#5b6878;font-size:12.5px}
+.pe-foot{margin:14px 0 0;text-align:center;font-size:12px;color:var(--muted)} .pe-foot a{color:inherit}
+</style>
+<script>
+(function(){var o=document.getElementById('peInfo');
+  document.getElementById('peInfoBtn').addEventListener('click',function(){o.hidden=false;document.getElementById('peInfoClose').focus()});
+  o.addEventListener('click',function(e){if(e.target===o||e.target.id==='peInfoClose')o.hidden=true});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')o.hidden=true});})();
+</script>
+
+<script id="pe-common-js">
+(function(){
+  var web=/^https?:/.test(location.protocol);
+  document.querySelectorAll('.pe-mback,.pe-back').forEach(function(a){a.hidden=!web});
+  function cue(el){var m=el.scrollWidth-el.clientWidth;el.classList.toggle('pe-tabs-r',m>4&&el.scrollLeft<m-4);el.classList.toggle('pe-tabs-l',m>4&&el.scrollLeft>4)}
+  function bind(){document.querySelectorAll('[data-pe-tabs]').forEach(function(el){if(el._pe)return;el._pe=1;el.addEventListener('scroll',function(){cue(el)},{passive:true});new ResizeObserver(function(){cue(el)}).observe(el);if(window.MutationObserver)new MutationObserver(function(){cue(el)}).observe(el,{childList:true});cue(el)})}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+  addEventListener('resize',function(){document.querySelectorAll('[data-pe-tabs]').forEach(cue)});
+})();
+</script>
+</body>
+</html>

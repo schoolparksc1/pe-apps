@@ -344,7 +344,30 @@ body.kiosk .tabs button[data-tab="draw"]{display:none}
 .foot .wrap{padding-bottom:0}
 body.kiosk .foot{display:none}
 .backlink{font-size:13px;font-weight:600;color:var(--accent);text-decoration:none;margin-right:4px}
-body.kiosk .backlink{display:none}
+body.kiosk .backlink,body.kiosk .pe-back{display:none!important}
+</style>
+
+<style id="pe-common">
+.pe-mback{display:inline-flex;align-items:center;justify-content:center;flex:none;width:34px;height:34px;border-radius:10px;font-size:20px;line-height:1;text-decoration:none;color:inherit;opacity:.85}
+.pe-mback:hover{opacity:1;background:rgba(127,127,127,.14)}
+.pe-minfo{display:inline-flex;align-items:center;justify-content:center;flex:none;width:34px;height:34px;border-radius:10px;border:0;background:transparent;color:inherit;font:inherit;font-size:17px;cursor:pointer;opacity:.85}
+.pe-minfo:hover{opacity:1;background:rgba(127,127,127,.14)}
+.pe-tabs-r{-webkit-mask-image:linear-gradient(to right,#000 82%,transparent);mask-image:linear-gradient(to right,#000 82%,transparent)}
+.pe-tabs-l{-webkit-mask-image:linear-gradient(to left,#000 82%,transparent);mask-image:linear-gradient(to left,#000 82%,transparent)}
+.pe-tabs-l.pe-tabs-r{-webkit-mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent)}
+.pe-file{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+/* 오른쪽 위 공통 버튼: ← 체육 앱 서랍 · (수업 모드) · ⓘ 정보 */
+.pe-nav{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin-left:auto}
+.pe-pill{display:inline-flex;align-items:center;gap:5px;height:auto;min-height:0;padding:6px 13px;border-radius:999px;border:1px solid color-mix(in srgb,currentColor 30%,transparent);background:color-mix(in srgb,currentColor 5%,transparent);color:inherit;font:inherit;font-size:13px;font-weight:600;line-height:1.2;text-decoration:none;white-space:nowrap;cursor:pointer;box-shadow:none;width:auto}
+.pe-pill:hover{background:color-mix(in srgb,currentColor 12%,transparent);text-decoration:none}
+.pe-pill:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+.pe-pill[hidden]{display:none!important}
+@media print{.pe-nav{display:none!important}}
+.pe-tnav{order:2}
+.mbar .pe-nav{margin-left:6px;flex-wrap:nowrap}
+.mbar .pe-pill{color:inherit}
+@media (max-width:560px){.pe-mpill .pe-t{display:none}.pe-mpill{padding:6px 10px;font-size:15px}}
+.side #backDrawer{display:none!important}
 </style>
 </head>
 <body>
@@ -352,17 +375,14 @@ body.kiosk .backlink{display:none}
 <div class="top">
   <div class="wrap">
     <div class="brand">
-      <a class="backlink noprint" id="backDrawer" href="../" hidden>← 체육 앱 서랍</a>
       <h1>리그전 운영</h1>
       <div class="seg sportbar noprint" id="sportBar"><button data-sp="tt">탁구</button><button data-sp="bd">배드민턴</button></div>
       <input class="titleIn" id="title" placeholder="예: 2-3" autocomplete="off">
-      <button class="btn noprint" id="btnKioskTop" title="학생용 화면으로 전환합니다">수업 모드</button>
-      <button class="btn ghost noprint" id="btnKioskOff" style="display:none">수업 모드 끄기</button>
       <button class="synced ok" id="syncChip" title="저장 방식 안내">이 기기에만 저장</button>
-      <button class="synced infobtn" id="btnInfo" title="앱 정보">ⓘ 정보</button>
+      <div class="pe-nav noprint"><a class="pe-pill pe-back" id="backDrawer" href="../" hidden>← 체육 앱 서랍</a><button class="pe-pill" id="btnKioskTop" title="학생용 화면으로 전환합니다">수업 모드</button><button class="pe-pill" id="btnKioskOff" style="display:none">수업 모드 끄기</button><button class="pe-pill" id="btnInfo" title="앱 정보">ⓘ 정보</button></div>
     </div>
     <div class="classbar" id="classBar"></div>
-    <div class="tabs" role="tablist">
+    <div class="tabs" role="tablist" data-pe-tabs>
       <button data-tab="roster" role="tab" aria-selected="true"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="tlab">명단</span><span class="cnt" id="cntR"></span></button>
       <button data-tab="match" role="tab" aria-selected="false"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg><span class="tlab">대진표</span><span class="cnt" id="cntM"></span></button>
       <button data-tab="rank" role="tab" aria-selected="false"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg><span class="tlab">순위</span><span class="cnt" id="cntK"></span></button>
@@ -380,8 +400,8 @@ body.kiosk .backlink{display:none}
       <h2>엑셀에서 명단 가져오기</h2>
       <p class="sub">학생 이름이 들어 있는 엑셀 파일(.xlsx, .xls, .csv)을 올리고 이름 열만 골라 주세요.</p>
       <div class="drop" id="drop">
-        <p class="dropmsg">엑셀 파일을 여기에 끌어다 놓으세요</p>
-        <input type="file" id="file" accept=".xlsx,.xls,.csv">
+        <p class="dropmsg">엑셀 파일을 여기에 끌어다 놓거나</p>
+        <label class="btn pe-file">파일 고르기<input type="file" id="file" accept=".xlsx,.xls,.csv" hidden></label>
       </div>
       <div id="importPanel" style="display:none;margin-top:14px">
         <div class="row">
@@ -453,7 +473,7 @@ body.kiosk .backlink{display:none}
         <button class="btn primary" id="btnBackup">백업 파일 내려받기</button>
         <button class="btn" id="btnRestore">백업 파일 불러오기</button>
         <input type="file" id="restoreFile" accept=".json,application/json" hidden>
-        <button class="btn" id="btnSample">예시 반 만들기</button>
+        <button class="btn" id="btnSample">예시로 둘러보기</button>
         <button class="btn" id="btnPin">수업 모드 비밀번호 정하기</button>
         <div class="spacer"></div>
         <button class="btn danger" id="btnWipe">이 기기 기록 모두 지우기</button>
@@ -623,7 +643,7 @@ body.kiosk .backlink{display:none}
 </div>
 
 <footer class="foot noprint">
-  <div class="wrap">탁구·배드민턴 리그전 대진표 · 순위표 <b>v1.0</b> · 만든 이 다정고 박성찬 · 모든 기록은 이 기기(브라우저)에만 저장됩니다 · 제보·제안 <a href="mailto:schoolparksc@sje.ai.kr" style="color:inherit">schoolparksc@sje.ai.kr</a></div>
+  <div class="wrap">탁구·배드민턴 리그전 대진표 · 순위표 <b>v1.0</b> · 만든 이 다정고 박성찬 · 모든 기록은 이 기기(브라우저)에만 저장됩니다 · 제보·제안 <a href="mailto:schoolparksc@sjeai.kr" style="color:inherit">schoolparksc@sjeai.kr</a></div>
 </footer>
 <div class="modal" id="modal" hidden>
   <div class="sheet">
@@ -639,11 +659,11 @@ body.kiosk .backlink{display:none}
   <div class="sheet">
     <h3 style="font-size:17px;margin:0 0 4px">탁구·배드민턴 리그전 v1.0</h3>
     <p style="margin:0 0 12px;color:var(--ink-2);font-size:14px">만든 이 · 다정고 박성찬</p>
-    <p style="margin:0 0 10px">바이브 코딩으로 만든 체육 수업 도구예요. 리그전 대진표·순위표와 복식 토너먼트, 조 짜기를 한 화면에서 할 수 있어요.</p>
+    <p style="margin:0 0 10px">체육 수업 도구예요. 리그전 대진표·순위표와 복식 토너먼트, 조 짜기를 한 화면에서 할 수 있어요.</p>
     <p style="margin:0 0 12px;font-size:14px;color:var(--ink-2)">모든 기록은 이 기기(브라우저)에만 저장되고 어디로도 보내지지 않아요. 자유롭게 쓰고, 자기 수업에 맞게 고쳐 쓰셔도 됩니다.</p>
     <div style="border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:10px 12px;margin:0 0 18px;font-size:14px">
       <b>버그 제보 · 추가 기능 제안</b><br>
-      <a href="mailto:schoolparksc@sje.ai.kr?subject=%5B%EB%A6%AC%EA%B7%B8%EC%A0%84%20v1.0%5D%20%EB%B2%84%EA%B7%B8%20%EC%A0%9C%EB%B3%B4%20%C2%B7%20%EA%B8%B0%EB%8A%A5%20%EC%A0%9C%EC%95%88" style="color:var(--accent);font-weight:600">schoolparksc@sje.ai.kr</a>
+      <a href="mailto:schoolparksc@sjeai.kr?subject=%5B%EB%A6%AC%EA%B7%B8%EC%A0%84%20v1.0%5D%20%EB%B2%84%EA%B7%B8%20%EC%A0%9C%EB%B3%B4%20%C2%B7%20%EA%B8%B0%EB%8A%A5%20%EC%A0%9C%EC%95%88" style="color:var(--accent);font-weight:600">schoolparksc@sjeai.kr</a>
       <div style="color:var(--ink-2);font-size:12.5px;margin-top:4px">어떤 화면에서 무엇을 눌렀는지 적어 주시면 빨리 고칠 수 있어요. 학생 이름 등 개인정보는 보내지 말아 주세요.</div>
     </div>
     <div class="row" style="justify-content:flex-end"><button class="btn primary" id="infoClose">닫기</button></div>
@@ -1038,7 +1058,7 @@ function renderCounts(){
 function renderRoster(){
   var box=$('#rosterBox'),G=groupsUsed();
   if(!S.entrants.length){
-    box.innerHTML='<div class="empty"><strong>명단이 비어 있습니다</strong>위에서 엑셀을 올리거나 이름을 붙여 넣어 시작하세요.<br><button class="btn" id="btnSample2" style="margin-top:12px">예시 반으로 먼저 둘러보기</button></div>';
+    box.innerHTML='<div class="empty"><strong>명단이 비어 있습니다</strong>위에서 엑셀을 올리거나 이름을 붙여 넣어 시작하세요.<br><button class="btn" id="btnSample2" style="margin-top:12px">예시로 둘러보기</button></div>';
   }else{
     var h='<table class="rtable"><thead><tr><th class="idx">#</th><th>이름</th><th>원반·번호</th><th>성별</th>'+(G>1?'<th>조</th>':'')+'<th class="del noprint"></th></tr></thead><tbody>';
     S.entrants.forEach(function(e,i){
@@ -2702,6 +2722,17 @@ if(/kiosk/i.test(location.hash))DB.kiosk=true;
 syncControls();renderAll();applyKiosk();
 setTab(DB.kiosk&&(!DB.tab||DB.tab==='roster')?'match':(DB.tab||'roster'));
 if(/unlock/i.test(location.hash))unlockByHash();
+})();
+</script>
+
+<script id="pe-common-js">
+(function(){
+  var web=/^https?:/.test(location.protocol);
+  document.querySelectorAll('.pe-mback,.pe-back').forEach(function(a){a.hidden=!web});
+  function cue(el){var m=el.scrollWidth-el.clientWidth;el.classList.toggle('pe-tabs-r',m>4&&el.scrollLeft<m-4);el.classList.toggle('pe-tabs-l',m>4&&el.scrollLeft>4)}
+  function bind(){document.querySelectorAll('[data-pe-tabs]').forEach(function(el){if(el._pe)return;el._pe=1;el.addEventListener('scroll',function(){cue(el)},{passive:true});new ResizeObserver(function(){cue(el)}).observe(el);if(window.MutationObserver)new MutationObserver(function(){cue(el)}).observe(el,{childList:true});cue(el)})}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+  addEventListener('resize',function(){document.querySelectorAll('[data-pe-tabs]').forEach(cue)});
 })();
 </script>
 </body>

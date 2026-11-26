@@ -314,6 +314,29 @@ span.st{cursor:default}
 @media (pointer:coarse){.st{padding:6px 10px}}
 .mob-backup{display:none;gap:6px;flex-wrap:wrap;align-items:center}
 </style>
+
+<style id="pe-common">
+.pe-mback{display:inline-flex;align-items:center;justify-content:center;flex:none;width:34px;height:34px;border-radius:10px;font-size:20px;line-height:1;text-decoration:none;color:inherit;opacity:.85}
+.pe-mback:hover{opacity:1;background:rgba(127,127,127,.14)}
+.pe-minfo{display:inline-flex;align-items:center;justify-content:center;flex:none;width:34px;height:34px;border-radius:10px;border:0;background:transparent;color:inherit;font:inherit;font-size:17px;cursor:pointer;opacity:.85}
+.pe-minfo:hover{opacity:1;background:rgba(127,127,127,.14)}
+.pe-tabs-r{-webkit-mask-image:linear-gradient(to right,#000 82%,transparent);mask-image:linear-gradient(to right,#000 82%,transparent)}
+.pe-tabs-l{-webkit-mask-image:linear-gradient(to left,#000 82%,transparent);mask-image:linear-gradient(to left,#000 82%,transparent)}
+.pe-tabs-l.pe-tabs-r{-webkit-mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent)}
+.pe-file{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+/* 오른쪽 위 공통 버튼: ← 체육 앱 서랍 · (수업 모드) · ⓘ 정보 */
+.pe-nav{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin-left:auto}
+.pe-pill{display:inline-flex;align-items:center;gap:5px;height:auto;min-height:0;padding:6px 13px;border-radius:999px;border:1px solid color-mix(in srgb,currentColor 30%,transparent);background:color-mix(in srgb,currentColor 5%,transparent);color:inherit;font:inherit;font-size:13px;font-weight:600;line-height:1.2;text-decoration:none;white-space:nowrap;cursor:pointer;box-shadow:none;width:auto}
+.pe-pill:hover{background:color-mix(in srgb,currentColor 12%,transparent);text-decoration:none}
+.pe-pill:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+.pe-pill[hidden]{display:none!important}
+@media print{.pe-nav{display:none!important}}
+.pe-tnav{order:2}
+.mbar .pe-nav{margin-left:6px;flex-wrap:nowrap}
+.mbar .pe-pill{color:inherit}
+@media (max-width:560px){.pe-mpill .pe-t{display:none}.pe-mpill{padding:6px 10px;font-size:15px}}
+.side #backDrawer{display:none!important}
+</style>
 </head>
 <body>
 <header class="hdr">
@@ -324,7 +347,7 @@ span.st{cursor:default}
     <button class="btn" id="newProj" type="button">+ 새 사업 추가</button>
     <button class="btn hdel" id="hdrDel" type="button">사업 삭제</button>
   </div>
-  <div class="util"><a class="hlink" id="backDrawer" href="../" hidden>← 체육 앱 서랍</a><span class="saved" id="saveState"></span><button class="btn" id="infoBtn" type="button" title="앱 정보">ⓘ 정보</button></div>
+  <div class="util"><span class="saved" id="saveState"></span><span class="pe-nav"><a class="pe-pill pe-back" id="backDrawer" href="../" hidden>← 체육 앱 서랍</a><button class="pe-pill" id="infoBtn" type="button" title="앱 정보">ⓘ 정보</button></span></div>
 </header>
 
 <div class="wrap">
@@ -338,10 +361,10 @@ span.st{cursor:default}
     <div class="lnb-foot">
       <span>자료는 이 기기 브라우저에 저장됩니다.</span>
       <span class="msg" id="appVer" style="margin-top:6px">버전 1.0.0</span>
-      <button class="btn" id="backupBtn" type="button">백업 파일 내보내기</button>
-      <label class="btn" for="restoreFile">백업 불러오기<input type="file" id="restoreFile" accept=".json"></label>
+      <button class="btn" id="backupBtn" type="button">백업 파일 내려받기</button>
+      <label class="btn" for="restoreFile">백업 파일 불러오기<input type="file" id="restoreFile" accept=".json"></label>
       <span class="msg" id="backupMsg"></span>
-      <span class="credit">만든 이 · 다정고 박성찬<br>제보·제안 <a href="mailto:schoolparksc@sje.ai.kr?subject=%5B%EC%A0%95%EC%82%B0%EC%84%9C%20%EC%9E%91%EC%84%B1%EA%B8%B0%20v1.0.0%5D%20%EB%B2%84%EA%B7%B8%20%EC%A0%9C%EB%B3%B4%20%C2%B7%20%EA%B8%B0%EB%8A%A5%20%EC%A0%9C%EC%95%88">schoolparksc@sje.ai.kr</a></span>
+      <span class="credit">만든 이 · 다정고 박성찬<br>제보·제안 <a href="mailto:schoolparksc@sjeai.kr?subject=%5B%EC%A0%95%EC%82%B0%EC%84%9C%20%EC%9E%91%EC%84%B1%EA%B8%B0%20v1.0.0%5D%20%EB%B2%84%EA%B7%B8%20%EC%A0%9C%EB%B3%B4%20%C2%B7%20%EA%B8%B0%EB%8A%A5%20%EC%A0%9C%EC%95%88">schoolparksc@sjeai.kr</a></span>
     </div>
   </nav>
 
@@ -395,14 +418,14 @@ span.st{cursor:default}
         <div class="sec-h"><h2>사업 관리</h2>
           <div class="btns">
             <button class="btn" id="dupProj" type="button">항목·양식 복사해서 새 사업</button>
-            <button class="btn" id="addSample" type="button">예시 사업 다시 넣기</button>
+            <button class="btn" id="addSample" type="button">예시로 둘러보기</button>
             <span id="delWrap"><button class="btn del" id="delProj" type="button">사업 삭제</button></span>
           </div>
         </div>
       </section>
       <section class="sec mob-backup">
         <div class="sec-h" style="width:100%"><h2>백업</h2>
-          <div class="btns"><button class="btn" id="backupBtn2" type="button">백업 파일 내보내기</button><label class="btn" for="restoreFile2">백업 불러오기<input type="file" id="restoreFile2" accept=".json"></label></div>
+          <div class="btns"><button class="btn" id="backupBtn2" type="button">백업 파일 내려받기</button><label class="btn" for="restoreFile2">백업 파일 불러오기<input type="file" id="restoreFile2" accept=".json"></label></div>
         </div>
         <span class="msg">자료는 이 기기 브라우저에 저장됩니다. 다른 기기로 옮길 때 백업 파일을 쓰세요.</span>
       </section>
@@ -2259,10 +2282,10 @@ persist(); renderAll();
   <div class="isheet" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
     <h3 id="infoTitle">체육 사업 정산서 작성기 v1.0.0</h3>
     <p class="isub">만든 이 · 다정고 박성찬</p>
-    <p>바이브 코딩으로 만든 체육 업무 도구예요. 예산을 설정하고 지출을 등록하면 정산서 엑셀과 에듀파인 업로드 파일을 만들어 줍니다. 받은 정산서 양식(.xlsx)을 올리면 그 양식에 맞춰 채워 넣어요.</p>
+    <p>체육 업무 도구예요. 예산을 설정하고 지출을 등록하면 정산서 엑셀과 에듀파인 업로드 파일을 만들어 줍니다. 받은 정산서 양식(.xlsx)을 올리면 그 양식에 맞춰 채워 넣어요.</p>
     <p class="isub">모든 자료는 이 기기(브라우저)에만 저장되고 어디로도 보내지지 않아요. 자유롭게 쓰고, 자기 업무에 맞게 고쳐 쓰셔도 됩니다.</p>
     <div class="ibox"><b>버그 제보 · 추가 기능 제안</b><br>
-      <a href="mailto:schoolparksc@sje.ai.kr?subject=%5B%EC%A0%95%EC%82%B0%EC%84%9C%20%EC%9E%91%EC%84%B1%EA%B8%B0%20v1.0.0%5D%20%EB%B2%84%EA%B7%B8%20%EC%A0%9C%EB%B3%B4%20%C2%B7%20%EA%B8%B0%EB%8A%A5%20%EC%A0%9C%EC%95%88">schoolparksc@sje.ai.kr</a>
+      <a href="mailto:schoolparksc@sjeai.kr?subject=%5B%EC%A0%95%EC%82%B0%EC%84%9C%20%EC%9E%91%EC%84%B1%EA%B8%B0%20v1.0.0%5D%20%EB%B2%84%EA%B7%B8%20%EC%A0%9C%EB%B3%B4%20%C2%B7%20%EA%B8%B0%EB%8A%A5%20%EC%A0%9C%EC%95%88">schoolparksc@sjeai.kr</a>
       <div class="isub" style="margin:4px 0 0">어떤 화면에서 무엇을 눌렀는지 적어 주시면 빨리 고칠 수 있어요. 학교 예산 자료나 개인정보는 보내지 말아 주세요.</div>
     </div>
     <div style="text-align:right"><button class="btn" id="infoClose" type="button">닫기</button></div>
@@ -2291,6 +2314,17 @@ persist(); renderAll();
   document.getElementById('infoBtn').addEventListener('click',function(){m.hidden=false;document.getElementById('infoClose').focus();});
   m.addEventListener('click',function(e){if(e.target===m||e.target.id==='infoClose')m.hidden=true;});
   document.addEventListener('keydown',function(e){if(e.key==='Escape')m.hidden=true;});
+})();
+</script>
+
+<script id="pe-common-js">
+(function(){
+  var web=/^https?:/.test(location.protocol);
+  document.querySelectorAll('.pe-mback,.pe-back').forEach(function(a){a.hidden=!web});
+  function cue(el){var m=el.scrollWidth-el.clientWidth;el.classList.toggle('pe-tabs-r',m>4&&el.scrollLeft<m-4);el.classList.toggle('pe-tabs-l',m>4&&el.scrollLeft>4)}
+  function bind(){document.querySelectorAll('[data-pe-tabs]').forEach(function(el){if(el._pe)return;el._pe=1;el.addEventListener('scroll',function(){cue(el)},{passive:true});new ResizeObserver(function(){cue(el)}).observe(el);if(window.MutationObserver)new MutationObserver(function(){cue(el)}).observe(el,{childList:true});cue(el)})}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+  addEventListener('resize',function(){document.querySelectorAll('[data-pe-tabs]').forEach(cue)});
 })();
 </script>
 </body>

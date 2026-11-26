@@ -1,5 +1,28 @@
 <!DOCTYPE html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>PAPS 기록부</title><meta name="description" content="학생건강체력평가(PAPS) 기록 입력·현황·나이스 양식 내보내기. 기록은 이 기기에만 저장됩니다."></head><body>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>PAPS 기록부</title><meta name="description" content="학생건강체력평가(PAPS) 기록 입력·현황·나이스 양식 내보내기. 기록은 이 기기에만 저장됩니다.">
+<style id="pe-common">
+.pe-mback{display:inline-flex;align-items:center;justify-content:center;flex:none;width:34px;height:34px;border-radius:10px;font-size:20px;line-height:1;text-decoration:none;color:inherit;opacity:.85}
+.pe-mback:hover{opacity:1;background:rgba(127,127,127,.14)}
+.pe-minfo{display:inline-flex;align-items:center;justify-content:center;flex:none;width:34px;height:34px;border-radius:10px;border:0;background:transparent;color:inherit;font:inherit;font-size:17px;cursor:pointer;opacity:.85}
+.pe-minfo:hover{opacity:1;background:rgba(127,127,127,.14)}
+.pe-tabs-r{-webkit-mask-image:linear-gradient(to right,#000 82%,transparent);mask-image:linear-gradient(to right,#000 82%,transparent)}
+.pe-tabs-l{-webkit-mask-image:linear-gradient(to left,#000 82%,transparent);mask-image:linear-gradient(to left,#000 82%,transparent)}
+.pe-tabs-l.pe-tabs-r{-webkit-mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent)}
+.pe-file{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+/* 오른쪽 위 공통 버튼: ← 체육 앱 서랍 · (수업 모드) · ⓘ 정보 */
+.pe-nav{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin-left:auto}
+.pe-pill{display:inline-flex;align-items:center;gap:5px;height:auto;min-height:0;padding:6px 13px;border-radius:999px;border:1px solid color-mix(in srgb,currentColor 30%,transparent);background:color-mix(in srgb,currentColor 5%,transparent);color:inherit;font:inherit;font-size:13px;font-weight:600;line-height:1.2;text-decoration:none;white-space:nowrap;cursor:pointer;box-shadow:none;width:auto}
+.pe-pill:hover{background:color-mix(in srgb,currentColor 12%,transparent);text-decoration:none}
+.pe-pill:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+.pe-pill[hidden]{display:none!important}
+@media print{.pe-nav{display:none!important}}
+.pe-tnav{order:2}
+.mbar .pe-nav{margin-left:6px;flex-wrap:nowrap}
+.mbar .pe-pill{color:inherit}
+@media (max-width:560px){.pe-mpill .pe-t{display:none}.pe-mpill{padding:6px 10px;font-size:15px}}
+.side #backDrawer{display:none!important}
+</style>
+</head><body>
 <div class="login paperbg" id="loadOv" role="status" aria-live="polite" style="position:fixed;inset:0;z-index:310;display:grid;place-items:center;background:#f6f8fc"><div class="lbox ldbox"><div class="logo"><i>P</i><div><b>PAPS 기록부</b><small>이 기기에 저장 · 체육과</small></div></div><div class="ldrow"><span class="spin" aria-hidden="true"></span><span id="loadMsg">불러오는 중…</span></div><div class="ldbar"><i></i></div></div></div>
 <title>PAPS 기록부</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -580,19 +603,20 @@ tr.rest td{color:var(--muted);font-style:italic}
     <div class="chips" id="gradeChips"></div>
     <div class="seg" id="modeSeg"><button data-mode="ban">원반</button><button data-mode="cls">수업반</button></div>
     <div class="groups" id="groupList"></div>
-    <div class="sideuser" id="sideUser"></div><div class="sidefoot" id="saveStat">불러오는 중</div><div class="sidecredit"><a href="../" id="backDrawer" hidden>← 체육 앱 서랍</a><span>PAPS 기록부 v1.0 · 만든 이 다정고 박성찬</span><span><a href="mailto:schoolparksc@sje.ai.kr?subject=%5BPAPS%20%EA%B8%B0%EB%A1%9D%EB%B6%80%20v1.0%5D%20%EB%B2%84%EA%B7%B8%20%EC%A0%9C%EB%B3%B4%20%C2%B7%20%EA%B8%B0%EB%8A%A5%20%EC%A0%9C%EC%95%88">버그 제보·제안</a> · <a href="#" id="infoLink">정보</a></span></div>
+    <div class="sideuser" id="sideUser"></div><div class="sidefoot" id="saveStat">불러오는 중</div><div class="sidecredit"><a href="../" id="backDrawer" hidden>← 체육 앱 서랍</a><span>PAPS 기록부 v1.0 · 만든 이 다정고 박성찬</span><span><a href="mailto:schoolparksc@sjeai.kr?subject=%5BPAPS%20%EA%B8%B0%EB%A1%9D%EB%B6%80%20v1.0%5D%20%EB%B2%84%EA%B7%B8%20%EC%A0%9C%EB%B3%B4%20%C2%B7%20%EA%B8%B0%EB%8A%A5%20%EC%A0%9C%EC%95%88">버그 제보·제안</a> · <a href="#" id="infoLink">정보</a></span></div>
   </aside>
 
   <header class="mbar">
     <button class="mgrp" id="mGroup" aria-haspopup="dialog"><span style="min-width:0"><b id="mTitle">PAPS 기록부</b><small id="mSub"></small></span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
     <span class="msave" id="mSave" aria-live="polite"></span>
     <button class="btn lock" id="mLock" data-on="1" aria-label="기록 잠금"></button>
+    <span class="pe-nav"><a class="pe-pill pe-back pe-mpill" href="../" aria-label="체육 앱 서랍으로" hidden>←<span class="pe-t"> 체육 앱 서랍</span></a><button class="pe-pill pe-mpill" type="button" aria-label="정보" onclick="document.getElementById('infoLink').click()">ⓘ<span class="pe-t"> 정보</span></button></span>
   </header>
 
   <main class="main paperbg">
     <div class="head">
       <div><button class="ttl" id="pageTitle" aria-haspopup="dialog"><span id="ttlText">PAPS 기록부</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><p class="subl" id="pageSub"></p></div>
-      <div class="tools" id="headTools"></div>
+      <div class="pe-headr"><div class="pe-nav"><a class="pe-pill pe-back" href="../" hidden>← 체육 앱 서랍</a><button class="pe-pill" type="button" onclick="document.getElementById('infoLink').click()">ⓘ 정보</button></div><div class="tools" id="headTools"></div></div>
     </div>
     <div class="banner" id="exBanner" hidden><b>예시 학교 데이터입니다.</b><span>실제 명렬표를 넣으면 예시는 모두 지워집니다.</span><button class="btn small" id="exClear">예시 지우기</button></div>
 
@@ -1251,12 +1275,12 @@ function renderSetup(){const G=gradesList();if(!isAdmin()){renderSetupTeacher();
   const cls=S.classes.length?S.classes.map(c=>`<div class="row"><span><b>${esc(c.name)} ${esc(c.subj)}</b><span class="src">${c.grade}학년 · ${c.keys.length}명${c.miss&&c.miss.length?` · <span class="badt">명렬표에 없는 학생 ${c.miss.length}명</span>`:''}${c.teacher?' · '+esc(c.teacher):''}${c.sched?' · '+esc(c.sched):''}</span></span><button class="btn small warn" data-delcls="${esc(c.id)}">지우기</button></div>`).join(''):'<p>원반 수업만 한다면 넣지 않아도 됩니다.</p>';
   const items=(G.length?G:['1','2','3']).map(g=>{const hs=headsOf(g),it=itemsOfHeads(hs.heads);return `<div class="row"><span><b>${g}학년</b><span class="src">${it.length?(hs.own?'양식 종목':`${hs.from}학년 양식 종목을 같이 씀`):'아직 없음'}${FILES[g]?` · 내보내기 바탕: ${esc(FILES[g].name)}`:''}</span>${it.length?`<span class="itemchips" style="margin-top:4px">${it.map(x=>`<span>${esc(x.name)}${x.slots.length>1?' ×'+x.slots.length:''}</span>`).join('')}</span>`:''}</span>${it.length&&S.grades[g]?`<button class="btn small pri" data-export="${g}">내보내기</button>`:''}</div>`}).join('');
   const prev=(()=>{try{return localStorage.getItem(KEY+'-prev')}catch(e){return null}})();
-  $('setupBox').innerHTML=(G.length?'':`<div class="card start" style="grid-column:1/-1;border:2px solid var(--pen)"><h3>PAPS 기록부 시작하기</h3><p>나이스 PAPS 학년별 양식만 넣어도 원반·학생 명단과 기록이 한 번에 만들어집니다. 성별까지 쓰려면 학년 명렬표를, 2학년 이동반은 출석부를 함께 넣으세요. 넣은 내용은 <b>이 기기(브라우저)에만</b> 저장되고 어디로도 보내지지 않습니다. 처음이라면 예시 학교로 먼저 둘러보세요.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn pri" data-pickfile="1"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg>학교 파일 넣기</button><button class="btn" id="exLoad">예시 학교로 둘러보기</button></div></div>`)+`
+  $('setupBox').innerHTML=(G.length?'':`<div class="card start" style="grid-column:1/-1;border:2px solid var(--pen)"><h3>PAPS 기록부 시작하기</h3><p>나이스 PAPS 학년별 양식만 넣어도 원반·학생 명단과 기록이 한 번에 만들어집니다. 성별까지 쓰려면 학년 명렬표를, 2학년 이동반은 출석부를 함께 넣으세요. 넣은 내용은 <b>이 기기(브라우저)에만</b> 저장되고 어디로도 보내지지 않습니다. 처음이라면 예시 학교로 먼저 둘러보세요.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn pri" data-pickfile="1"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg>학교 파일 넣기</button><button class="btn" id="exLoad">예시로 둘러보기</button></div></div>`)+`
   <div class="card"><h3><span class="no">1</span>학년 명렬표 (원반)</h3><p>학년별 명렬표(학년·반·번호·성명·성별) 엑셀을 넣으면 원반 명단이 만들어집니다. 명렬표 대신 <b>나이스 PAPS 학년별 양식</b>만 넣어도 그 파일의 원반·학생 명단이 만들어지고, 적힌 기록까지 들어갑니다(이때는 성별 없음). 1·2·3학년 파일을 한꺼번에 넣어도 됩니다.</p><div class="drop" data-pickfile="1">여기를 누르거나 파일을 끌어다 놓으세요 · .xlsx</div><div class="rows">${rost}</div></div>
   <div class="card"><h3><span class="no">2</span>이동반 출석부 (선택)</h3><p>원반이 아닌 수업반은 나이스 교과시간별출석부를 넣으면 명렬표에서 학생을 찾아 수업반으로 묶습니다. 수업반으로 기록하고, 내보낼 때는 원반 기준으로 들어갑니다.</p><div class="drop" data-pickfile="1">출석부 파일 넣기 · 여러 개 가능</div><div class="rows">${cls}</div></div>
   <div class="card"><h3><span class="no">3</span>PAPS 양식 · 기록 합치기 · 내보내기</h3><p>나이스에서 받은 학년별 PAPS 입력 양식을 넣으면 학교가 고른 종목이 정해집니다. 다른 선생님이 기록해 보낸 같은 양식을 넣으면 빈 칸만 채우고, 다른 값은 목록으로 보여 줍니다. 내보내기는 나이스 양식 파일을 고르면 그 모양대로, 기록부 값을 먼저 넣고 기록부에 없는 칸은 파일 값을 둡니다. 기록부 명단에 없는 학생 줄은 뺍니다.</p><div class="drop" data-pickfile="1">PAPS 양식 넣기 · 학년별</div><div class="rows">${items}</div></div>
   <div class="card"><h3><span class="no">4</span>백업</h3><p>기록은 <b>이 기기(브라우저)에만</b> 저장되고 어디로도 보내지지 않습니다. 브라우저 기록을 지우거나, 재부팅하면 초기화되는 교실 PC에서는 사라지니 측정이 끝날 때마다 백업 파일을 받아 두세요. 다른 기기로 옮길 때도 백업 파일을 씁니다. 백업 불러오기는 지금 기록을 지우거나 바꾸지 않고 빈 칸만 채웁니다. 키·몸무게는 <b>키·몸무게 비밀번호로 암호화해서</b> 백업 파일에 넣습니다. 파일을 열어 봐도 알아볼 수 없고, 불러올 때 그 비밀번호를 넣어야 풀립니다(비밀번호를 잊으면 그 백업의 키·몸무게는 되살릴 수 없습니다).</p>
-    <div class="actions" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn pri" id="bkSave2">백업 파일 내려받기 (.json)</button><button class="btn" data-pickfile="1">백업 불러오기</button><button class="btn" id="exLoad2">예시 학교 불러오기</button><span style="flex:1"></span><button class="btn small warn" id="pinReset">키·몸무게 비밀번호 초기화</button><button class="btn small warn" id="localWipe">이 기기 기록 모두 지우기</button></div></div>`+featCards()+usersCard()}
+    <div class="actions" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn pri" id="bkSave2">백업 파일 내려받기</button><button class="btn" data-pickfile="1">백업 파일 불러오기</button><button class="btn" id="exLoad2">예시로 둘러보기</button><span style="flex:1"></span><button class="btn small warn" id="pinReset">키·몸무게 비밀번호 초기화</button><button class="btn small warn" id="localWipe">이 기기 기록 모두 지우기</button></div></div>`+featCards()+usersCard()}
 function renderSetupTeacher(){const me=GS.me||{};const sc=(me.scope||[]);
   $('setupBox').innerHTML=`<div class="card"><h3>내 정보</h3><div class="rows"><div class="row"><span><b>${esc(me.name||'')}</b><span class="src">맡은 반 ${sc.length?sc.map(x=>esc(x.id)+(x.mode==='cls'?' (수업반)':'')).join(' · '):'아직 정해지지 않음'}</span></span><button class="btn small" id="logoutBtn">나가기</button></div></div><p class="src">모든 반의 기록을 볼 수 있고, 맡은 반 학생만 고칠 수 있습니다. 키·몸무게 수치는 맡은 반 학생만 보입니다. 명렬표·출석부 넣기와 나이스 내보내기는 관리자가 합니다.</p></div><div class="card"><h3>입력 양식 올리기</h3><p>채운 입력 양식이나 나이스 PAPS 양식을 올리면 <b>맡은 반 학생의 빈 칸만</b> 채웁니다. 다른 반 학생 데이터는 건너뜁니다. 이미 적힌 값과 다른 칸은 목록으로 보여 주고, ‘파일 값으로’를 눌러야 바뀝니다.</p><div class="drop" data-pickfile="1">여기를 누르거나 파일을 끌어다 놓으세요 · .xlsx</div></div>`}
 function armed(b,msg){if(b.classList.contains('armed'))return true;b.classList.add('armed');const t=b.textContent;b.textContent=msg||'한 번 더 누르면 지움';setTimeout(()=>{if(b.isConnected){b.classList.remove('armed');b.textContent=t}},3000);return false}
@@ -1871,7 +1895,8 @@ document.addEventListener('click',async e=>{if(!isAdmin())return;
 #sideUser{display:none!important}
 .sidecredit{margin-top:8px;padding-top:8px;border-top:1px dashed rgba(0,0,0,.15);font-size:11.5px;line-height:1.6;opacity:.85;display:flex;flex-direction:column;gap:2px}
 .sidecredit a{color:inherit;text-decoration:underline}
-#backDrawer{font-weight:700;text-decoration:none}
+#backDrawer{display:none!important}
+.pe-headr{display:flex;flex-direction:column;align-items:flex-end;gap:10px;margin-left:auto}
 .infobox{line-height:1.7}.infobox .ib{border:1px solid rgba(0,0,0,.12);border-radius:10px;padding:10px 12px;margin:10px 0;background:rgba(0,0,0,.02)}
 .infobox a{font-weight:700}
 </style>
@@ -1879,7 +1904,7 @@ document.addEventListener('click',async e=>{if(!isAdmin())return;
 (function(){
   var $i=function(id){return document.getElementById(id)};
   if(/^https?:/.test(location.protocol)&&$i('backDrawer'))$i('backDrawer').hidden=false;
-  function info(){openDlg('PAPS 기록부 v1.0','<div class="infobox"><p><b>만든 이 · 다정고 박성찬</b></p><p>바이브 코딩으로 만든 체육 업무 도구예요. 나이스 PAPS 양식·명렬표·출석부를 넣으면 반별 기록표와 현황판, 미측정자 목록이 만들어지고, 나이스에 올릴 양식으로 내보낼 수 있어요.</p><p>모든 기록은 이 기기(브라우저)에만 저장되고 어디로도 보내지지 않아요. 키·몸무게는 비밀번호로 잠가 둡니다. 자유롭게 쓰고, 자기 학교에 맞게 고쳐 쓰셔도 됩니다.</p><div class="ib"><b>버그 제보 · 추가 기능 제안</b><br><a href="mailto:schoolparksc@sje.ai.kr?subject=%5BPAPS%20%EA%B8%B0%EB%A1%9D%EB%B6%80%20v1.0%5D%20%EB%B2%84%EA%B7%B8%20%EC%A0%9C%EB%B3%B4%20%C2%B7%20%EA%B8%B0%EB%8A%A5%20%EC%A0%9C%EC%95%88">schoolparksc@sje.ai.kr</a><br><small>어떤 화면에서 무엇을 눌렀는지 적어 주시면 빨리 고칠 수 있어요. 학생 이름·기록 등 개인정보는 보내지 말아 주세요.</small></div></div>','narrow')}
+  function info(){openDlg('PAPS 기록부 v1.0','<div class="infobox"><p><b>만든 이 · 다정고 박성찬</b></p><p>체육 업무 도구예요. 나이스 PAPS 양식·명렬표·출석부를 넣으면 반별 기록표와 현황판, 미측정자 목록이 만들어지고, 나이스에 올릴 양식으로 내보낼 수 있어요.</p><p>모든 기록은 이 기기(브라우저)에만 저장되고 어디로도 보내지지 않아요. 키·몸무게는 비밀번호로 잠가 둡니다. 자유롭게 쓰고, 자기 학교에 맞게 고쳐 쓰셔도 됩니다.</p><div class="ib"><b>버그 제보 · 추가 기능 제안</b><br><a href="mailto:schoolparksc@sjeai.kr?subject=%5BPAPS%20%EA%B8%B0%EB%A1%9D%EB%B6%80%20v1.0%5D%20%EB%B2%84%EA%B7%B8%20%EC%A0%9C%EB%B3%B4%20%C2%B7%20%EA%B8%B0%EB%8A%A5%20%EC%A0%9C%EC%95%88">schoolparksc@sjeai.kr</a><br><small>어떤 화면에서 무엇을 눌렀는지 적어 주시면 빨리 고칠 수 있어요. 학생 이름·기록 등 개인정보는 보내지 말아 주세요.</small></div></div>','narrow')}
   document.addEventListener('click',function(e){
     var t=e.target;
     if(t.closest('#infoLink')){e.preventDefault();info();return}
@@ -1927,6 +1952,17 @@ document.addEventListener('click',async e=>{if(!isAdmin())return;
         try{nb=PAPS_LOCAL.mergeBody(await open_(o.bodyEnc,p))}catch(err){$i('bkPinMsg').textContent='비밀번호가 맞지 않습니다';return}}
       prev();
       if(nb){await boot(false);toast(`키·몸무게 ${nb}명을 백업에서 채웠습니다`)}}}
+})();
+</script>
+
+<script id="pe-common-js">
+(function(){
+  var web=/^https?:/.test(location.protocol);
+  document.querySelectorAll('.pe-mback,.pe-back').forEach(function(a){a.hidden=!web});
+  function cue(el){var m=el.scrollWidth-el.clientWidth;el.classList.toggle('pe-tabs-r',m>4&&el.scrollLeft<m-4);el.classList.toggle('pe-tabs-l',m>4&&el.scrollLeft>4)}
+  function bind(){document.querySelectorAll('[data-pe-tabs]').forEach(function(el){if(el._pe)return;el._pe=1;el.addEventListener('scroll',function(){cue(el)},{passive:true});new ResizeObserver(function(){cue(el)}).observe(el);if(window.MutationObserver)new MutationObserver(function(){cue(el)}).observe(el,{childList:true});cue(el)})}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+  addEventListener('resize',function(){document.querySelectorAll('[data-pe-tabs]').forEach(cue)});
 })();
 </script>
 </body></html>

@@ -4,94 +4,183 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>체육 앱 서랍</title>
-<meta name="description" content="체육 선생님이 바이브 코딩으로 만든 수업·업무 도구 모음. 설치 없이 바로 쓰고, 기록은 내 기기에만 저장됩니다.">
+<meta name="description" content="체육 선생님이 만든 수업·업무 도구 모음. 설치 없이 바로 쓰고, 기록은 내 기기에만 저장됩니다.">
 <style>
-:root{
-  --bg:#eef1ec;--surface:#fff;--surface-2:#f5f7f3;--line:#d6ddd3;--line-strong:#b9c4b4;
-  --ink:#17211c;--ink-2:#5d6a61;--accent:#1f7a55;--accent-soft:#e2f0e8;--amber:#c98a19;--radius:14px;
-}
-@media (prefers-color-scheme: dark){:root{
-  --bg:#121714;--surface:#1a211d;--surface-2:#212a25;--line:#2e3a33;--line-strong:#43524a;
-  --ink:#e8efe9;--ink-2:#9aa8a0;--accent:#5fc494;--accent-soft:#1f3a2d;--amber:#e0ab4a;
-}}
+:root{--ink:#111318;--ink-2:#4A4F59;--ink-3:#8A8F99;--bg:#fff;--tile:#F7F8FA;--chip:#F1F2F5;--line:#E6E8EC;--blue:#1F4FD8;--blue-soft:#E4E9F7}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;line-height:1.55;-webkit-text-size-adjust:100%}
-a{color:inherit}
-.wrap{max-width:1040px;margin:0 auto;padding:0 18px}
-header{padding:34px 0 18px}
-.eyebrow{font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.02em}
-h1{margin:4px 0 6px;font-size:30px;letter-spacing:-.03em}
-.lead{margin:0;color:var(--ink-2);font-size:15.5px;max-width:640px}
-.notice{margin:18px 0 6px;display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;font-size:14px}
-.notice .ic{flex:0 0 auto;width:28px;height:28px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800}
-.notice b{font-weight:700}
-.notice ul{margin:6px 0 0;padding-left:18px;color:var(--ink-2)}
-.notice li{margin:2px 0}
-section{margin-top:26px}
-h2{font-size:17px;margin:0 0 4px;letter-spacing:-.02em}
-.sec-sub{margin:0 0 12px;color:var(--ink-2);font-size:13.5px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;gap:10px}
-.card.soon{background:var(--surface-2);border-style:dashed}
-.top{display:flex;gap:12px;align-items:center}
-.icon{flex:0 0 auto;width:44px;height:44px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center}
-.soon .icon{background:var(--surface);color:var(--ink-2)}
-.icon svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.name{font-size:16.5px;font-weight:700;letter-spacing:-.02em;margin:0}
-.meta{font-size:12px;color:var(--ink-2);margin-top:1px}
-.desc{margin:0;font-size:14px;color:var(--ink-2);flex:1}
-.tags{display:flex;flex-wrap:wrap;gap:5px}
-.tag{font-size:11.5px;font-weight:600;border:1px solid var(--line);border-radius:99px;padding:1px 8px;color:var(--ink-2)}
-.tag.edit{border-color:var(--amber);color:var(--amber)}
-.acts{display:flex;gap:6px}
-.btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:5px;text-decoration:none;border:1px solid var(--line-strong);background:var(--surface);border-radius:10px;padding:9px 6px;font-size:13.5px;font-weight:700;white-space:nowrap}
-.btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
-.btn.wide{flex:1.3}
-.btn:hover{background:var(--surface-2)}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-.btn.primary:hover{filter:brightness(1.06)}
-.btn.off{pointer-events:none;opacity:.5}
-.badge{margin-left:auto;font-size:11.5px;font-weight:700;border-radius:99px;padding:2px 9px;background:var(--surface);border:1px solid var(--line);color:var(--ink-2);white-space:nowrap}
-.badge.new{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
-footer{margin:40px 0 0;border-top:1px solid var(--line);padding:18px 0 40px;color:var(--ink-2);font-size:13px;text-align:center;line-height:1.8}
-footer a{color:var(--accent);font-weight:600}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-@media (max-width:520px){h1{font-size:25px}.grid{grid-template-columns:1fr}}
+body{background:var(--bg);color:var(--ink);font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;line-height:1.55;word-break:keep-all;-webkit-text-size-adjust:100%}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+svg.i{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+/* header */
+.top{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.92);backdrop-filter:saturate(1.6) blur(12px);-webkit-backdrop-filter:saturate(1.6) blur(12px);border-bottom:1px solid transparent;transition:border-color .2s}
+.top.scrolled{border-bottom-color:var(--line)}
+.top .wrap{display:flex;align-items:center;gap:14px;height:72px}
+.logo{display:flex;align-items:center;gap:12px;flex:none}
+.logo-mark{width:36px;height:36px;border-radius:10px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center}
+.logo-mark svg{width:20px;height:20px;stroke-width:2}
+.logo b{font-size:20px;font-weight:900;letter-spacing:-.03em;white-space:nowrap}
+.search{margin-left:20px;flex:1;max-width:420px;height:42px;border-radius:12px;background:var(--chip);display:flex;align-items:center;gap:10px;padding:0 14px;color:var(--ink-3)}
+.search svg{width:17px;height:17px;stroke-width:2;flex:none}
+.search input{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:14.5px;color:var(--ink);outline:none}
+.search input::placeholder{color:var(--ink-3)}
+.search:focus-within{background:#fff;box-shadow:0 0 0 2px var(--blue) inset}
+.tabs{margin-left:auto;display:flex;gap:6px;flex:none}
+.tab{border:0;font:inherit;font-size:14px;font-weight:700;padding:9px 16px;border-radius:999px;background:var(--chip);color:var(--ink);cursor:pointer;white-space:nowrap}
+.tab:hover{background:#E6E8EC}
+.tab[aria-pressed="true"]{background:var(--ink);color:#fff}
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:24px;align-items:center;margin-top:28px;padding:32px 36px;border-radius:28px;background:var(--tile)}
+.intro h1{margin:0 0 10px;font-size:32px;font-weight:900;line-height:1.3;letter-spacing:-.035em}
+.intro p{margin:0;font-size:15.5px;line-height:1.7;color:var(--ink-2);max-width:560px}
+.safe{display:flex;gap:16px;align-items:flex-start;text-align:left;border:0;font:inherit;color:inherit;cursor:pointer;background:#E5F6EC;border-radius:22px;padding:22px 24px}
+.safe:hover{background:#DAF1E3}
+.safe-ic{width:44px;height:44px;flex:none;border-radius:14px;background:#15803D;color:#fff;display:flex;align-items:center;justify-content:center}
+.safe-ic svg{width:24px;height:24px;stroke-width:1.9}
+.safe-tx{display:flex;flex-direction:column;gap:3px}
+.safe .t{font-size:17px;font-weight:900;letter-spacing:-.02em}
+.safe .d{font-size:13.5px;color:#3B5446;line-height:1.55}
+.safe .more{font-size:13px;font-weight:700;color:#15803D;margin-top:4px}
+/* storage notice */
+.notice{margin-top:16px;border-radius:20px;background:#F3FAF6;border:1px solid #CFEBDB;padding:18px 24px;font-size:14px;color:#2F4A3B}
+.notice[hidden]{display:none}
+.notice b{color:#14532D}
+.notice ul{margin:8px 0 0;padding-left:18px}
+.notice li{margin:3px 0}
+/* shelves */
+main{padding-bottom:12px}
+.shelf{margin-top:44px}
+.shelf-h{display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
+.shelf-h h2{margin:0;font-size:24px;font-weight:900;letter-spacing:-.03em;white-space:nowrap}
+.shelf-h span{font-size:14px;color:var(--ink-3)}
+.shelf-h .cnt{margin-left:auto;font-size:13px;font-weight:700;color:var(--ink-3);white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.card{position:relative;border-radius:22px;background:var(--tile);padding:20px;display:flex;flex-direction:column;gap:14px;transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(17,19,24,.08)}
+.card.go{cursor:pointer}
+.card.go:hover{background:#EEF1F6}
+.stretch{color:inherit}
+.stretch::after{content:"";position:absolute;inset:0;border-radius:22px;z-index:1}
+.card .acts a,.card .mats a{position:relative;z-index:2}
+.arrow{margin-left:auto;flex:none;width:32px;height:30px;border-radius:50%;background:#fff;color:var(--ink-3);display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s,transform .15s}
+.arrow svg{width:15px;height:15px;stroke-width:2.2}
+.card.go:hover .arrow{background:var(--blue);color:#fff;transform:translateX(2px)}
+.card.go:has(.stretch:focus-visible){outline:2px solid var(--blue);outline-offset:2px}
+.stretch:focus-visible{outline:none}
+.card-top{display:flex;align-items:center;gap:14px}
+.app-ic{width:60px;height:60px;flex:none;border-radius:16px;display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+.app-ic svg{width:30px;height:30px;stroke-width:1.9}
+.nm{display:flex;flex-direction:column;gap:3px;min-width:0}
+.name{margin:0;font-size:16px;font-weight:900;letter-spacing:-.025em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub{font-size:12.5px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub .ed{color:#C2410C;font-weight:700}
+.desc{margin:0;font-size:13.5px;line-height:1.6;color:var(--ink-2);flex:1}
+.acts{display:flex;gap:6px;align-items:center}
+._unused{background:var(--blue-soft);color:var(--blue);font-size:13.5px;font-weight:900;padding:7px 18px;border-radius:999px;white-space:nowrap}
+._unused2{background:var(--blue);color:#fff}
+.lnk{display:inline-flex;align-items:center;gap:5px;font-size:13px;color:var(--ink-2);font-weight:700;padding:7px 12px;border-radius:999px;background:#fff;box-shadow:0 0 0 1px var(--line) inset;white-space:nowrap}
+.lnk svg{width:14px;height:14px;stroke-width:2}
+.lnk:hover{color:var(--blue);box-shadow:0 0 0 1.5px var(--blue) inset}
+.lnk.off{color:#B5B9C1;background:transparent;pointer-events:none}
+.lnk.dl{}
+.mats{display:flex;flex-direction:column;gap:6px;padding-top:12px;border-top:1px solid var(--line)}
+.mats-h{font-size:12px;font-weight:700;color:var(--ink-3)}
+.mat{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink-2);background:#fff;border-radius:10px;padding:7px 10px}
+.mat:hover{color:var(--ink);box-shadow:0 0 0 1px var(--line) inset}
+.mat svg{width:15px;height:15px;stroke-width:1.8;flex:none;color:#DC2626}
+.shelf.wide .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.shelf.wide .mats{flex-direction:row;flex-wrap:wrap;align-items:center}
+.shelf.wide .mats-h{margin-right:4px}
+.empty{margin:60px 0;text-align:center;color:var(--ink-3);font-size:15px}
+footer{margin-top:56px;border-top:1px solid var(--line);padding:22px 0 44px;color:var(--ink-3);font-size:12.5px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:6px 20px}
+footer a{color:var(--blue);font-weight:700}
+footer .r{margin-left:auto}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+@media (max-width:1080px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:900px){
+  .top .wrap{flex-wrap:wrap;height:auto;padding-top:12px;padding-bottom:12px;gap:10px}
+  .search{order:3;margin-left:0;max-width:none;flex-basis:100%}
+  .tabs{order:4;margin-left:0;overflow-x:auto;flex-basis:100%;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .hero{grid-template-columns:1fr;padding:26px 26px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:600px){
+  .shelf.wide .grid{grid-template-columns:1fr}
+  .shelf.wide .mats{flex-direction:column;align-items:stretch}
+  .wrap{padding:0 16px}
+  .hero{padding:22px 20px;border-radius:22px;margin-top:16px}
+  .intro h1{font-size:25px}
+  .grid{grid-template-columns:1fr}
+  .shelf{margin-top:34px}
+  .shelf-h{flex-wrap:wrap}.shelf-h h2{font-size:21px}
+  footer .r{margin-left:0}
+}
 </style>
 </head>
 <body>
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="logo" href="./" aria-label="체육 앱 서랍 처음으로">
+      <span class="logo-mark"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v12H4zM4 7l2-3h12l2 3M10 12h4"/></svg></span>
+      <b>체육 앱 서랍</b>
+    </a>
+    <label class="search">
+      <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      <input id="q" type="search" placeholder="앱 이름이나 기능으로 찾기 (예: 세특, 추첨)" aria-label="앱 검색" autocomplete="off">
+    </label>
+    <nav class="tabs" id="tabs" aria-label="분류">
+      <button class="tab" data-f="all" aria-pressed="true">전체</button>
+      <button class="tab" data-f="class" aria-pressed="false">수업</button>
+      <button class="tab" data-f="work" aria-pressed="false">업무 · 행사</button>
+      <button class="tab" data-f="mat" aria-pressed="false">자료</button>
+    </nav>
+  </div>
+</header>
+
 <div class="wrap">
-  <header>
-    <div class="eyebrow">바이브 코딩으로 만든 체육 수업 도구</div>
-    <h1>체육 앱 서랍</h1>
-    <p class="lead">체육 선생님이 수업과 업무에 직접 쓰려고 만든 도구들이에요. 설치나 로그인 없이 바로 열어 쓰고, 마음에 들면 HTML 파일로 내려받아 보관하거나 자기 수업에 맞게 고쳐 쓰세요.</p>
-    <div class="notice" role="note">
-      <div class="ic" aria-hidden="true">i</div>
-      <div>
-        <b>모든 기록은 지금 쓰는 기기(브라우저)에만 저장돼요.</b> 학생 명단이나 점수가 인터넷 어디로도 보내지지 않아요.
-        <ul>
-          <li>다른 기기에서 열면 기록이 보이지 않아요. 옮길 때는 각 앱의 <b>백업 파일 내려받기 → 불러오기</b>를 쓰세요.</li>
-          <li>재부팅하면 초기화되는 교실 PC, 브라우저 기록 삭제, 시크릿 창에서는 기록이 사라져요. 수업이 끝날 때마다 백업해 두세요.</li>
-          <li>처음 써 볼 때는 앱 안의 <b>예시 반 만들기</b>로 둘러보세요.</li>
-        </ul>
-      </div>
+  <section class="hero" id="hero">
+    <div class="intro">
+      <h1>수업과 업무에 바로 쓰는<br>체육 앱 <span id="appCount">9</span>가지</h1>
+      <p>체육 선생님이 직접 쓰려고 만든 도구예요. 설치나 로그인 없이 열어 쓰고, 마음에 들면 HTML 파일로 받아 보관하거나 내 수업에 맞게 고쳐 쓰세요.</p>
     </div>
-  </header>
+    <button class="safe" id="safeBtn" aria-expanded="false" aria-controls="notice">
+      <span class="safe-ic" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span>
+      <span class="safe-tx">
+        <span class="t">기록은 이 기기에만 저장돼요</span>
+        <span class="d">로그인 없음 · 학생 정보가 인터넷으로 보내지지 않아요</span>
+        <span class="more" id="safeMore">저장 방식 자세히 보기 ↓</span>
+      </span>
+    </button>
+  </section>
+  <div class="notice" id="notice" role="note" hidden>
+    <b>모든 기록은 지금 쓰는 기기(브라우저)에만 저장돼요.</b> 학생 명단이나 점수가 인터넷 어디로도 보내지지 않아요.
+    <ul>
+      <li>다른 기기에서 열면 기록이 보이지 않아요. 옮길 때는 각 앱의 <b>백업 파일 내려받기 → 불러오기</b>를 쓰세요.</li>
+      <li>재부팅하면 초기화되는 교실 PC, 브라우저 기록 삭제, 시크릿 창에서는 기록이 사라져요. 수업이 끝날 때마다 백업해 두세요.</li>
+      <li>처음 써 볼 때는 앱 안의 <b>예시로 둘러보기</b>를 눌러 보세요. 마음에 들면 <b>HTML 받기</b>로 파일을 보관하거나 고쳐 쓰셔도 돼요.</li>
+    </ul>
+  </div>
 
   <main id="drawer"></main>
-
-  <footer>
-    만든 이 · 다정고 박성찬 · 버그 제보 · 추가 기능 제안 <a href="mailto:schoolparksc@sje.ai.kr?subject=%5B%EC%B2%B4%EC%9C%A1%20%EC%95%B1%20%EC%84%9C%EB%9E%8D%5D%20%EC%A0%9C%EB%B3%B4%20%C2%B7%20%EC%A0%9C%EC%95%88">schoolparksc@sje.ai.kr</a><br>
-    메일에는 학생 이름 등 개인정보를 적지 말아 주세요. 자유롭게 쓰고 고쳐 쓰셔도 됩니다.
-  </footer>
 </div>
+
+<footer>
+  <div class="wrap">
+    <span>만든 이 · 다정고 박성찬</span>
+    <span>버그 제보 · 기능 제안 <a href="mailto:schoolparksc@sjeai.kr?subject=%5B%EC%B2%B4%EC%9C%A1%20%EC%95%B1%20%EC%84%9C%EB%9E%8D%5D%20%EC%A0%9C%EB%B3%B4%20%C2%B7%20%EC%A0%9C%EC%95%88">schoolparksc@sjeai.kr</a> (학생 개인정보는 적지 말아 주세요)</span>
+    <span class="r">기록은 이 기기(브라우저)에만 저장됩니다 · 자유롭게 쓰고 고쳐 쓰세요</span>
+  </div>
+</footer>
 
 <script>
 (function(){
 'use strict';
 /* 앱 목록: 새 앱이 완성되면 file 을 채우고 ready:true 로 바꾸면 됩니다.
-   사용법은 guide 에 'guides/이름.html' 또는 'guides/이름.pdf' 를 넣으면 새 탭으로 열립니다. */
+   사용법은 guide 에 'guides/이름.html' 또는 'guides/이름.pdf' 를 넣으면 새 탭으로 열립니다.
+   color 는 아이콘 타일 색, short 는 카드에 보이는 짧은 설명입니다. */
 var ICON={
   clip:'<path d="M9 4h6v3H9z"/><path d="M15 5h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h4"/>',
   trophy:'<path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4.5a2.5 2.5 0 0 0 2.5 4M17 6h2.5a2.5 2.5 0 0 1-2.5 4"/><path d="M12 14v4M8 21h8M9 18h6"/>',
@@ -100,54 +189,81 @@ var ICON={
   user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/><path d="M17 3l2 2-2 2"/>',
   coin:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>',
   brain:'<path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3h0V4z"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3V4z"/>',
-  pen:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>'
+  pen:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>',
+  ball:'<circle cx="12" cy="12" r="10"/><path d="M11.1 7.1a16.55 16.55 0 0 1 10.9 4"/><path d="M12 12a12.6 12.6 0 0 1-8.7 5"/><path d="M16.8 13.6a16.55 16.55 0 0 1-9 7.5"/><path d="M20.7 17a12.8 12.8 0 0 0-8.7-5 13.3 13.3 0 0 1 0-10"/><path d="M6.3 3.8a16.55 16.55 0 0 0 1.9 11.5"/>',
+  board:'<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M12 4v14M7 9h0M7 13h0M17 9h0M17 13h0"/><path d="M8 21h8"/>'
 };
 var SECTIONS=[
-  {title:'수업',sub:'체육 시간에 바로 꺼내 쓰는 도구',apps:[
-    {name:'체육 수업 어시스턴트',icon:'clip',desc:'출석부 파일로 반을 만들고 수행평가 기록·점수 환산, 출석, 학생 점수 확인, 관찰 메모·세특, 나이스 업로드 양식까지. 나이스 시간표·PAPS 기록부와 연결돼요.',tags:['수행평가','출석','세특'],file:'apps/assistant.html',dl:'체육-수업-어시스턴트.html',guide:'',ver:'v1.0',ready:true},
-    {name:'탁구·배드민턴 리그전',icon:'bracket',desc:'조별 리그 대진표·순위표, 복식 토너먼트, 조 짜기. 코트 수에 맞춰 라운드를 자동으로 배치해요.',tags:['리그전','토너먼트','수업 모드'],file:'apps/league.html',dl:'탁구배드민턴-리그전.html',guide:'',ver:'v1.0',ready:true},
-    {name:'PAPS 기록부',icon:'heart',desc:'나이스 PAPS 양식·명렬표·출석부를 넣으면 반별 기록표, 현황판, 미측정자 목록이 만들어지고 나이스 업로드 양식으로 내보내요. 키·몸무게는 비밀번호 잠금.',tags:['PAPS','나이스 양식','엑셀'],file:'apps/paps.html',dl:'PAPS-기록부.html',guide:'',ver:'v1.0',ready:true}
+  {id:'class',title:'수업',sub:'체육 시간에 바로 꺼내 쓰는 도구',apps:[
+    {name:'체육 수업 어시스턴트',icon:'clip',color:'#1F4FD8',short:'수행평가 기록·점수 환산, 출석, 관찰 메모·세특, 나이스 업로드 양식까지 한 앱에서.',desc:'출석부 파일로 반을 만들고 수행평가 기록·점수 환산, 출석, 학생 점수 확인, 관찰 메모·세특, 나이스 업로드 양식까지. 나이스 시간표·PAPS 기록부와 연결돼요.',tags:['수행평가','출석','세특'],file:'apps/assistant.html',dl:'체육-수업-어시스턴트.html',guide:'guides/assistant.html',ver:'v1.0',ready:true},
+    {name:'탁구·배드민턴 리그전',icon:'bracket',color:'#0E9F6E',short:'조별 리그 대진표·순위표, 복식 토너먼트, 조 짜기. 코트 수에 맞춰 자동 배치.',desc:'조별 리그 대진표·순위표, 복식 토너먼트, 조 짜기. 코트 수에 맞춰 라운드를 자동으로 배치해요.',tags:['리그전','토너먼트','수업 모드'],file:'apps/league.html',dl:'탁구배드민턴-리그전.html',guide:'guides/league.html',ver:'v1.0',ready:true},
+    {name:'배구 로테이션 보드',icon:'ball',color:'#EA580C',short:'R1~R6 대형을 움직이며 보여 주고, 리시브 팀 포지션 폴트를 바로 판정.',desc:'로테이션(R1~R6)마다 리시브·서브·수비·공격 전환 대형을 움직이며 보여 줘요. 선수를 끌어 옮기면 리시브 팀 포지션 폴트를 바로 판정해요.',tags:['배구','로테이션','포지션 폴트'],file:'apps/rotation.html',dl:'배구-로테이션-보드.html',guide:'guides/rotation.html',ver:'v1.0',ready:true},
+    {name:'PAPS 기록부',icon:'heart',color:'#DC2626',short:'반별 기록표, 현황판, 미측정자 목록, 나이스 업로드 양식까지.',desc:'나이스 PAPS 양식·명렬표·출석부를 넣으면 반별 기록표, 현황판, 미측정자 목록이 만들어지고 나이스 업로드 양식으로 내보내요. 키·몸무게는 비밀번호 잠금.',tags:['PAPS','나이스 양식','엑셀'],file:'apps/paps.html',dl:'PAPS-기록부.html',guide:'guides/paps.html',ver:'v1.0',ready:true}
   ]},
-  {title:'업무 · 행사',sub:'체육과 업무와 학교 행사 운영',apps:[
-    {name:'스포츠 토너먼트',icon:'trophy',desc:'반 대항 토너먼트를 종목별로 설정하면 부전승 포함 대진표, 추첨 발표 화면, 경기 기록지, 순위까지 만들어요. 세트승·총득점 방식 선택.',tags:['반 대항','추첨','세트승'],file:'apps/tournament.html',dl:'스포츠-토너먼트.html',guide:'',ver:'v1.0',ready:true},
-    {name:'학생선수 출결 장부',icon:'user',desc:'대회 출전 기록으로 출석인정결석 일수, 나이스 입력 내용, 이스쿨 이수, 학관위 심의 대상을 정리하고 기안문·확인서를 만들어요.',tags:['학생선수','출결','이스쿨'],file:'apps/athlete.html',dl:'학생선수-출결장부.html',guide:'',ver:'v1.0',ready:true},
-    {name:'체육 사업 정산서 작성기',icon:'coin',desc:'예산을 설정하고 지출을 등록하면 정산서 엑셀과 에듀파인 업로드 파일을 만들어요. 받은 정산서 양식에 맞춰 채워 넣기도 해요.',tags:['예산','정산','에듀파인'],file:'apps/budget.html',dl:'체육사업-정산서작성기.html',guide:'',ver:'v1.0.0',ready:true}
+  {id:'work',title:'업무 · 행사',sub:'체육과 업무와 학교 행사 운영',apps:[
+    {name:'스포츠 토너먼트',icon:'trophy',color:'#7C3AED',short:'대진표, 추첨 발표 화면, 심판 배정, 경기 기록지와 순위까지.',desc:'반 대항 토너먼트를 종목별로 설정하면 부전승 포함 대진표, 추첨 발표 화면, 경기 기록지, 순위까지 만들어요. 세트승·총득점 방식 선택.',tags:['반 대항','추첨','세트승'],file:'apps/tournament.html',dl:'스포츠-토너먼트.html',guide:'guides/tournament.html',ver:'v1.2',ready:true},
+    {name:'학생선수 관리',icon:'user',color:'#0891B2',short:'출석인정결석, 나이스·이스쿨 입력, 학업성적관리위원회 심의 자료와 기안문.',desc:'대회 출전 기록으로 출석인정결석 일수, 나이스 입력 내용, 이스쿨 이수를 정리하고 기안문·확인서를 만들어요. 학업성적관리위원회 심의(허용일수 예외·최저학력·등록 서류)까지 준비해요.',tags:['학생선수','출결','학업성적관리위원회'],file:'apps/athlete.html',dl:'학생선수-관리.html',guide:'guides/athlete.html',ver:'v1.0',ready:true},
+    {name:'체육 사업 정산서 작성기',icon:'coin',color:'#CA8A04',short:'지출만 등록하면 정산서 엑셀과 에듀파인 업로드 파일이 완성.',desc:'예산을 설정하고 지출을 등록하면 정산서 엑셀과 에듀파인 업로드 파일을 만들어요. 받은 정산서 양식에 맞춰 채워 넣기도 해요.',tags:['예산','정산','에듀파인'],file:'apps/budget.html',dl:'체육사업-정산서작성기.html',guide:'guides/budget.html',ver:'v1.0.0',ready:true}
   ]},
-  {title:'내 수업에 맞게 고쳐 쓰는 자료',sub:'내용을 직접 편집해 내 수업 자료로 바꿀 수 있는 사례',apps:[
-    {name:'스포츠 멘탈 1차시',icon:'brain',desc:'스포츠 심리 탐구 동아리 오리엔테이션 수업 자료.',tags:['동아리','편집 가능'],file:'',ready:false},
-    {name:'스포츠 가치판단 글쓰기',icon:'pen',desc:'스포츠 딜레마 사례로 입장과 근거를 쓰는 글쓰기 수행평가.',tags:['수행평가','편집 가능'],file:'',ready:false}
+  {id:'mat',title:'고쳐 쓰는 자료',sub:'내용을 직접 편집해 내 수업 자료로 바꿀 수 있는 사례',apps:[
+    {name:'스포츠멘탈 동아리 수업자료',icon:'brain',color:'#DB2777',short:'스포츠 심리 탐구 동아리 오리엔테이션 슬라이드와 판서, 유인물.',desc:'스포츠 심리 탐구 동아리 오리엔테이션 슬라이드 23장. ✏️ 편집으로 글자·순서·타이머를 바꾸고 판서도 할 수 있어요. 활동지·참고 자료·보고서 양식 유인물도 함께 받을 수 있어요.',tags:['동아리','슬라이드','편집 가능'],file:'apps/mental.html',dl:'스포츠멘탈-동아리-수업자료.html',guide:'guides/mental.html',ver:'v1.0',ready:true,files:[{name:'동아리 유인물 6쪽 (PDF)',href:'materials/mental-handouts.pdf'}]},
+    {name:'스포츠 가치 판단 글쓰기',icon:'pen',color:'#475569',short:'스포츠퍼슨십 사례, 딜레마 문제 3개, 채점 기준과 원고지 답안지.',desc:'스포츠퍼슨십 사례와 딜레마 문제 3개, 채점 기준까지. ✏️ 편집으로 사례·문항·대본을 바꾸고, 영상 칸에 유튜브 주소나 내 영상 파일을 넣어요. 수행평가 때 쓴 참고 자료와 답안지도 함께 받을 수 있어요.',tags:['수행평가','글쓰기','편집 가능'],file:'apps/values.html',dl:'스포츠-가치판단-글쓰기.html',guide:'guides/values.html',ver:'v1.0',ready:true,files:[{name:'참고 자료 (PDF)',href:'materials/values-reference.pdf'},{name:'원고지 답안지 A4 (PDF)',href:'materials/values-answer-sheet-a4.pdf'}]}
   ]}
 ];
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-var BI={
-  open:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>',
-  book:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M8 7h7"/></svg>',
-  down:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg>'
-};
-function btn(on,cls,label,icon,attrs,offLabel){
-  return on?'<a class="btn '+cls+'" '+attrs+'>'+BI[icon]+label+'</a>'
-           :'<span class="btn off '+cls.replace('primary','')+'" title="'+(offLabel||'준비 중')+'">'+BI[icon]+label+'</span>';
+var FILE_IC='<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>';
+var BOOK='<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M8 7h7"/></svg>';
+var DOWN='<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg>';
+function card(a){
+  var ok=a.ready&&a.file, ed=a.tags.indexOf('편집 가능')>=0;
+  var sub=a.tags.filter(function(t){return t!=='편집 가능';}).slice(0,2).join(' · ');
+  return '<article class="card'+(ok?' go':'')+'" data-s="'+esc((a.name+' '+a.desc+' '+a.tags.join(' ')).toLowerCase())+'">'+
+    '<div class="card-top"><div class="app-ic" style="background:'+a.color+'" aria-hidden="true"><svg class="i" viewBox="0 0 24 24">'+ICON[a.icon]+'</svg></div>'+
+    '<div class="nm"><p class="name" title="'+esc(a.name)+'">'+(ok?'<a class="stretch" href="'+esc(a.file)+'">'+esc(a.name)+'</a>':esc(a.name))+'</p><span class="sub">'+(ed?'<span class="ed">편집 가능</span> · ':'')+esc(sub)+' · '+esc(ok?(a.ver||''):'준비 중')+'</span></div></div>'+
+    '<p class="desc" title="'+esc(a.desc)+'">'+esc(a.short||a.desc)+'</p>'+
+    '<div class="acts">'+(ok?'':'<span class="lnk off">준비 중</span>')+
+      
+      (a.guide?'<a class="lnk" href="'+esc(a.guide)+'" target="_blank" rel="noopener">'+BOOK+'사용법</a>':'<span class="lnk off" title="사용법 준비 중">'+BOOK+'사용법</span>')+
+      (ok?'<a class="lnk dl" href="'+esc(a.file)+'" download="'+esc(a.dl||'')+'">'+DOWN+'HTML 받기</a>':'')+(ok?'<span class="arrow" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>':'')+
+    '</div>'+
+    (a.files&&a.files.length?'<div class="mats"><span class="mats-h">수업 자료</span>'+a.files.map(function(f){return '<a class="mat" href="'+esc(f.href)+'" target="_blank" rel="noopener" title="새 탭에서 열기">'+FILE_IC+esc(f.name)+'</a>';}).join('')+'</div>':'')+
+  '</article>';
 }
 var h='';
 SECTIONS.forEach(function(sec){
-  h+='<section><h2>'+esc(sec.title)+'</h2><p class="sec-sub">'+esc(sec.sub)+'</p><div class="grid">';
-  sec.apps.forEach(function(a){
-    var ok=a.ready&&a.file;
-    h+='<article class="card'+(ok?'':' soon')+'">'+
-      '<div class="top"><div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24">'+ICON[a.icon]+'</svg></div>'+
-      '<div><p class="name">'+esc(a.name)+'</p><div class="meta">'+(ok?esc(a.ver||''):'준비 중')+'</div></div>'+
-      '<span class="badge'+(ok?' new':'')+'">'+(ok?'바로 사용':'곧 공개')+'</span></div>'+
-      '<p class="desc">'+esc(a.desc)+'</p>'+
-      '<div class="tags">'+a.tags.map(function(t){return '<span class="tag'+(t==='편집 가능'?' edit':'')+'">'+esc(t)+'</span>';}).join('')+'</div>'+
-      '<div class="acts">'+
-        btn(ok,'primary wide','바로 열기','open','href="'+esc(a.file||'')+'"')+
-        btn(!!a.guide,'','사용법','book','href="'+esc(a.guide||'')+'" target="_blank" rel="noopener"','사용법 준비 중')+
-        btn(ok,'','HTML 받기','down','href="'+esc(a.file||'')+'" download="'+esc(a.dl||'')+'"')+
-      '</div></article>';
-  });
-  h+='</div></section>';
+  h+='<section class="shelf'+(sec.id==='mat'?' wide':'')+'" data-id="'+sec.id+'"><div class="shelf-h"><h2>'+esc(sec.title)+'</h2><span>'+esc(sec.sub)+'</span><b class="cnt">'+sec.apps.length+'개</b></div><div class="grid">'+sec.apps.map(card).join('')+'</div></section>';
 });
-document.getElementById('drawer').innerHTML=h;
+h+='<p class="empty" id="empty" hidden>찾는 앱이 없어요. 다른 낱말로 찾아보세요.</p>';
+var main=document.getElementById('drawer'); main.innerHTML=h;
+document.getElementById('appCount').textContent=SECTIONS.reduce(function(n,x){return n+x.apps.length;},0);
+/* 필터 · 검색 */
+var cur='all', q=document.getElementById('q'), hero=document.getElementById('hero');
+function apply(){
+  var t=q.value.trim().toLowerCase(), any=false;
+  main.querySelectorAll('.shelf').forEach(function(s){
+    var n=0;
+    s.querySelectorAll('.card').forEach(function(c){var v=(!t||c.dataset.s.indexOf(t)>=0);c.hidden=!v;c.style.display=v?'':'none';if(v)n++;});
+    var show=(cur==='all'||cur===s.dataset.id)&&n>0;
+    s.style.display=show?'':'none'; if(show)any=true;
+    s.querySelector('.cnt').textContent=n+'개';
+  });
+  document.getElementById('empty').hidden=any;
+  hero.style.display=(cur==='all'&&!t)?'':'none';
+  if(cur!=='all'||t){document.getElementById('notice').hidden=true;}
+}
+document.getElementById('tabs').addEventListener('click',function(e){
+  var b=e.target.closest('.tab'); if(!b)return;
+  cur=b.dataset.f;
+  this.querySelectorAll('.tab').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});
+  apply(); window.scrollTo({top:0,behavior:'smooth'});
+});
+q.addEventListener('input',apply);
+/* 저장 안내 펼치기 */
+var sb=document.getElementById('safeBtn'), nt=document.getElementById('notice');
+sb.addEventListener('click',function(){var o=nt.hidden;nt.hidden=!o;sb.setAttribute('aria-expanded',String(o));document.getElementById('safeMore').textContent=o?'접기 ↑':'저장 방식 자세히 보기 ↓';});
+/* 스크롤 시 헤더 구분선 */
+var tp=document.getElementById('top');
+window.addEventListener('scroll',function(){tp.classList.toggle('scrolled',window.scrollY>8);},{passive:true});
 })();
 </script>
 </body>

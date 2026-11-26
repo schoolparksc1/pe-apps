@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>스포츠 토너먼트 사용법 · 체육 앱 서랍</title>
+<style>
+:root{--ink:#111318;--ink-2:#4A4F59;--ink-3:#8A8F99;--tile:#F7F8FA;--chip:#F1F2F5;--line:#E6E8EC;--ac:#7C3AED;--ac-soft:#F1EBFD;--ac-ink:#5929AA;--warn:#B45309;--warn-soft:#FEF6E7;--ok:#15803D;--ok-soft:#E5F6EC}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+html,body{margin:0}
+body{background:#fff;color:var(--ink);font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;line-height:1.75;word-break:keep-all;-webkit-text-size-adjust:100%}
+a{color:var(--ac-ink)}
+svg.i{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+/* top bar */
+.bar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:saturate(1.6) blur(12px);-webkit-backdrop-filter:saturate(1.6) blur(12px);border-bottom:1px solid var(--line)}
+.bar-in{max-width:1200px;margin:0 auto;padding:0 32px;height:64px;display:flex;align-items:center;gap:12px}
+.back{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--ink-2);text-decoration:none;padding:7px 12px;border-radius:999px;background:var(--chip);white-space:nowrap}
+.back:hover{color:var(--ink)}
+.bar-t{font-size:15px;font-weight:800;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-acts{margin-left:auto;display:flex;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:800;padding:8px 16px;border-radius:999px;text-decoration:none;white-space:nowrap;border:0;cursor:pointer;font-family:inherit}
+.pill svg{width:15px;height:15px;stroke-width:2.2}
+.pill.main{background:var(--ac);color:#fff}
+.pill.main:hover{background:var(--ac-ink)}
+.pill.sub{background:#fff;color:var(--ink-2);box-shadow:0 0 0 1px var(--line) inset}
+.pill.sub:hover{color:var(--ac-ink);box-shadow:0 0 0 1.5px var(--ac) inset}
+/* layout */
+.layout{max-width:1200px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:56px}
+.toc{position:sticky;top:88px;align-self:start;max-height:calc(100vh - 110px);overflow:auto;padding:8px 0 24px;font-size:14px}
+.toc b{display:block;font-size:12px;letter-spacing:.06em;color:var(--ink-3);margin:0 0 8px 10px}
+.toc a{display:block;text-decoration:none;color:var(--ink-2);padding:5px 10px;border-radius:8px;line-height:1.45}
+.toc a.s{padding-left:22px;font-size:13px;color:var(--ink-3)}
+.toc a:hover{background:var(--chip);color:var(--ink)}
+.toc a.on{background:var(--ac-soft);color:var(--ac-ink);font-weight:700}
+main{padding:36px 0 80px;min-width:0}
+/* hero */
+.hero{display:flex;gap:22px;align-items:center;padding:30px 32px;border-radius:28px;background:var(--tile)}
+.hero-ic{width:76px;height:76px;flex:none;border-radius:20px;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center}
+.hero-ic svg{width:40px;height:40px;stroke-width:1.8}
+.hero h1{margin:0;font-size:30px;font-weight:900;letter-spacing:-.035em;line-height:1.3}
+.hero p{margin:6px 0 0;color:var(--ink-2);font-size:15.5px}
+.hero .meta{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12.5px;font-weight:700;padding:3px 10px;border-radius:999px;background:#fff;color:var(--ink-2);box-shadow:0 0 0 1px var(--line) inset}
+/* sections */
+section.s{margin-top:64px}
+h2{font-size:26px;font-weight:900;letter-spacing:-.035em;margin:0 0 6px;display:flex;align-items:baseline;gap:12px}
+h2 .no{font-size:15px;font-weight:900;color:var(--ac)}
+.lead{margin:0 0 22px;color:var(--ink-2);font-size:15.5px}
+h3{font-size:20px;font-weight:900;letter-spacing:-.03em;margin:44px 0 6px;padding-top:4px}
+h3 .no{color:var(--ac);margin-right:8px}
+h4{font-size:16px;font-weight:800;letter-spacing:-.02em;margin:26px 0 6px}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 14px;padding-left:22px}
+li{margin:4px 0}
+kbd{font-family:inherit;font-size:12.5px;font-weight:700;padding:1px 7px;border-radius:6px;background:#fff;box-shadow:0 0 0 1px var(--line) inset,0 2px 0 var(--line);white-space:nowrap}
+.btnname{font-weight:800;color:var(--ink);background:var(--chip);border-radius:6px;padding:1px 7px;white-space:nowrap;font-size:.94em}
+/* feature cards */
+.feat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.fc{background:var(--tile);border-radius:20px;padding:20px}
+.fc .ic{width:40px;height:40px;border-radius:12px;background:var(--ac-soft);color:var(--ac);display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.fc .ic svg{width:21px;height:21px;stroke-width:2}
+.fc b{display:block;font-size:16px;letter-spacing:-.02em}
+.fc span{display:block;font-size:13.5px;color:var(--ink-2);line-height:1.6;margin-top:3px}
+/* quick start */
+.steps{list-style:none;padding:0;margin:0;counter-reset:st;display:grid;gap:12px}
+.steps>li{counter-increment:st;display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;align-items:start;background:var(--tile);border-radius:18px;padding:16px 18px;margin:0}
+.steps>li::before{content:counter(st);width:36px;height:36px;border-radius:50%;background:var(--ac);color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center}
+.steps li>div>b{display:block;font-size:16px}
+.steps li>div>span{display:block;color:var(--ink-2);font-size:14.5px}
+/* figure */
+figure{margin:18px 0 22px;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:#fff}
+figure .shot{display:block;background:#EEF1F6;padding:0}
+figure img{display:block;width:100%;height:auto}
+figure.narrow{max-width:420px}
+figcaption{padding:14px 18px 16px;font-size:14px;color:var(--ink-2);border-top:1px solid var(--line)}
+figcaption .cap{display:block;font-weight:800;color:var(--ink);margin-bottom:4px}
+.legend{list-style:none;padding:0;margin:6px 0 0;display:grid;gap:5px}
+.legend li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:8px;margin:0;line-height:1.6}
+.legend li::before{content:attr(data-n);width:22px;height:22px;border-radius:50%;background:var(--ac);color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;margin-top:1px}
+/* callouts */
+.note{border-radius:16px;padding:14px 18px;margin:14px 0 18px;font-size:14.5px;display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px}
+.note svg{width:20px;height:20px;stroke-width:2;margin-top:3px}
+.note p:last-child,.note ul:last-child{margin-bottom:0}
+.note.tip{background:var(--ac-soft);color:#3B1F73}
+.note.warn{background:var(--warn-soft);color:#6B3A07}
+.note.ok{background:var(--ok-soft);color:#14532D}
+.note b{color:inherit}
+/* tables */
+.tw{overflow-x:auto;margin:10px 0 18px;border:1px solid var(--line);border-radius:16px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--tile);font-weight:800;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td code,p code,li code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;background:var(--chip);padding:1px 6px;border-radius:6px}
+/* faq */
+details{border:1px solid var(--line);border-radius:16px;margin:10px 0;background:#fff}
+summary{cursor:pointer;list-style:none;padding:14px 18px;font-weight:800;display:flex;gap:10px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"Q";width:24px;height:24px;flex:none;border-radius:8px;background:var(--ac-soft);color:var(--ac);font-size:13px;display:flex;align-items:center;justify-content:center}
+summary::after{content:"";margin-left:auto;width:8px;height:8px;border-right:2px solid var(--ink-3);border-bottom:2px solid var(--ink-3);transform:rotate(45deg);transition:transform .15s;flex:none}
+details[open] summary::after{transform:rotate(-135deg)}
+details .a{padding:0 18px 14px 52px;color:var(--ink-2);font-size:14.5px}
+details .a p:last-child{margin-bottom:0}
+/* prompts */
+.prompt{position:relative;background:#14151A;color:#EDEDF2;border-radius:16px;padding:16px 18px 16px 18px;margin:10px 0;font-size:14.5px;line-height:1.7}
+.prompt .lbl{display:block;font-size:12px;font-weight:800;color:#B9A3F5;margin-bottom:4px;letter-spacing:.04em}
+.prompt button{position:absolute;right:12px;top:12px;font:inherit;font-size:12px;font-weight:800;color:#EDEDF2;background:rgba(255,255,255,.1);border:0;border-radius:999px;padding:4px 11px;cursor:pointer}
+.prompt button:hover{background:rgba(255,255,255,.2)}
+.flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0 20px}
+.flow div{background:var(--tile);border-radius:16px;padding:14px 16px;font-size:14px;color:var(--ink-2)}
+.flow b{display:block;color:var(--ink);font-size:15px;margin-bottom:2px}
+.flow i{font-style:normal;color:var(--ac);font-weight:900;font-size:13px}
+footer{border-top:1px solid var(--line);margin-top:72px;padding-top:20px;font-size:13px;color:var(--ink-3)}
+footer a{font-weight:700}
+@media (max-width:960px){
+  .layout{grid-template-columns:1fr;gap:0}
+  .toc{display:none}
+  .feat{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .flow{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:600px){
+  .bar-in,.layout{padding:0 16px}
+  .bar-t{display:none}
+  .pill.sub{display:none}
+  .hero{flex-direction:column;align-items:flex-start;padding:22px 20px;border-radius:22px}
+  .hero h1{font-size:25px}
+  h2{font-size:22px}
+  .feat,.flow{grid-template-columns:1fr}
+  details .a{padding-left:18px}
+}
+@media print{
+  @page{size:A4;margin:14mm 12mm}
+  html{scroll-padding-top:0}
+  body{font-size:11pt;line-height:1.6}
+  .bar,.toc,.prompt button{display:none!important}
+  .layout{display:block;padding:0;max-width:none}
+  main{padding:0}
+  section.s{margin-top:28px}
+  h2,h3,h4{break-after:avoid}
+  figure,.note,.steps>li,.fc,details,.prompt,.tw{break-inside:avoid}
+  figure img{max-height:120mm;width:auto;max-width:100%;margin:0 auto}
+  details{border:0;margin:6px 0}
+  details .a{display:block!important;padding-left:18px}
+  details:not([open])>.a{display:block}
+  .prompt{background:#fff;color:#000;border:1px solid #999}
+  .prompt .lbl{color:#555}
+  a{color:inherit;text-decoration:none}
+}
+
+.one{max-width:860px;margin:0 auto;padding:0 32px}
+.flow4{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.flow4 figure{margin:0;display:flex;flex-direction:column}
+.flow4 figcaption{flex:1}
+.flow4 figcaption b.t{display:block;color:var(--ink);font-size:15.5px;margin-bottom:2px}
+.flow4 figcaption b.t i{font-style:normal;color:var(--ac);margin-right:6px}
+.flow4 .shot{display:block;height:220px;overflow:hidden;background:#EEF1F6;cursor:zoom-in}
+.flow4 .shot:hover img{opacity:.92}
+.flow4 .shot img{width:100%;height:100%;object-fit:cover;object-position:top center}
+.flow4 .shot.tall img{object-fit:contain;background:#F7F8FA}
+.chk{list-style:none;padding:0;display:grid;gap:8px}
+.chk li{background:var(--tile);border-radius:14px;padding:12px 16px;margin:0;font-size:14.5px}
+.more{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap;background:var(--ac-soft);border-radius:18px;padding:16px 20px;margin-top:40px;font-size:14.5px;color:var(--ac-ink)}
+.mats{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+@media (max-width:600px){.one{padding:0 16px}.flow4{grid-template-columns:1fr}}
+@media print{.one{padding:0;max-width:none}.flow4 .shot{height:auto}.flow4 .shot img{height:auto;object-fit:contain}}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="bar-in">
+    <a class="back" href="../"><svg class="i" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>체육 앱 서랍</a>
+    <span class="bar-t">스포츠 토너먼트 사용법</span>
+    <div class="bar-acts">
+      <a class="pill sub" href="../apps/tournament.html" download="스포츠-토너먼트.html"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg>HTML 받기</a>
+      <button class="pill sub" type="button" onclick="window.print()"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9V3h10v6"/><rect x="4" y="9" width="16" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg>인쇄</button>
+      <a class="pill main" href="../apps/tournament.html">앱 열기<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </div>
+</header>
+<div class="one"><main>
+<div class="hero"><div class="hero-ic" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4.5a2.5 2.5 0 0 0 2.5 4M17 6h2.5a2.5 2.5 0 0 1-2.5 4"/><path d="M12 14v4M8 21h8M9 18h6"/></svg></div><div><h1>스포츠 토너먼트 사용법</h1><p>종목과 참가 반만 정하면 대진표 · 추첨 화면 · 일정 · 경기 기록지 · 순위가 자동으로 만들어져요.</p><div class="meta"><span class="chip">v1.2</span><span class="chip">설치·로그인 없음</span><span class="chip">기록은 이 기기에만 저장</span></div></div></div>
+<section class="s" style="margin-top:44px"><h2><span class="no">01</span>처음이라면</h2><ol class="steps"><li><div><b>예시로 둘러보기</b><span>처음 화면에서 누르면 배드민턴·탁구 예시 대회가 열려요. 마음껏 눌러 봐도 괜찮아요.</span></div></li><li><div><b>둘러봤다면 관리 → 데이터 관리 → 새 대회 시작</b><span>예시를 지우고 내 대회를 만들어요.</span></div></li></ol></section>
+<section class="s"><h2><span class="no">02</span>대회는 이렇게 흘러가요</h2><p class="lead">관리 탭에서 준비하고, 나머지 탭은 학생에게 보여 줘요.</p><div class="flow4"><figure><a class="shot" href="img/tournament/03-event-teams.webp" target="_blank" rel="noopener" title="크게 보기"><img src="img/tournament/03-event-teams.webp" alt="종목 만들기" loading="lazy"></a><figcaption><b class="t"><i>1</i>종목 만들기</b><span class="btnname">관리</span> → <span class="btnname">+ 종목 추가</span> → <span class="btnname">설정</span>. 참가 반(빠르게 채우기), 세트 수·점수, 경기 날짜를 정해요. 부전승은 자동.</figcaption></figure><figure><a class="shot" href="img/tournament/12-draw-after.webp" target="_blank" rel="noopener" title="크게 보기"><img src="img/tournament/12-draw-after.webp" alt="대진 추첨" loading="lazy"></a><figcaption><b class="t"><i>2</i>대진 추첨</b><span class="btnname">관리</span> → <span class="btnname">추첨 화면 열기</span>. TV에 띄우고 <kbd>스페이스바</kbd>로 추첨, 끝나면 꼭 <span class="btnname">저장하기</span>.</figcaption></figure><figure><a class="shot" href="img/tournament/16-sheet.webp" target="_blank" rel="noopener" title="크게 보기"><img src="img/tournament/16-sheet.webp" alt="결과 입력" loading="lazy"></a><figcaption><b class="t"><i>3</i>결과 입력</b><span class="btnname">일정·결과</span>에서 경기를 눌러 세트 점수를 넣고 저장. 이긴 반이 자동으로 다음 라운드에 올라가요.</figcaption></figure><figure><a class="shot" href="img/tournament/14-bracket-h.webp" target="_blank" rel="noopener" title="크게 보기"><img src="img/tournament/14-bracket-h.webp" alt="공유·발표" loading="lazy"></a><figcaption><b class="t"><i>4</i>공유·발표</b><span class="btnname">대진표</span>에서 이미지 저장·인쇄, <span class="btnname">순위</span>에서 1~4위 확인. 3·4위전 없이 4강 결과로 3·4위가 정해져요.</figcaption></figure></div></section>
+<section class="s"><h2><span class="no">03</span>알아 두면 좋은 기능</h2><ul class="chk"><li><b>학생 심판 배정</b> — 관리 → 심판 배정에 <code>1-3 김하늘</code>처럼 학년-반과 함께 명단을 넣고 <span class="btnname">남은 경기 자동 배정</span>. 같은 학년 경기에만, 자기 반 경기는 빼고 배정돼요. 엑셀 명단도 넣을 수 있어요.</li><li><b>수업 모드</b> — TV에 띄워 둘 때 켜요. 비밀번호(4자 이상)를 정하면 관리 탭·점수 입력·심판 이름이 숨겨져요.</li><li><b>공지 · D-day · 규칙</b> — 관리 탭에 적으면 ‘오늘’ 화면과 규칙 탭에 바로 보여요.</li><li><b>경기 연기</b> — 그 경기의 기록지에서 날짜만 바꾸면 일정에 ‘변경’ 표시가 붙어요.</li></ul></section>
+<section class="s"><h2><span class="no">04</span>꼭 지켜 주세요</h2><div class="note warn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg><div><ul><li>기록은 <b>입력한 기기에만</b> 저장돼요. 학생 휴대폰에서 열어도 선생님 기록은 보이지 않아요.</li><li>추첨 직후와 경기가 있는 날마다 <b>관리 → 백업 파일 내려받기</b>. 다른 기기로 옮길 때도 이 파일을 불러오면 돼요.</li><li>경기 기록이 생긴 종목은 다시 추첨할 수 없고, 추첨 뒤에는 팀 <b>이름만</b> 고치세요(팀 수를 바꾸면 추첨이 지워져요).</li></ul></div></div></section>
+<section class="s"><h2><span class="no">05</span>내 수업에 맞게 고쳐 쓰기</h2>
+<p><span class="btnname">HTML 받기</span>로 파일을 받아 Claude 같은 AI에게 첨부하고, 바꾸고 싶은 점을 한 가지씩 말해 보세요. 고친 파일은 더블클릭으로 바로 써요.</p>
+<div class="prompt"><span class="lbl">예시</span>첨부한 스포츠 토너먼트 앱에 3·4위전을 추가해 줘. 대진표·일정·순위 탭에 모두 반영하고, 기존 백업 파일도 계속 불러올 수 있게 해 줘.<button type="button">복사</button></div>
+<p style="font-size:14px;color:var(--ink-2)">원본 파일은 따로 보관하고, 학생 이름이 담긴 백업 파일은 AI에 올리지 마세요.</p></section>
+<div class="more"><span>화면마다 번호를 붙인 자세한 설명이 필요하다면</span><a class="pill main" href="tournament-detail.html">자세한 사용법 보기</a></div>
+<footer>스포츠 토너먼트 v1.2 사용법 · 만든 이 다정고 박성찬 · 문의 <a href="mailto:schoolparksc@sjeai.kr">schoolparksc@sjeai.kr</a><br>화면 사진은 앱의 예시 자료로 찍었어요. 실제 학생 정보는 들어 있지 않아요.</footer>
+</main></div>
+<script>
+(function(){
+  /* 복사 버튼 */
+  document.querySelectorAll('.prompt button').forEach(function(b){
+    b.addEventListener('click',function(){
+      var t=b.parentNode.cloneNode(true); t.querySelector('button').remove(); t.querySelector('.lbl').remove();
+      var txt=t.textContent.trim();
+      function done(){ b.textContent='복사됨'; setTimeout(function(){ b.textContent='복사'; },1500); }
+      if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(done,function(){ fallback(); }); } else fallback();
+      function fallback(){ var ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} ta.remove(); done(); }
+    });
+  });
+  /* 인쇄할 때 질문 모두 펼치기 */
+  window.addEventListener('beforeprint',function(){ document.querySelectorAll('details').forEach(function(d){ d.dataset.was=d.open?'1':''; d.open=true; }); });
+  window.addEventListener('afterprint',function(){ document.querySelectorAll('details').forEach(function(d){ d.open=!!d.dataset.was; }); });
+  /* 목차 현재 위치 */
+  var links=[].slice.call(document.querySelectorAll('#toc a'));
+  var targets=links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  function spy(){
+    var y=window.scrollY+120, cur=0;
+    targets.forEach(function(t,i){ if(t && t.getBoundingClientRect().top+window.scrollY<=y) cur=i; });
+    links.forEach(function(a,i){ a.classList.toggle('on',i===cur); });
+  }
+  window.addEventListener('scroll',spy,{passive:true}); spy();
+})();
+</script>
+</body>
+</html>

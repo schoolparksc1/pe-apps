@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>스포츠 토너먼트 사용법 · 체육 앱 서랍</title>
+<style>
+:root{--ink:#111318;--ink-2:#4A4F59;--ink-3:#8A8F99;--tile:#F7F8FA;--chip:#F1F2F5;--line:#E6E8EC;--ac:#7C3AED;--ac-soft:#F1EAFE;--ac-ink:#5B21B6;--warn:#B45309;--warn-soft:#FEF6E7;--ok:#15803D;--ok-soft:#E5F6EC}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+html,body{margin:0}
+body{background:#fff;color:var(--ink);font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;line-height:1.75;word-break:keep-all;-webkit-text-size-adjust:100%}
+a{color:var(--ac-ink)}
+svg.i{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+/* top bar */
+.bar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:saturate(1.6) blur(12px);-webkit-backdrop-filter:saturate(1.6) blur(12px);border-bottom:1px solid var(--line)}
+.bar-in{max-width:1200px;margin:0 auto;padding:0 32px;height:64px;display:flex;align-items:center;gap:12px}
+.back{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--ink-2);text-decoration:none;padding:7px 12px;border-radius:999px;background:var(--chip);white-space:nowrap}
+.back:hover{color:var(--ink)}
+.bar-t{font-size:15px;font-weight:800;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-acts{margin-left:auto;display:flex;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:800;padding:8px 16px;border-radius:999px;text-decoration:none;white-space:nowrap;border:0;cursor:pointer;font-family:inherit}
+.pill svg{width:15px;height:15px;stroke-width:2.2}
+.pill.main{background:var(--ac);color:#fff}
+.pill.main:hover{background:var(--ac-ink)}
+.pill.sub{background:#fff;color:var(--ink-2);box-shadow:0 0 0 1px var(--line) inset}
+.pill.sub:hover{color:var(--ac-ink);box-shadow:0 0 0 1.5px var(--ac) inset}
+/* layout */
+.layout{max-width:1200px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:56px}
+.toc{position:sticky;top:88px;align-self:start;max-height:calc(100vh - 110px);overflow:auto;padding:8px 0 24px;font-size:14px}
+.toc b{display:block;font-size:12px;letter-spacing:.06em;color:var(--ink-3);margin:0 0 8px 10px}
+.toc a{display:block;text-decoration:none;color:var(--ink-2);padding:5px 10px;border-radius:8px;line-height:1.45}
+.toc a.s{padding-left:22px;font-size:13px;color:var(--ink-3)}
+.toc a:hover{background:var(--chip);color:var(--ink)}
+.toc a.on{background:var(--ac-soft);color:var(--ac-ink);font-weight:700}
+main{padding:36px 0 80px;min-width:0}
+/* hero */
+.hero{display:flex;gap:22px;align-items:center;padding:30px 32px;border-radius:28px;background:var(--tile)}
+.hero-ic{width:76px;height:76px;flex:none;border-radius:20px;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center}
+.hero-ic svg{width:40px;height:40px;stroke-width:1.8}
+.hero h1{margin:0;font-size:30px;font-weight:900;letter-spacing:-.035em;line-height:1.3}
+.hero p{margin:6px 0 0;color:var(--ink-2);font-size:15.5px}
+.hero .meta{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12.5px;font-weight:700;padding:3px 10px;border-radius:999px;background:#fff;color:var(--ink-2);box-shadow:0 0 0 1px var(--line) inset}
+/* sections */
+section.s{margin-top:64px}
+h2{font-size:26px;font-weight:900;letter-spacing:-.035em;margin:0 0 6px;display:flex;align-items:baseline;gap:12px}
+h2 .no{font-size:15px;font-weight:900;color:var(--ac)}
+.lead{margin:0 0 22px;color:var(--ink-2);font-size:15.5px}
+h3{font-size:20px;font-weight:900;letter-spacing:-.03em;margin:44px 0 6px;padding-top:4px}
+h3 .no{color:var(--ac);margin-right:8px}
+h4{font-size:16px;font-weight:800;letter-spacing:-.02em;margin:26px 0 6px}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 14px;padding-left:22px}
+li{margin:4px 0}
+kbd{font-family:inherit;font-size:12.5px;font-weight:700;padding:1px 7px;border-radius:6px;background:#fff;box-shadow:0 0 0 1px var(--line) inset,0 2px 0 var(--line);white-space:nowrap}
+.btnname{font-weight:800;color:var(--ink);background:var(--chip);border-radius:6px;padding:1px 7px;white-space:nowrap;font-size:.94em}
+/* feature cards */
+.feat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.fc{background:var(--tile);border-radius:20px;padding:20px}
+.fc .ic{width:40px;height:40px;border-radius:12px;background:var(--ac-soft);color:var(--ac);display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.fc .ic svg{width:21px;height:21px;stroke-width:2}
+.fc b{display:block;font-size:16px;letter-spacing:-.02em}
+.fc span{display:block;font-size:13.5px;color:var(--ink-2);line-height:1.6;margin-top:3px}
+/* quick start */
+.steps{list-style:none;padding:0;margin:0;counter-reset:st;display:grid;gap:12px}
+.steps>li{counter-increment:st;display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;align-items:start;background:var(--tile);border-radius:18px;padding:16px 18px;margin:0}
+.steps>li::before{content:counter(st);width:36px;height:36px;border-radius:50%;background:var(--ac);color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center}
+.steps li>div>b{display:block;font-size:16px}
+.steps li>div>span{display:block;color:var(--ink-2);font-size:14.5px}
+/* figure */
+figure{margin:18px 0 22px;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:#fff}
+figure .shot{display:block;background:#EEF1F6;padding:0}
+figure img{display:block;width:100%;height:auto}
+figure.narrow{max-width:420px}
+figcaption{padding:14px 18px 16px;font-size:14px;color:var(--ink-2);border-top:1px solid var(--line)}
+figcaption .cap{display:block;font-weight:800;color:var(--ink);margin-bottom:4px}
+.legend{list-style:none;padding:0;margin:6px 0 0;display:grid;gap:5px}
+.legend li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:8px;margin:0;line-height:1.6}
+.legend li::before{content:attr(data-n);width:22px;height:22px;border-radius:50%;background:var(--ac);color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;margin-top:1px}
+/* callouts */
+.note{border-radius:16px;padding:14px 18px;margin:14px 0 18px;font-size:14.5px;display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px}
+.note svg{width:20px;height:20px;stroke-width:2;margin-top:3px}
+.note p:last-child,.note ul:last-child{margin-bottom:0}
+.note.tip{background:var(--ac-soft);color:#3B1F73}
+.note.warn{background:var(--warn-soft);color:#6B3A07}
+.note.ok{background:var(--ok-soft);color:#14532D}
+.note b{color:inherit}
+/* tables */
+.tw{overflow-x:auto;margin:10px 0 18px;border:1px solid var(--line);border-radius:16px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--tile);font-weight:800;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td code,p code,li code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;background:var(--chip);padding:1px 6px;border-radius:6px}
+/* faq */
+details{border:1px solid var(--line);border-radius:16px;margin:10px 0;background:#fff}
+summary{cursor:pointer;list-style:none;padding:14px 18px;font-weight:800;display:flex;gap:10px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"Q";width:24px;height:24px;flex:none;border-radius:8px;background:var(--ac-soft);color:var(--ac);font-size:13px;display:flex;align-items:center;justify-content:center}
+summary::after{content:"";margin-left:auto;width:8px;height:8px;border-right:2px solid var(--ink-3);border-bottom:2px solid var(--ink-3);transform:rotate(45deg);transition:transform .15s;flex:none}
+details[open] summary::after{transform:rotate(-135deg)}
+details .a{padding:0 18px 14px 52px;color:var(--ink-2);font-size:14.5px}
+details .a p:last-child{margin-bottom:0}
+/* prompts */
+.prompt{position:relative;background:#14151A;color:#EDEDF2;border-radius:16px;padding:16px 18px 16px 18px;margin:10px 0;font-size:14.5px;line-height:1.7}
+.prompt .lbl{display:block;font-size:12px;font-weight:800;color:#B9A3F5;margin-bottom:4px;letter-spacing:.04em}
+.prompt button{position:absolute;right:12px;top:12px;font:inherit;font-size:12px;font-weight:800;color:#EDEDF2;background:rgba(255,255,255,.1);border:0;border-radius:999px;padding:4px 11px;cursor:pointer}
+.prompt button:hover{background:rgba(255,255,255,.2)}
+.flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0 20px}
+.flow div{background:var(--tile);border-radius:16px;padding:14px 16px;font-size:14px;color:var(--ink-2)}
+.flow b{display:block;color:var(--ink);font-size:15px;margin-bottom:2px}
+.flow i{font-style:normal;color:var(--ac);font-weight:900;font-size:13px}
+footer{border-top:1px solid var(--line);margin-top:72px;padding-top:20px;font-size:13px;color:var(--ink-3)}
+footer a{font-weight:700}
+@media (max-width:960px){
+  .layout{grid-template-columns:1fr;gap:0}
+  .toc{display:none}
+  .feat{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .flow{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:600px){
+  .bar-in,.layout{padding:0 16px}
+  .bar-t{display:none}
+  .pill.sub{display:none}
+  .hero{flex-direction:column;align-items:flex-start;padding:22px 20px;border-radius:22px}
+  .hero h1{font-size:25px}
+  h2{font-size:22px}
+  .feat,.flow{grid-template-columns:1fr}
+  details .a{padding-left:18px}
+}
+@media print{
+  @page{size:A4;margin:14mm 12mm}
+  html{scroll-padding-top:0}
+  body{font-size:11pt;line-height:1.6}
+  .bar,.toc,.prompt button{display:none!important}
+  .layout{display:block;padding:0;max-width:none}
+  main{padding:0}
+  section.s{margin-top:28px}
+  h2,h3,h4{break-after:avoid}
+  figure,.note,.steps>li,.fc,details,.prompt,.tw{break-inside:avoid}
+  figure img{max-height:120mm;width:auto;max-width:100%;margin:0 auto}
+  details{border:0;margin:6px 0}
+  details .a{display:block!important;padding-left:18px}
+  details:not([open])>.a{display:block}
+  .prompt{background:#fff;color:#000;border:1px solid #999}
+  .prompt .lbl{color:#555}
+  a{color:inherit;text-decoration:none}
+}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="bar-in">
+    <a class="back" href="../"><svg class="i" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>체육 앱 서랍</a>
+    <span class="bar-t">스포츠 토너먼트 사용법</span>
+    <div class="bar-acts">
+      <a class="pill sub" href="../apps/tournament.html" download="스포츠-토너먼트.html"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg>HTML 받기</a>
+      <button class="pill sub" type="button" onclick="window.print()"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9V3h10v6"/><rect x="4" y="9" width="16" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg>인쇄</button>
+      <a class="pill main" href="../apps/tournament.html">앱 열기<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="toc" id="toc" aria-label="목차">
+    <b>목차</b>
+    <a href="#what">1. 할 수 있는 것</a>
+    <a href="#quick">2. 3분 만에 시작하기</a>
+    <a href="#screen">3. 화면 한눈에 보기</a>
+    <a href="#howto">4. 상황별 따라 하기</a>
+    <a class="s" href="#h-make">대회·종목 만들기</a>
+    <a class="s" href="#h-draw">대진 추첨 행사</a>
+    <a class="s" href="#h-board">공지·일정·규칙</a>
+    <a class="s" href="#h-ref">심판 배정</a>
+    <a class="s" href="#h-score">경기 결과 입력</a>
+    <a class="s" href="#h-share">대진표·순위 공유</a>
+    <a class="s" href="#h-kiosk">학생에게 보여 주기</a>
+    <a class="s" href="#h-data">백업·마무리</a>
+    <a href="#faq">5. 꼭 알아 둘 점</a>
+    <a href="#remix">6. 내 수업에 맞게 고쳐 쓰기</a>
+  </nav>
+
+  <main>
+    <div class="hero">
+      <div class="hero-ic" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4.5a2.5 2.5 0 0 0 2.5 4M17 6h2.5a2.5 2.5 0 0 1-2.5 4"/><path d="M12 14v4M8 21h8M9 18h6"/></svg></div>
+      <div>
+        <h1>스포츠 토너먼트 사용법</h1>
+        <p>반 대항 토너먼트를 준비하고, 추첨하고, 기록하고, 순위를 발표하기까지 이 앱 하나로 진행하는 방법을 정리했어요.</p>
+        <div class="meta"><span class="chip">v1.2</span><span class="chip">설치·로그인 없음</span><span class="chip">기록은 이 기기에만 저장</span><span class="chip">PC · 태블릿 · 휴대폰</span></div>
+      </div>
+    </div>
+
+    <!-- 1 -->
+    <section class="s" id="what">
+      <h2><span class="no">01</span>이 앱으로 할 수 있는 것</h2>
+      <p class="lead">종목과 참가 반만 정하면 대진표부터 순위까지 자동으로 이어져요. 학교스포츠클럽 대회, 학생회 주관 반 대항전, 체육대회 종목 예선에 맞춰 만들었어요.</p>
+      <div class="feat">
+        <div class="fc"><div class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M4 5h5v5H4zM4 14h5v5H4zM9 7.5h3v9H9M12 12h4M16 9.5h4v5h-4z"/></svg></div><b>대진표 자동 생성</b><span>참가 팀 수에 맞춰 부전승 자리까지 자동 배치. 최대 32팀, 세로형·가로형 보기.</span></div>
+        <div class="fc"><div class="ic"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><b>추첨 발표 화면</b><span>프로젝터·TV에 띄우고 스페이스바로 한 팀씩 추첨. 마음에 안 들면 되돌리기.</span></div>
+        <div class="fc"><div class="ic"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div><b>날짜별 경기 일정</b><span>경기 날짜만 넣으면 라운드 순서대로 일정이 붙고, ‘오늘’ 화면에 그날 경기가 떠요.</span></div>
+        <div class="fc"><div class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M9 4h6v3H9z"/><path d="M15 5h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h4"/></svg></div><b>경기 기록지</b><span>세트별 점수를 넣으면 승리팀이 자동 판정되고, 다음 라운드로 올라가요.</span></div>
+        <div class="fc"><div class="ic"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><b>학생 심판 배정</b><span>같은 학년 경기에만, 자기 반 경기는 빼고, 맡은 횟수가 고르게 자동 배정.</span></div>
+        <div class="fc"><div class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M12 14v4M8 21h8"/></svg></div><b>순위·결과 정리</b><span>결승이 끝나면 1~4위 확정. 대진표 이미지 저장, 인쇄, 결과 CSV 받기.</span></div>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section class="s" id="quick">
+      <h2><span class="no">02</span>3분 만에 시작하기</h2>
+      <p class="lead">처음이라면 예시 대회로 한 바퀴 둘러보고, 내 대회는 그다음에 만드세요.</p>
+      <figure>
+        <div class="shot"><img src="img/tournament/00-start.webp" alt="처음 화면의 예시로 둘러보기와 직접 만들기 버튼" loading="lazy" width="1600" height="429"></div>
+        <figcaption><span class="cap">처음 열었을 때 화면</span>
+          <ol class="legend"><li data-n="1"><span><span class="btnname">예시로 둘러보기</span> — 1학년 배드민턴(남·녀부)과 2학년 탁구가 들어 있는 예시 대회를 만들어요.</span></li><li data-n="2"><span><span class="btnname">직접 만들기</span> — 빈 대회를 만들고 <b>관리</b> 탭으로 이동해요.</span></li></ol>
+        </figcaption>
+      </figure>
+      <ol class="steps">
+        <li><div><b>예시로 둘러보기</b><span>대진표·일정·규칙이 미리 채워진 예시 대회가 열려요. 마음껏 눌러 봐도 괜찮아요.</span></div></li>
+        <li><div><b>관리 → 대진 추첨 → 추첨 화면 열기</b><span><kbd>스페이스바</kbd>로 추첨을 진행하고 <span class="btnname">저장하기</span>를 누르면 대진이 확정돼요.</span></div></li>
+        <li><div><b>일정·결과에서 경기 하나 눌러 점수 넣기</b><span>세트 점수를 넣고 저장하면 대진표와 순위에 바로 반영돼요.</span></div></li>
+        <li><div><b>관리 → 데이터 관리 → 새 대회 시작</b><span>둘러보기가 끝나면 예시를 지우고 내 대회를 만들어요. (<a href="#h-make">대회·종목 만들기</a>)</span></div></li>
+        <li><div><b>백업 파일 내려받기</b><span>기록은 이 기기에만 저장돼요. 중요한 날에는 꼭 백업 파일을 받아 두세요.</span></div></li>
+      </ol>
+    </section>
+
+    <!-- 3 -->
+    <section class="s" id="screen">
+      <h2><span class="no">03</span>화면 한눈에 보기</h2>
+      <p class="lead">위쪽 탭으로 화면을 옮겨 다녀요. <b>관리</b> 탭은 선생님만 쓰는 곳이고, 나머지는 학생에게 보여 주는 화면이에요.</p>
+      <figure>
+        <div class="shot"><img src="img/tournament/01-home.webp" alt="오늘 탭 화면" loading="lazy" width="1600" height="1066"></div>
+        <figcaption><span class="cap">‘오늘’ 탭 — 대회 기간에 가장 많이 보는 화면</span>
+          <ol class="legend">
+            <li data-n="1"><span><b>탭</b> — 오늘 · 대진표 · 일정·결과 · 순위 · 규칙 · 관리. 규칙을 비워 두면 규칙 탭은 숨겨져요.</span></li>
+            <li data-n="2"><span><span class="btnname">수업 모드</span> — 학생에게 보여 줄 때 켜요. 관리 탭과 입력 기능이 잠겨요. (<a href="#h-kiosk">자세히</a>)</span></li>
+            <li data-n="3"><span><b>D-day 카드</b> — 참가 신청 마감, 대진 추첨 같은 대회 전 일정. ‘대회 시작’ 카드는 자동으로 붙어요.</span></li>
+            <li data-n="4"><span><b>오늘의 경기 / 다음 경기</b> — 오늘 날짜의 경기가 없으면 가장 가까운 다음 경기일을 보여 줘요. 카드를 누르면 기록지가 열려요.</span></li>
+            <li data-n="5"><span><b>공지</b> — 관리 탭에서 쓴 공지가 최신 순으로 보여요.</span></li>
+          </ol>
+        </figcaption>
+      </figure>
+      <div class="tw"><table>
+        <thead><tr><th>탭</th><th>보이는 내용</th><th>이럴 때 써요</th></tr></thead>
+        <tbody>
+          <tr><td><b>오늘</b></td><td>D-day, 오늘(다음) 경기, 공지</td><td>점심시간에 TV로 띄워 두기</td></tr>
+          <tr><td><b>대진표</b></td><td>종목별 대진표(세로형·가로형), 이미지 저장, 인쇄</td><td>대진 공개, 게시판 부착</td></tr>
+          <tr><td><b>일정·결과</b></td><td>날짜별 경기 목록, 점수, 심판, 진행 상태</td><td>결과 입력, 일정 확인</td></tr>
+          <tr><td><b>순위</b></td><td>종목(부)별 1~4위</td><td>시상, 결과 발표</td></tr>
+          <tr><td><b>규칙</b></td><td>관리 탭에 적은 경기 방법·규칙</td><td>경기 전 규칙 안내</td></tr>
+          <tr><td><b>관리</b></td><td>대회 정보, 종목, 추첨, 공지, 일정, 규칙, 심판, 데이터</td><td>준비와 운영 전부 (수업 모드에서는 숨김)</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="s" id="howto">
+      <h2><span class="no">04</span>상황별 따라 하기</h2>
+      <p class="lead">대회를 준비하는 순서대로 정리했어요. 필요한 부분만 골라 읽어도 돼요.</p>
+
+      <!-- 4-1 -->
+      <h3 id="h-make"><span class="no">4-1</span>대회와 종목 만들기</h3>
+      <p><b>관리</b> 탭 맨 위에서 대회 정보와 종목을 정해요. 바꾼 내용은 저장 버튼 없이 바로 저장돼요.</p>
+      <figure>
+        <div class="shot"><img src="img/tournament/02-admin-events.webp" alt="관리 탭의 대회 정보와 종목 목록" loading="lazy" width="1600" height="697"></div>
+        <figcaption><span class="cap">대회 정보와 종목 목록</span>
+          <ol class="legend">
+            <li data-n="1"><span><b>대회 정보</b> — 대회 이름, 주최(학교), 장소, 시간 안내. 화면 맨 위 제목과 기록지·인쇄물에 그대로 쓰여요.</span></li>
+            <li data-n="2"><span><span class="btnname">+ 종목 추가</span> — 배드민턴, 탁구, 피구처럼 종목(학년)마다 하나씩 만들어요.</span></li>
+            <li data-n="3"><span><span class="btnname">설정</span> — 종목의 참가 팀, 경기 방식, 일정을 정하는 칸이 펼쳐져요.</span></li>
+          </ol>
+        </figcaption>
+      </figure>
+
+      <h4>① 참가 팀 정하기</h4>
+      <figure>
+        <div class="shot"><img src="img/tournament/03-event-teams.webp" alt="종목 설정의 참가 팀 입력" loading="lazy" width="1600" height="845"></div>
+        <figcaption><span class="cap">종목 설정 — 이름과 참가 팀</span>
+          <ol class="legend">
+            <li data-n="1"><span><b>남학생부·여학생부로 나눠 진행</b> — 추첨(대진)은 하나로 같게 쓰고, 경기 결과와 순위는 부별로 따로 기록해요. 대진표·일정 탭에 ‘배드민턴 남’, ‘배드민턴 여’가 따로 생겨요.</span></li>
+            <li data-n="2"><span><b>빠르게 채우기</b> — 학년과 반 수를 넣고 <span class="btnname">채우기</span>를 누르면 ‘1학년 1반 … 12반’이 한 번에 들어가요.</span></li>
+            <li data-n="3"><span><b>참가 팀 목록</b> — 한 줄에 한 팀, 최대 32팀. 동아리 이름이나 ‘3반 A팀’처럼 자유롭게 적어도 돼요.</span></li>
+          </ol>
+        </figcaption>
+      </figure>
+      <div class="note tip"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg><div><p><b>부전승은 자동</b>이에요. 12팀이면 16강 자리 중 4곳이 부전승 자리가 되고, 추첨 화면에 ‘부전승’ 표시가 붙어요. 불참하는 반은 <b>추첨 전에</b> 목록에서 지우세요.</p></div></div>
+      <div class="note warn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg><div><p><b>추첨이 끝난 뒤</b>에는 팀 이름만 고치세요. 팀 수를 바꾸면 추첨이 지워지고, 경기 기록이 하나라도 있으면 팀 수를 바꿀 수 없어요.</p></div></div>
+
+      <h4>② 경기 방식 정하기</h4>
+      <figure>
+        <div class="shot"><img src="img/tournament/04-event-mode.webp" alt="경기 방식 설정" loading="lazy" width="1600" height="561"></div>
+        <figcaption><span class="cap">종목 설정 — 경기 방식</span>
+          <ol class="legend">
+            <li data-n="1"><span><b>승패 방식</b> — <b>세트승</b>(과반 세트를 먼저 이긴 팀 승) 또는 <b>총득점 합산</b>(모든 경기 득점의 합이 큰 팀 승).</span></li>
+            <li data-n="2"><span><b>한 세트 점수</b> — 21, 11, 15처럼 세트가 끝나는 점수. 0으로 두면 점수 확인을 하지 않아요(시간제 경기).</span></li>
+            <li data-n="3"><span><b>듀스</b> — ‘듀스 있음’이면 2점 차가 나야 세트가 끝나요. 기록지에서 잘못된 점수를 잡아 줄 때 이 설정을 써요.</span></li>
+            <li data-n="4"><span><b>세트(세부 경기) 구성</b> — <span class="btnname">3세트</span> <span class="btnname">5세트</span> <span class="btnname">복식 3경기</span> <span class="btnname">탁구 7경기</span>를 누르거나, ‘남단 1 / 여단 1 / 혼복’처럼 한 줄에 하나씩 직접 적어요. 이 이름이 기록지의 줄이 돼요.</span></li>
+          </ol>
+        </figcaption>
+      </figure>
+      <div class="tw"><table>
+        <thead><tr><th>이런 대회라면</th><th>승패 방식</th><th>세트 점수 · 듀스</th><th>세트 구성</th></tr></thead>
+        <tbody>
+          <tr><td>배드민턴 반 대항(복식 3경기)</td><td>세트승</td><td>21점 · 듀스 없음</td><td>복식 3경기</td></tr>
+          <tr><td>탁구 단체전(7경기 4선승)</td><td>세트승</td><td>11점 · 듀스 있음</td><td>탁구 7경기</td></tr>
+          <tr><td>배구·빅발리볼(3세트 2선승)</td><td>세트승</td><td>15점 · 듀스 있음</td><td>3세트</td></tr>
+          <tr><td>피구·줄다리기처럼 판 수로 겨루기</td><td>세트승</td><td>0점(확인 안 함)</td><td>1판 / 2판 / 3판</td></tr>
+          <tr><td>농구·풋살(전·후반 득점 합)</td><td>총득점 합산</td><td>0점(확인 안 함)</td><td>전반 / 후반</td></tr>
+        </tbody>
+      </table></div>
+
+      <h4>③ 경기 일정 넣기 (선택)</h4>
+      <figure>
+        <div class="shot"><img src="img/tournament/05-event-dates.webp" alt="경기 일정 설정" loading="lazy" width="1600" height="636"></div>
+        <figcaption><span class="cap">종목 설정 — 경기 일정</span>
+          <ol class="legend">
+            <li data-n="1"><span><b>경기 시작 시간</b> — 매일 같은 시간에 한다면 한 번만 적어요(예: 점심시간 12:35).</span></li>
+            <li data-n="2"><span><b>하루에 치르는 경기 수</b> — 코트가 2면이면 2. 필요한 경기일 수가 이 숫자에 맞춰 계산돼요.</span></li>
+            <li data-n="3"><span><b>평일 자동 채우기</b> — 시작일과 끝나는 날을 고르고 <span class="btnname">채우기</span>. 주말은 빠지고, 시험·행사로 쉬는 날은 날짜 옆 ×로 빼요.</span></li>
+            <li data-n="4"><span><span class="btnname">하루 추가</span> — 날짜를 하나씩 더할 때 써요.</span></li>
+          </ol>
+        </figcaption>
+      </figure>
+      <p>‘경기 날짜 (11일 · 필요 11일)’처럼 <b>넣은 날짜 수</b>와 <b>필요한 날짜 수</b>가 함께 보여요. 날짜가 모자라면 남은 경기는 날짜 없이 ‘미정’으로 남으니, 필요한 수만큼 맞춰 주세요. 일정을 아예 넣지 않아도 대진표·기록·순위는 그대로 쓸 수 있어요.</p>
+      <div class="note tip"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg><div><p>비가 오거나 행사로 경기가 밀리면, 종목 일정은 그대로 두고 그 경기의 <b>기록지에서 날짜만 바꾸면</b> 돼요. 일정 목록에 ‘변경’ 표시가 붙어요. (<a href="#h-score">경기 결과 입력</a>)</p></div></div>
+
+      <!-- 4-2 -->
+      <h3 id="h-draw"><span class="no">4-2</span>대진 추첨 행사 진행하기</h3>
+      <p>추첨은 종목마다 따로 해요. 남·녀부로 나눈 종목은 추첨 한 번으로 두 부의 대진이 함께 정해져요.</p>
+      <figure>
+        <div class="shot"><img src="img/tournament/06-admin-draw.webp" alt="관리 탭의 대진 추첨 칸" loading="lazy" width="1600" height="426"></div>
+        <figcaption><span class="cap">관리 → 대진 추첨</span>
+          <ol class="legend"><li data-n="1"><span><span class="btnname">추첨 화면 열기</span> — 종목별 추첨 화면이 화면 전체에 열려요. 추첨 상태(추첨 전 · 추첨 완료 · 경기 기록 있음)가 옆에 보여요.</span></li></ol>
+        </figcaption>
+      </figure>
+      <figure>
+        <div class="shot"><img src="img/tournament/11-draw-before.webp" alt="추첨 시작 전 추첨 화면" loading="lazy" width="1600" height="1000"></div>
+        <figcaption><span class="cap">추첨 화면 — 시작 전</span>
+          <ol class="legend">
+            <li data-n="1"><span><span class="btnname">추첨 시작</span> 또는 <kbd>스페이스바</kbd> — 빈 자리(A, B, C …)에 반이 하나씩 떨어져요.</span></li>
+            <li data-n="2"><span><span class="btnname">전체화면</span> — 주소창까지 사라져 프로젝터·TV에서 크게 보여요. 추첨이 끝나도 <span class="btnname">닫기</span>를 누르기 전까지 전체화면이 유지돼요.</span></li>
+          </ol>
+        </figcaption>
+      </figure>
+      <figure>
+        <div class="shot"><img src="img/tournament/12-draw-after.webp" alt="추첨 완료 후 추첨 화면" loading="lazy" width="1600" height="1000"></div>
+        <figcaption><span class="cap">추첨 화면 — 추첨 완료</span>
+          <ol class="legend">
+            <li data-n="1"><span><span class="btnname">되돌리기</span> — 저장하지 않은 이번 추첨을 취소해요. 처음 추첨이었다면 빈 자리로 돌아가요.</span></li>
+            <li data-n="2"><span><span class="btnname">다시 추첨</span> — 처음부터 새로 뽑아요.</span></li>
+            <li data-n="3"><span><span class="btnname">저장하기</span> — <b>이걸 눌러야 대진이 확정</b>돼요. 저장하면 대진표·일정에 반 이름이 들어가요.</span></li>
+          </ol>
+        </figcaption>
+      </figure>
+      <div class="note warn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg><div><p>경기 기록이 하나라도 들어간 종목은 <b>다시 추첨할 수 없어요</b>. 추첨을 다시 하고 싶다면 그 종목의 경기 기록을 먼저 모두 지워야 해요.</p></div></div>
+      <div class="note tip"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg><div><p><b>행사 진행 팁</b> — 각 반 대표를 앞으로 불러 스페이스바를 누르게 하면 공정해 보이고 분위기도 살아요. 추첨이 끝나면 바로 <b>대진표 → 이미지로 저장</b>해서 학급 단톡방에 올려 주세요.</p></div></div>
+
+      <!-- 4-3 -->
+      <h3 id="h-board"><span class="no">4-3</span>공지 · D-day · 규칙 올리기</h3>
+      <figure>
+        <div class="shot"><img src="img/tournament/07-admin-notice.webp" alt="공지 입력" loading="lazy" width="1600" height="379"></div>
+        <figcaption><span class="cap">관리 → 공지</span>
+          <ol class="legend"><li data-n="1"><span><span class="btnname">+ 공지 추가</span> — 날짜와 내용을 적으면 ‘오늘’ 화면 아래에 최신 순으로 보여요. 필요 없는 공지는 <span class="btnname">삭제</span>.</span></li></ol>
+        </figcaption>
+      </figure>
+      <figure>
+        <div class="shot"><img src="img/tournament/07b-admin-dday.webp" alt="주요 일정 D-day 입력" loading="lazy" width="1600" height="373"></div>
+        <figcaption><span class="cap">관리 → 주요 일정 (D-day 카드)</span>
+          <ol class="legend"><li data-n="1"><span><span class="btnname">+ 일정 추가</span> — 날짜·시간·제목·설명을 넣으면 ‘오늘’ 화면에 D-day 카드로 떠요. 지난 일정은 ‘완료’로 바뀌어요.</span></li></ol>
+        </figcaption>
+      </figure>
+      <figure>
+        <div class="shot"><img src="img/tournament/08-admin-rules.webp" alt="규칙 입력" loading="lazy" width="1600" height="559"></div>
+        <figcaption><span class="cap">관리 → 규칙</span>
+          <ol class="legend"><li data-n="1"><span><b>규칙 입력 칸</b> — 한 줄에 하나씩 적으면 규칙 탭에 보기 좋게 정리돼요. 비워 두면 규칙 탭이 숨겨져요.</span></li></ol>
+        </figcaption>
+      </figure>
+      <div class="tw"><table>
+        <thead><tr><th>이렇게 적으면</th><th>이렇게 보여요</th></tr></thead>
+        <tbody>
+          <tr><td><code># 배드민턴</code></td><td>소제목</td></tr>
+          <tr><td><code>1) 반마다 복식 3경기로 한다.</code> 또는 <code>가. …</code></td><td>번호 항목</td></tr>
+          <tr><td><code>- 11점에 코트를 교대한다.</code></td><td>점 항목</td></tr>
+          <tr><td>그 밖의 줄</td><td>보통 문장</td></tr>
+        </tbody>
+      </table></div>
+      <p>한글 파일로 만든 대회 계획서의 경기 규칙을 그대로 복사해 붙여 넣고, 줄 앞에 <code>#</code>, <code>1)</code>, <code>-</code>만 다듬으면 빨라요.</p>
+
+      <!-- 4-4 -->
+      <h3 id="h-ref"><span class="no">4-4</span>학생 심판 배정하기</h3>
+      <p>학생 심판 명단을 넣으면 남은 경기에 심판을 자동으로 나눠 줘요. 학생 이름은 이 기기에만 저장되고, <b>수업 모드에서는 보이지 않아요</b>.</p>
+      <figure>
+        <div class="shot"><img src="img/tournament/09-admin-referee.webp" alt="심판 배정 칸" loading="lazy" width="1600" height="859"></div>
+        <figcaption><span class="cap">관리 → 심판 배정</span>
+          <ol class="legend">
+            <li data-n="1"><span><b>심판 배정 기능 쓰기</b> — 쓰지 않는다면 체크를 해제하세요. 일정·기록지에서 심판 칸이 사라져요.</span></li>
+            <li data-n="2"><span><b>심판 명단</b> — 한 줄에 한 명. 이름 앞에 <code>1-3 김하늘</code>처럼 <b>학년-반</b>이나 <code>10305 김하늘</code>처럼 <b>학번</b>을 붙이면 자동 배정이 더 똑똑해져요.</span></li>
+            <li data-n="3"><span><span class="btnname">엑셀·CSV에서 명단 넣기</span> — 나이스 명렬표나 심판 신청 명단(.xlsx, .xls, .csv)에서 ‘이름’ 또는 ‘학번·이름’ 열을 찾아 명단에 더해요.</span></li>
+            <li data-n="4"><span><span class="btnname">남은 경기 자동 배정</span> — 대진이 정해진 경기 중 심판이 없는 경기에 배정해요.</span></li>
+            <li data-n="5"><span><span class="btnname">배정표 인쇄</span> — 날짜·경기·심판이 정리된 배정표를 인쇄하거나 PDF로 저장해요.</span></li>
+          </ol>
+        </figcaption>
+      </figure>
+      <h4>자동 배정 규칙</h4>
+      <ul>
+        <li><b>같은 학년 종목에만</b> 넣어요. 1학년 심판은 1학년 경기만, 2학년 심판은 2학년 경기만 맡아요.</li>
+        <li><b>자기 반 경기는 빼요.</b> 1학년 3반 학생은 3반이 뛰는 경기의 심판이 되지 않아요.</li>
+        <li>같은 날 같은 시간에 한 사람이 두 경기를 맡지 않아요.</li>
+        <li>맡은 횟수가 적은 학생부터 골라서 고르게 나눠요. 아래 ‘배정 횟수’에서 확인할 수 있어요.</li>
+      </ul>
+      <div class="note tip"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg><div><p>자기 반 경기인지 알려면 대진이 정해져야 해요. 그래서 <b>추첨 직후</b>에 한 번, 그리고 <b>라운드가 끝날 때마다</b> <span class="btnname">남은 경기 자동 배정</span>을 다시 눌러 주세요. 8강·4강은 이긴 반이 정해진 뒤에야 배정돼요.</p></div></div>
+      <p>특정 경기의 심판만 바꾸고 싶다면 그 경기의 <b>기록지</b>에서 심판을 골라 저장하면 돼요.</p>
+
+      <!-- 4-5 -->
+      <h3 id="h-score"><span class="no">4-5</span>경기 결과 입력하기</h3>
+      <figure>
+        <div class="shot"><img src="img/tournament/15-schedule.webp" alt="일정·결과 탭" loading="lazy" width="1600" height="829"></div>
+        <figcaption><span class="cap">일정·결과 탭</span>
+          <ol class="legend">
+            <li data-n="1"><span><b>종목 거르기</b> — 전체 또는 종목(부)별로 모아 봐요.</span></li>
+            <li data-n="2"><span><b>경기 줄</b> — 누르면 경기 기록지가 열려요. 이긴 반은 주황색으로 표시돼요.</span></li>
+            <li data-n="3"><span><b>심판</b> — 배정된 학생 심판(수업 모드에서는 숨김).</span></li>
+            <li data-n="4"><span><b>진행 상태</b> — 예정 · 입력 중(일부 세트만 입력) · 종료.</span></li>
+          </ol>
+        </figcaption>
+      </figure>
+      <figure>
+        <div class="shot"><img src="img/tournament/16-sheet.webp" alt="경기 기록지 입력 화면" loading="lazy" width="1280" height="1976" style="max-width:640px;margin:0 auto"></div>
+        <figcaption><span class="cap">경기 기록지</span>
+          <ol class="legend">
+            <li data-n="1"><span><b>심판</b> — 이 경기의 심판을 직접 고르거나 바꿔요.</span></li>
+            <li data-n="2"><span><b>세트별 점수</b> — 듀스·세트 점수 설정에 맞지 않는 점수(예: 듀스 없음인데 23:21)를 넣으면 줄 아래에 안내가 떠요.</span></li>
+            <li data-n="3"><span><b>승리팀</b> — 이긴 세트 수(또는 득점 합)로 자동 판정돼요. 3세트 경기라면 2세트를 먼저 이기는 순간 정해져요.</span></li>
+            <li data-n="4"><span><b>경기 전체 기권</b> — 한 반이 오지 않았을 때. 점수 없이 상대 반이 이겨요.</span></li>
+            <li data-n="5"><span><b>경기 날짜 바꾸기 · 시간</b> — 이 경기만 다른 날로 옮겨요. 일정에 ‘변경’ 표시가 붙어요.</span></li>
+            <li data-n="6"><span><span class="btnname">저장</span> — 저장하면 이긴 반이 다음 라운드로 올라가요. 메모 칸에는 경고·부상 교체 같은 특이 사항을 적어 둬요.</span></li>
+          </ol>
+        </figcaption>
+      </figure>
+      <ul>
+        <li><b>중간 저장</b>도 돼요. 1세트만 넣고 저장하면 ‘입력 중’으로 표시되고, 나중에 이어서 넣을 수 있어요.</li>
+        <li><b>총득점 합산</b>에서 점수가 같으면 ‘동점 — 운영진 판정’ 칸이 나타나요. 승부차기·자유투 결과에 따라 이긴 반을 골라 주세요.</li>
+        <li>잘못 넣은 기록은 기록지의 <span class="btnname">기록 지우기</span>로 지워요. 앞 경기의 승리팀이 바뀌면 다음 라운드의 상대도 바뀌니, 이어진 경기 기록도 함께 확인하세요.</li>
+        <li>대진표의 경기 칸이나 ‘오늘’ 화면의 경기 카드를 눌러도 같은 기록지가 열려요.</li>
+      </ul>
+
+      <!-- 4-6 -->
+      <h3 id="h-share"><span class="no">4-6</span>대진표와 순위 공유하기</h3>
+      <figure>
+        <div class="shot"><img src="img/tournament/13-bracket.webp" alt="대진표 세로형" loading="lazy" width="1600" height="1120"></div>
+        <figcaption><span class="cap">대진표 탭 — 세로형</span>
+          <ol class="legend">
+            <li data-n="1"><span><b>종목(부) 고르기</b> — 배드민턴 남 · 배드민턴 여 · 탁구.</span></li>
+            <li data-n="2"><span><span class="btnname">세로형</span> / <span class="btnname">가로형</span> — 세로형은 TV·게시용, 가로형은 팀 이름이 길 때 좋아요.</span></li>
+            <li data-n="3"><span><span class="btnname">이미지로 저장</span> — 지금 보이는 대진표를 PNG 그림으로 내려받아요. 단톡방·학교 홈페이지에 올리기 좋아요. 옆의 <span class="btnname">인쇄</span>를 누르면 메뉴 없이 대진표만 인쇄돼요. 인쇄 창에서 ‘가로’ 방향을 고르면 크게 나와요.</span></li>
+            <li data-n="4"><span><b>경기 칸</b> — 누르면 그 경기 기록지가 열려요. 색칠된 선은 올라간 팀이에요.</span></li>
+          </ol>
+        </figcaption>
+      </figure>
+      <figure>
+        <div class="shot"><img src="img/tournament/14-bracket-h.webp" alt="대진표 가로형, 우승팀까지 결정된 모습" loading="lazy" width="1600" height="1125"></div>
+        <figcaption><span class="cap">대진표 탭 — 가로형 (결승까지 끝난 모습)</span>진 팀은 줄이 그어지고, 맨 오른쪽에 우승 반이 표시돼요.</figcaption>
+      </figure>
+      <figure>
+        <div class="shot"><img src="img/tournament/17-rank.webp" alt="순위 탭" loading="lazy" width="1600" height="770"></div>
+        <figcaption><span class="cap">순위 탭</span>결승이 끝나면 ‘확정’으로 바뀌어요. 3·4위전은 없고, <b>4강에서 우승팀에 진 팀이 3위</b>, <b>준우승팀에 진 팀이 4위</b>예요.</figcaption>
+      </figure>
+
+      <!-- 4-7 -->
+      <h3 id="h-kiosk"><span class="no">4-7</span>학생에게 보여 주기 (수업 모드)</h3>
+      <p>교실 TV나 체육관 프로젝터에 띄워 둘 때는 <b>수업 모드</b>를 켜세요. 학생이 마우스를 만져도 기록이 바뀌지 않아요.</p>
+      <figure>
+        <div class="shot"><img src="img/tournament/18-kiosk.webp" alt="수업 모드가 켜진 상단" loading="lazy" width="1600" height="207"></div>
+        <figcaption><span class="cap">수업 모드가 켜진 모습</span>
+          <ol class="legend"><li data-n="1"><span><span class="btnname">수업 모드 끄기</span> — 비밀번호를 넣어야 꺼져요. 관리 탭이 사라지고, 기록지는 보기만 돼요.</span></li></ol>
+        </figcaption>
+      </figure>
+      <ol>
+        <li>처음 <span class="btnname">수업 모드</span>를 누르면 <b>비밀번호(4자 이상)</b>를 두 번 입력해 정해요.</li>
+        <li>수업 모드에서는 <b>관리 탭, 점수 입력, 심판 이름</b>이 숨겨져요. 대진표·일정·순위·규칙은 그대로 보여요.</li>
+        <li>끌 때, 그리고 <b>새 대회 시작 · 기록 모두 지우기</b>를 할 때 같은 비밀번호를 물어봐요.</li>
+        <li>비밀번호는 <b>관리 → 데이터 관리 → 수업 모드 비밀번호 정하기</b>에서 바꿀 수 있어요.</li>
+      </ol>
+      <figure class="narrow">
+        <div class="shot"><img src="img/tournament/19-mobile.webp" alt="휴대폰 화면" loading="lazy" width="780" height="1688"></div>
+        <figcaption><span class="cap">휴대폰에서 본 모습</span>화면이 좁으면 카드가 한 줄로 쌓이고, 대진표는 ‘라운드별 / 전체 대진표’로 나눠 볼 수 있어요.</figcaption>
+      </figure>
+      <div class="note warn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg><div><p><b>학생 휴대폰으로 같은 주소를 열어도 선생님 기록은 보이지 않아요.</b> 기록은 선생님이 입력한 그 기기에만 있기 때문이에요. 학생과 결과를 나누려면 교실 화면에 띄우거나, <b>대진표 이미지 저장</b>·<b>인쇄</b>로 공유하세요.</p></div></div>
+
+      <!-- 4-8 -->
+      <h3 id="h-data"><span class="no">4-8</span>백업하고, 옮기고, 마무리하기</h3>
+      <figure>
+        <div class="shot"><img src="img/tournament/10-admin-data.webp" alt="데이터 관리" loading="lazy" width="1600" height="370"></div>
+        <figcaption><span class="cap">관리 → 데이터 관리</span>
+          <ol class="legend">
+            <li data-n="1"><span><span class="btnname">백업 파일 내려받기</span> — 대회 전체(설정·추첨·기록·심판)를 파일 하나(.json)로 받아요. 마지막 백업 시각이 아래에 표시돼요.</span></li>
+            <li data-n="2"><span><span class="btnname">백업 파일 불러오기</span> — 다른 기기에서 받은 백업 파일을 열면 그대로 이어서 쓸 수 있어요. 지금 기기의 기록은 백업 내용으로 바뀌어요.</span></li>
+            <li data-n="3"><span><span class="btnname">수업 모드 비밀번호 정하기</span> — 비밀번호를 새로 정하거나 바꿔요.</span></li>
+            <li data-n="4"><span><span class="btnname">결과 CSV 받기</span> — 모든 경기 결과를 엑셀에서 열 수 있는 표로 받아요. 결과 보고, 생활기록부 자료 정리에 써요.</span></li>
+            <li data-n="5"><span><span class="btnname">새 대회 시작</span> — 지금 대회를 지우고 빈 대회를 만들어요. 그 전에 꼭 백업하세요. 옆의 <b>이 기기 기록 모두 지우기</b>는 앱의 모든 기록을 지워요.</span></li>
+          </ol>
+        </figcaption>
+      </figure>
+      <div class="note ok"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><div><p><b>백업 습관</b> — 추첨 저장 직후, 그리고 경기가 있는 날 결과를 다 넣은 뒤에 한 번씩. 백업 파일은 학교 업무 PC나 클라우드에 모아 두세요.</p></div></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="s" id="faq">
+      <h2><span class="no">05</span>꼭 알아 둘 점</h2>
+      <p class="lead">자주 받는 질문과, 기록이 사라지지 않게 하는 방법이에요.</p>
+      <details open><summary>기록은 어디에 저장되나요?</summary><div class="a"><p>지금 쓰는 <b>기기의 브라우저 안</b>에만 저장돼요. 학생 이름, 점수, 심판 명단이 인터넷 어디로도 보내지지 않아요. 같은 기기, 같은 브라우저로 다시 열면 그대로 이어져요.</p></div></details>
+      <details><summary>교무실 PC에서 입력하고, 체육관 노트북에서 띄우고 싶어요.</summary><div class="a"><p>교무실 PC에서 <b>백업 파일 내려받기</b> → 파일을 USB나 메일로 옮기기 → 노트북에서 <b>백업 파일 불러오기</b>. 두 기기에서 동시에 입력하면 서로 합쳐지지 않으니, <b>입력하는 기기는 하나로</b> 정해 두세요.</p></div></details>
+      <details><summary>기록이 사라질 수 있는 경우가 있나요?</summary><div class="a"><ul><li>재부팅하면 초기화되는 교실 PC(복원 프로그램이 깔린 PC)</li><li>브라우저의 ‘인터넷 사용 기록 삭제’에서 쿠키·사이트 데이터를 지웠을 때</li><li>시크릿 창(InPrivate)에서 썼을 때</li></ul><p>이런 환경이라면 그날 일이 끝날 때마다 백업 파일을 받아 두세요.</p></div></details>
+      <details><summary>추첨을 다시 하고 싶어요.</summary><div class="a"><p>경기 기록이 없다면 <b>관리 → 대진 추첨 → 추첨 화면 열기</b>에서 다시 추첨하고 저장하면 돼요. 기록이 하나라도 있으면 다시 추첨할 수 없으니, 그 종목의 기록을 먼저 지워 주세요.</p></div></details>
+      <details><summary>팀 이름에 오타가 있어요. 추첨 뒤에도 고칠 수 있나요?</summary><div class="a"><p>네. 종목 <span class="btnname">설정</span>의 참가 팀 목록에서 이름만 고치면 대진과 기록은 그대로 유지돼요. 줄을 더하거나 빼서 <b>팀 수를 바꾸면</b> 추첨이 지워지니 주의하세요.</p></div></details>
+      <details><summary>3·4위전을 하고 싶어요.</summary><div class="a"><p>지금 버전은 3·4위전 없이, 4강에서 우승팀에 진 팀을 3위, 준우승팀에 진 팀을 4위로 정해요. 3·4위전이 꼭 필요하다면 아래 <a href="#remix">내 수업에 맞게 고쳐 쓰기</a>의 요청 예시를 참고하세요.</p></div></details>
+      <details><summary>리그전(풀리그)도 되나요?</summary><div class="a"><p>이 앱은 토너먼트 전용이에요. 조별 리그는 체육 앱 서랍의 <b>탁구·배드민턴 리그전</b> 앱을 쓰세요.</p></div></details>
+      <details><summary>오류를 찾았거나 필요한 기능이 있어요.</summary><div class="a"><p><a href="mailto:schoolparksc@sjeai.kr?subject=%5B%EC%8A%A4%ED%8F%AC%EC%B8%A0%20%ED%86%A0%EB%84%88%EB%A8%BC%ED%8A%B8%5D%20%EC%A0%9C%EB%B3%B4%20%C2%B7%20%EC%A0%9C%EC%95%88">schoolparksc@sjeai.kr</a>로 보내 주세요. 화면 사진을 함께 보내면 빨리 고칠 수 있어요. 학생 이름 같은 개인정보는 가리고 보내 주세요.</p></div></details>
+    </section>
+
+    <!-- 6 -->
+    <section class="s" id="remix">
+      <h2><span class="no">06</span>내 수업에 맞게 고쳐 쓰기</h2>
+      <p class="lead">이 앱은 HTML 파일 하나로 되어 있어서, AI에게 파일을 주고 말로 부탁하면 우리 학교에 맞게 고칠 수 있어요. 코딩을 몰라도 괜찮아요.</p>
+      <div class="flow">
+        <div><i>STEP 1</i><b>HTML 받기</b>앱 서랍이나 이 페이지 위의 <span class="btnname">HTML 받기</span>로 파일을 받아요.</div>
+        <div><i>STEP 2</i><b>AI에게 첨부</b>Claude 같은 AI 채팅에 파일을 올리고, 바꾸고 싶은 점을 한 가지씩 말해요.</div>
+        <div><i>STEP 3</i><b>열어서 확인</b>고쳐 준 파일을 내려받아 더블클릭. <span class="btnname">예시로 둘러보기</span>로 바뀐 기능을 눌러 봐요.</div>
+        <div><i>STEP 4</i><b>다시 부탁</b>“이 버튼이 안 눌려요”처럼 본 그대로 말하면 이어서 고쳐 줘요.</div>
+      </div>
+
+      <h4>이렇게 부탁해 보세요</h4>
+      <div class="prompt"><span class="lbl">3·4위전 추가</span>첨부한 스포츠 토너먼트 앱에 3·4위전을 추가해 줘. 4강에서 진 두 팀이 결승 전날 3·4위전을 하고, 대진표·일정·순위 탭에 모두 반영되게 해 줘. 다른 기능은 그대로 두고, 기존 백업 파일도 계속 불러올 수 있게 해 줘.<button type="button">복사</button></div>
+      <div class="prompt"><span class="lbl">우리 학교 색으로</span>추첨 화면과 상단 색을 우리 학교 상징색(남색 #1E3A8A, 금색 #D4A017)으로 바꾸고, 추첨 화면 왼쪽 위에 학교 이름을 크게 넣어 줘.<button type="button">복사</button></div>
+      <div class="prompt"><span class="lbl">기록지에 칸 추가</span>경기 기록지에 ‘MVP 학생’과 ‘페어플레이 반’ 칸을 추가해 줘. 결과 CSV를 받을 때 이 두 칸도 함께 나오게 해 줘.<button type="button">복사</button></div>
+      <div class="prompt"><span class="lbl">종목 기본값 바꾸기</span>새 종목을 추가할 때 기본값을 ‘3세트 · 15점 · 듀스 있음 · 하루 2경기’로 바꿔 줘. 우리 학교는 빅발리볼을 주로 해.<button type="button">복사</button></div>
+
+      <h4>고쳐 쓸 때 지킬 것</h4>
+      <ul>
+        <li><b>한 번에 하나씩</b> 부탁하세요. 여러 가지를 한꺼번에 바꾸면 어디서 문제가 생겼는지 찾기 어려워요.</li>
+        <li><b>원본 파일은 따로 보관</b>하세요. 고친 파일 이름은 ‘스포츠-토너먼트-우리학교.html’처럼 바꿔 두면 헷갈리지 않아요.</li>
+        <li>쓰던 대회가 있다면 고치기 전에 <b>백업 파일</b>을 받아 두고, 고친 앱에서 불러와지는지 확인하세요.</li>
+        <li>AI에게 파일을 줄 때 <b>학생 이름이 담긴 백업 파일은 올리지 마세요.</b> 앱 파일(HTML)에는 학생 정보가 들어 있지 않아요.</li>
+      </ul>
+      <div class="note tip"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg><div><p>고친 파일은 내 컴퓨터에서 더블클릭으로 바로 쓸 수 있어요. 동료 선생님과 나누고 싶다면 파일을 그대로 보내 주면 돼요. 기록은 파일이 아니라 각자의 브라우저에 저장되니까요.</p></div></div>
+    </section>
+
+    <footer>
+      스포츠 토너먼트 v1.2 사용법 · 만든 이 다정고 박성찬 · 문의 <a href="mailto:schoolparksc@sjeai.kr">schoolparksc@sjeai.kr</a><br>
+      화면 사진은 앱의 ‘예시로 둘러보기’ 자료로 찍었어요. 실제 학생 정보는 들어 있지 않아요.
+    </footer>
+  </main>
+</div>
+
+<script>
+(function(){
+  /* 복사 버튼 */
+  document.querySelectorAll('.prompt button').forEach(function(b){
+    b.addEventListener('click',function(){
+      var t=b.parentNode.cloneNode(true); t.querySelector('button').remove(); t.querySelector('.lbl').remove();
+      var txt=t.textContent.trim();
+      function done(){ b.textContent='복사됨'; setTimeout(function(){ b.textContent='복사'; },1500); }
+      if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(done,function(){ fallback(); }); } else fallback();
+      function fallback(){ var ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} ta.remove(); done(); }
+    });
+  });
+  /* 인쇄할 때 질문 모두 펼치기 */
+  window.addEventListener('beforeprint',function(){ document.querySelectorAll('details').forEach(function(d){ d.dataset.was=d.open?'1':''; d.open=true; }); });
+  window.addEventListener('afterprint',function(){ document.querySelectorAll('details').forEach(function(d){ d.open=!!d.dataset.was; }); });
+  /* 목차 현재 위치 */
+  var links=[].slice.call(document.querySelectorAll('#toc a'));
+  var targets=links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  function spy(){
+    var y=window.scrollY+120, cur=0;
+    targets.forEach(function(t,i){ if(t && t.getBoundingClientRect().top+window.scrollY<=y) cur=i; });
+    links.forEach(function(a,i){ a.classList.toggle('on',i===cur); });
+  }
+  window.addEventListener('scroll',spy,{passive:true}); spy();
+})();
+</script>
+</body>
+</html>

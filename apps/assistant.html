@@ -3,6 +3,29 @@
 <head>
 <meta charset="utf-8">
 <base target="_top">
+
+<style id="pe-common">
+.pe-mback{display:inline-flex;align-items:center;justify-content:center;flex:none;width:34px;height:34px;border-radius:10px;font-size:20px;line-height:1;text-decoration:none;color:inherit;opacity:.85}
+.pe-mback:hover{opacity:1;background:rgba(127,127,127,.14)}
+.pe-minfo{display:inline-flex;align-items:center;justify-content:center;flex:none;width:34px;height:34px;border-radius:10px;border:0;background:transparent;color:inherit;font:inherit;font-size:17px;cursor:pointer;opacity:.85}
+.pe-minfo:hover{opacity:1;background:rgba(127,127,127,.14)}
+.pe-tabs-r{-webkit-mask-image:linear-gradient(to right,#000 82%,transparent);mask-image:linear-gradient(to right,#000 82%,transparent)}
+.pe-tabs-l{-webkit-mask-image:linear-gradient(to left,#000 82%,transparent);mask-image:linear-gradient(to left,#000 82%,transparent)}
+.pe-tabs-l.pe-tabs-r{-webkit-mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent)}
+.pe-file{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+/* 오른쪽 위 공통 버튼: ← 체육 앱 서랍 · (수업 모드) · ⓘ 정보 */
+.pe-nav{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin-left:auto}
+.pe-pill{display:inline-flex;align-items:center;gap:5px;height:auto;min-height:0;padding:6px 13px;border-radius:999px;border:1px solid color-mix(in srgb,currentColor 30%,transparent);background:color-mix(in srgb,currentColor 5%,transparent);color:inherit;font:inherit;font-size:13px;font-weight:600;line-height:1.2;text-decoration:none;white-space:nowrap;cursor:pointer;box-shadow:none;width:auto}
+.pe-pill:hover{background:color-mix(in srgb,currentColor 12%,transparent);text-decoration:none}
+.pe-pill:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+.pe-pill[hidden]{display:none!important}
+@media print{.pe-nav{display:none!important}}
+.pe-tnav{order:2}
+.mbar .pe-nav{margin-left:6px;flex-wrap:nowrap}
+.mbar .pe-pill{color:inherit}
+@media (max-width:560px){.pe-mpill .pe-t{display:none}.pe-mpill{padding:6px 10px;font-size:15px}}
+.side #backDrawer{display:none!important}
+</style>
 </head>
 <body>
 <script>
@@ -521,8 +544,9 @@ td.tot .ok{display:block;font-family:var(--f-body);font-size:10px;color:var(--ac
   .mbar{display:flex;align-items:center;gap:6px;position:sticky;top:0;z-index:20;flex:none;background:var(--navy);color:#fff;padding:calc(8px + env(safe-area-inset-top,0px)) 10px 8px 6px;min-height:58px}
   .mcls{display:flex;align-items:center;gap:8px;min-width:0;flex:1;border:0;background:transparent;color:inherit;padding:6px 8px;border-radius:10px;cursor:pointer;text-align:left;font-family:var(--f-body)}
   .mcls:active{background:rgba(255,255,255,.08)}
-  .mcls .mc-t{display:flex;flex-direction:column;min-width:0;line-height:1.15}
-  .mcls .mc-n{font-family:var(--f-display);font-size:24px;letter-spacing:-.01em;white-space:nowrap}
+  .mcls .mc-t{display:flex;flex-direction:column;min-width:0;line-height:1.15;overflow:hidden}
+  .mcls .mc-n{font-family:var(--f-display);font-size:22px;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  @media (max-width:430px){.mbar .mib.primary span{display:none}.mbar .mib.primary{padding-left:10px;padding-right:10px}.mbar .mcls .mc-n em{display:none}}
   .mcls .mc-n em{font-style:normal;font-family:var(--f-body);font-size:13px;font-weight:600;color:var(--navy-muted);margin-left:6px}
   .mcls .mc-s{font-size:12px;color:var(--navy-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .mcls svg{width:18px;height:18px;flex:none;stroke:var(--brand);fill:none;stroke-width:2.4}
@@ -1140,6 +1164,9 @@ table.paper thead th.dt.nb{box-shadow:inset -3px 0 0 var(--accent),inset 0 -3px 
   .brand h1{grid-column:2;grid-row:1;align-self:end}
   .brand .tagline{grid-column:2;grid-row:2;align-self:start}
   .brand .sync{grid-column:1/-1;grid-row:3;margin-top:8px;padding-left:2px}
+.brand .backlink{grid-column:1/-1;grid-row:5;margin-top:10px}
+.brand .gcredit{grid-column:1/-1;grid-row:4;margin-top:4px}
+.brand h1{word-break:keep-all}
 }
 
 /* 제목 = 반 바꾸기 버튼 */
@@ -1417,8 +1444,8 @@ th.at small.sp{display:block;font-size:11px;font-weight:600;line-height:1.1;opac
   <div class="tabs grade" role="tablist" id="gradeTabs" aria-label="학년"></div>
 </aside>
 <div class="wrap">
-  <header class="mbar" id="mbar"><button class="mcls" id="mClassBtn" aria-haspopup="dialog" aria-label="반 바꾸기"><span class="mc-t"><span class="mc-n" id="mClsName"></span><span class="mc-s" id="mClsSub"></span></span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><button class="mib lockbtn" id="mLock" data-on="1" aria-label="점수 잠금"></button><button class="mib primary" id="mExport" aria-label="나이스 파일 내려받기"><svg viewBox="0 0 24 24"><path d="M12 4v12M7 11l5 5 5-5M4 20h16"/></svg><span>나이스</span></button><button class="mib dots" id="mMore" data-menu="sheetMenu" aria-haspopup="true" aria-expanded="false" aria-label="더 보기">···</button></header>
-  <header class="topbar"><div><h2 class="ptitle" id="pageTitle" role="button" tabindex="0" aria-haspopup="dialog" title="눌러서 반 바꾸기">수행평가</h2><p class="sub" id="subline"></p></div></header>
+  <header class="mbar" id="mbar"><button class="mcls" id="mClassBtn" aria-haspopup="dialog" aria-label="반 바꾸기"><span class="mc-t"><span class="mc-n" id="mClsName"></span><span class="mc-s" id="mClsSub"></span></span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><button class="mib lockbtn" id="mLock" data-on="1" aria-label="점수 잠금"></button><button class="mib primary" id="mExport" aria-label="나이스 파일 내려받기"><svg viewBox="0 0 24 24"><path d="M12 4v12M7 11l5 5 5-5M4 20h16"/></svg><span>나이스</span></button><span class="pe-nav pe-mnav"><a class="pe-pill pe-back pe-mpill" href="../" aria-label="체육 앱 서랍으로" hidden>←<span class="pe-t"> 체육 앱 서랍</span></a><button class="pe-pill pe-mpill" type="button" aria-label="정보" onclick="document.getElementById('gInfoBtn').click()">ⓘ<span class="pe-t"> 정보</span></button></span><button class="mib dots" id="mMore" data-menu="sheetMenu" aria-haspopup="true" aria-expanded="false" aria-label="더 보기">···</button></header>
+  <header class="topbar"><div class="pe-nav pe-tnav"><a class="pe-pill pe-back" href="../" hidden>← 체육 앱 서랍</a><button class="pe-pill" type="button" onclick="document.getElementById('gInfoBtn').click()">ⓘ 정보</button></div><div><h2 class="ptitle" id="pageTitle" role="button" tabindex="0" aria-haspopup="dialog" title="눌러서 반 바꾸기">수행평가</h2><p class="sub" id="subline"></p></div></header>
 
   <!-- 수행평가 -->
   <section id="view-sheet" class="view-main" style="display:flex;flex-direction:column;gap:14px">
@@ -1446,8 +1473,8 @@ th.at small.sp{display:block;font-size:11px;font-weight:600;line-height:1.1;opac
           <button class="mi" id="openLog" role="menuitem">점수 변경 이력</button>
           <button class="mi" id="openDrafts" role="menuitem">세특 초안 모아 보기</button>
           <button class="mi" id="memoExport" role="menuitem">관찰 메모·세특 초안 내려받기 (.xlsx)</button>
-          <button class="mi" id="bkSave" role="menuitem">전체 백업 내려받기</button>
-          <button class="mi" id="bkLoad" role="menuitem">백업 파일로 복원</button>
+          <button class="mi" id="bkSave" role="menuitem">백업 파일 내려받기</button>
+          <button class="mi" id="bkLoad" role="menuitem">백업 파일 불러오기</button>
           <hr>
           <button class="mi" id="renameClass" role="menuitem">반 이름 변경</button>
           <button class="mi" id="addClass" role="menuitem">반 추가</button>
@@ -1527,7 +1554,7 @@ th.at small.sp{display:block;font-size:11px;font-weight:600;line-height:1.1;opac
 
     <div class="notice" id="exampleNote" hidden>
       <span><b>예시 명단입니다.</b> 실제 반 명단은 ‘명단 넣기’에 출석부 파일을 끌어다 놓으세요.</span>
-      <button class="btn small" id="clearExample">예시 비우기</button>
+      <button class="btn small" id="clearExample">예시 지우기</button>
     </div>
 
     <div class="summary" id="summary" hidden></div>
@@ -4266,9 +4293,9 @@ button.tt-chip{cursor:pointer}button.tt-chip:hover{border-color:var(--accent)}
 
 <div class="ginfo-ov" id="gInfo" hidden><div class="ginfo" role="dialog" aria-modal="true" aria-labelledby="gInfoT">
   <h2 id="gInfoT">체육 수업 어시스턴트 v1.0</h2><p class="gby">만든 이 · 다정고 박성찬</p>
-  <p>바이브 코딩으로 만든 체육 수업 도구예요. 출석부 파일로 반을 만들고 수행평가 기록·점수 환산, 출석 체크, 학생 점수 확인, 관찰 메모와 세특 쓰기, PAPS, 나이스 업로드 양식까지 한곳에서 합니다.</p>
+  <p>체육 수업 도구예요. 출석부 파일로 반을 만들고 수행평가 기록·점수 환산, 출석 체크, 학생 점수 확인, 관찰 메모와 세특 쓰기, PAPS, 나이스 업로드 양식까지 한곳에서 합니다.</p>
   <p class="gsub">모든 기록은 이 기기(브라우저)에만 저장되고 어디로도 보내지지 않아요. 나이스 시간표를 연결하면 이 기기에서 나이스 포털로 시간표만 받아 옵니다. 자유롭게 쓰고, 자기 수업에 맞게 고쳐 쓰셔도 됩니다.</p>
-  <div class="gmail"><b>버그 제보 · 추가 기능 제안</b><br><a href="mailto:schoolparksc@sje.ai.kr?subject=%5B%EC%B2%B4%EC%9C%A1%20%EC%88%98%EC%97%85%20%EC%96%B4%EC%8B%9C%EC%8A%A4%ED%84%B4%ED%8A%B8%20v1.0%5D%20%EB%B2%84%EA%B7%B8%20%EC%A0%9C%EB%B3%B4%20%C2%B7%20%EA%B8%B0%EB%8A%A5%20%EC%A0%9C%EC%95%88">schoolparksc@sje.ai.kr</a><br><small>어떤 화면에서 무엇을 눌렀는지 적어 주시면 빨리 고칠 수 있어요. 학생 이름 등 개인정보는 보내지 말아 주세요.</small></div>
+  <div class="gmail"><b>버그 제보 · 추가 기능 제안</b><br><a href="mailto:schoolparksc@sjeai.kr?subject=%5B%EC%B2%B4%EC%9C%A1%20%EC%88%98%EC%97%85%20%EC%96%B4%EC%8B%9C%EC%8A%A4%ED%84%B4%ED%8A%B8%20v1.0%5D%20%EB%B2%84%EA%B7%B8%20%EC%A0%9C%EB%B3%B4%20%C2%B7%20%EA%B8%B0%EB%8A%A5%20%EC%A0%9C%EC%95%88">schoolparksc@sjeai.kr</a><br><small>어떤 화면에서 무엇을 눌렀는지 적어 주시면 빨리 고칠 수 있어요. 학생 이름 등 개인정보는 보내지 말아 주세요.</small></div>
   <div style="text-align:right"><button class="btn primary" type="button" id="gInfoClose">닫기</button></div></div></div>
 <style>
 .side .brand h1{font-size:19px!important;line-height:1.2!important;white-space:normal!important;word-break:keep-all;letter-spacing:-.04em}
@@ -4286,6 +4313,17 @@ button.tt-chip{cursor:pointer}button.tt-chip:hover{border-color:var(--accent)}
   document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('#gInfoBtn')){e.preventDefault();o.hidden=false;document.getElementById('gInfoClose').focus();}});
   o.addEventListener('click',function(e){if(e.target===o||e.target.id==='gInfoClose')o.hidden=true;});
   document.addEventListener('keydown',function(e){if(e.key==='Escape')o.hidden=true;});})();
+</script>
+
+<script id="pe-common-js">
+(function(){
+  var web=/^https?:/.test(location.protocol);
+  document.querySelectorAll('.pe-mback,.pe-back').forEach(function(a){a.hidden=!web});
+  function cue(el){var m=el.scrollWidth-el.clientWidth;el.classList.toggle('pe-tabs-r',m>4&&el.scrollLeft<m-4);el.classList.toggle('pe-tabs-l',m>4&&el.scrollLeft>4)}
+  function bind(){document.querySelectorAll('[data-pe-tabs]').forEach(function(el){if(el._pe)return;el._pe=1;el.addEventListener('scroll',function(){cue(el)},{passive:true});new ResizeObserver(function(){cue(el)}).observe(el);if(window.MutationObserver)new MutationObserver(function(){cue(el)}).observe(el,{childList:true});cue(el)})}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+  addEventListener('resize',function(){document.querySelectorAll('[data-pe-tabs]').forEach(cue)});
+})();
 </script>
 </body>
 </html>
